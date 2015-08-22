@@ -1,0 +1,46 @@
+-- MAX+plus II Compiler Fit File      
+-- Version 10.2 07/10/2002            
+-- Compiled: 08/13/2015 15:43:51      
+
+-- Copyright (C) 1988-2002 Altera Corporation
+-- Any megafunction design, and related net list (encrypted or decrypted),
+-- support information, device programming or simulation file, and any other
+-- associated documentation or information provided by Altera or a partner
+-- under Altera's Megafunction Partnership Program may be used only to
+-- program PLD devices (but not masked PLD devices) from Altera.  Any other
+-- use of such megafunction design, net list, support information, device
+-- programming or simulation file, or any other related documentation or
+-- information is prohibited for any other purpose, including, but not
+-- limited to modification, reverse engineering, de-compiling, or use with
+-- any other silicon devices, unless such use is explicitly licensed under
+-- a separate agreement with Altera or a megafunction partner.  Title to
+-- the intellectual property, including patents, copyrights, trademarks,
+-- trade secrets, or maskworks, embodied in any such megafunction design,
+-- net list, support information, device programming or simulation file, or
+-- any other related documentation or information provided by Altera or a
+-- megafunction partner, remains with Altera, the megafunction partner, or
+-- their respective licensors.  No other licenses, including any licenses
+-- needed under any third party's intellectual property, are provided herein.
+
+CHIP "prog2c"
+BEGIN
+
+    DEVICE = "EPM7032LC44-6";
+
+    "x1"                           : INPUT_PIN  = 4      ; -- LC1
+    "x2"                           : INPUT_PIN  = 5      ; -- LC2
+    "x3"                           : INPUT_PIN  = 6      ; -- LC3
+    "f1"                           : OUTPUT_PIN = 41     ; -- LC17
+    "f2"                           : OUTPUT_PIN = 40     ; -- LC18
+
+END;
+
+INTERNAL_INFO "prog2c"
+BEGIN
+	DEVICE = EPM7032LC44-6;
+	LC17    : LORAX = "G13R0";
+	LC18    : LORAX = "G14R0";
+	OH0R0P4 : LORAX = "G43R0,PA20R0C1";
+	OH2R0P6 : LORAX = "G45R0,PA22R0C1";
+	OH1R0P5 : LORAX = "G44R0,PA19R0C1";
+END;
