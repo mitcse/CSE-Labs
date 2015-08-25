@@ -13,22 +13,24 @@ class Time
 
 	void showTime()
 	{
-		if (this.h < 10)
-		{
-			h = Integer.toString(h);
-			h = "0" +h;
-		}
-		if (this.m < 10)
-		{
-			m = Integer.toString(m);
-			m = "0" +m;
-		}
-		if (this.s < 10)
-		{
-			s = Integer.toString(s);
-			s = "0" +s;
-		}
-		System.out.println("Time is " +this.h+ ":" +this.m+ ":" +this.s);
+//		if (this.h < 10)
+//		{
+//			h = "0" + h;
+//		}
+//		if (this.m < 10)
+//		{
+//			m = "0" + m;
+//		}
+//		if (this.s < 10)
+////		{
+////			s = "0" + s;
+////		}
+////		System.out.printf("Time is : " + this.h + ":" + this.m + ":" + this.s);
+//    
+//        System.out.println("Time is " + (this.h<10)?"0":"" + this.h + ":" + (this.m<10)?"0":"" + this.m + (this.s<10)?"0":"" + this.s);
+    
+        System.out.println("Time is " + ((this.h<10)?"0":"") + this.h + " HH " + ((this.m<10)?"0":"") + this.m + " MM " + ((this.s<10)?"0":"") + this.s + " SS");
+    
 	}
 
 	Time makeTime(Time t2)
