@@ -2,7 +2,7 @@
 //  Palindrome.c
 //  Palindrome
 //
-//  Created by Avikant Saini on 8/24/15.
+//  Created by Avikant Saini on 8/25/15.
 //  Copyright © 2015 avikantz. All rights reserved.
 //
 
@@ -18,8 +18,20 @@ typedef enum {
 	YES = 1,
 } BOOL;
 
+BOOL isStackFull (int tos) {
+	if (tos == SIZE - 1)
+		return YES;
+	return NO;
+}
+
+BOOL isStackEmpty (int tos) {
+	if (tos == -1)
+		return YES;
+	return NO;
+}
+
 void push (char *stack, int item, int *tos) {
-	if (*tos == SIZE - 1) {
+	if (isStackFull (*tos)) {
 		printf("\n\tSTACK OVERFLOW\n");
 		return;
 	}
@@ -28,7 +40,7 @@ void push (char *stack, int item, int *tos) {
 }
 
 char pop (char *stack, int *tos) {
-	if (*tos == -1) {
+	if (isStackEmpty (*tos)) {
 		printf("\n\tSTACK UNDERFLOW\n");
 		return UNDERFLOW;
 	}
@@ -43,28 +55,27 @@ void display (char *stack, int tos) {
 	printf("\n");
 }
 
-int main(int argc, const char * argv[]) {
-	
+BOOL isPalindrome (char *string) {
 	int tos = -1, i;
 	char *stack = (char *)malloc(sizeof(char *));
-	char *string = (char *)malloc(sizeof(char *));
+	
+	for (i = 0; i < strlen(string); ++i)
+		push(stack, string[i], &tos);
+	
+	for (i = 0; i < strlen(string)/2; ++i)
+		if (pop(stack, &tos) != string[i])
+			return NO;
+	return YES;
+}
+
+int main(int argc, const char * argv[]) {
+	
+	char *string = (char *)malloc(SIZE * sizeof(char));
 	
 	printf("\n\tEnter a string: ");
 	scanf("%s", string);
 	
-	for (i = 0; i < strlen(string); ++i) {
-		push(stack, string[i], &tos);
-	}
-	
-	BOOL palindrome = YES;
-	for (i = 0; i < strlen(string)/2; ++i) {
-		if (pop(stack, &tos) != string[i]) {
-			palindrome = NO;
-			break;
-		}
-	}
-	
-	if (palindrome)
+	if (isPalindrome (string))
 		printf("\n\t\"%s\" is Palindrome.\n\n", string);
 	else
 		printf("\n\t\"%s\" is not Palindrome.\n\n", string);

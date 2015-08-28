@@ -1,8 +1,8 @@
 //
 //  Stack.c
-//  Stack
+//  Stack Operations
 //
-//  Created by Avikant Saini on 8/24/15.
+//  Created by Avikant Saini on 8/25/15.
 //  Copyright © 2015 avikantz. All rights reserved.
 //
 
@@ -12,8 +12,25 @@
 #define SIZE 10
 #define UNDERFLOW '\0'
 
+typedef enum {
+	NO = 0,
+	YES = 1,
+} BOOL;
+
+BOOL isStackFull (int tos) {
+	if (tos == SIZE - 1)
+		return YES;
+	return NO;
+}
+
+BOOL isStackEmpty (int tos) {
+	if (tos == -1)
+		return YES;
+	return NO;
+}
+
 void push (char *stack, int item, int *tos) {
-	if (*tos == SIZE - 1) {
+	if (isStackFull (*tos)) {
 		printf("\n\tSTACK OVERFLOW\n");
 		return;
 	}
@@ -22,7 +39,7 @@ void push (char *stack, int item, int *tos) {
 }
 
 char pop (char *stack, int *tos) {
-	if (*tos == -1) {
+	if (isStackEmpty (*tos)) {
 		printf("\n\tSTACK UNDERFLOW\n");
 		return UNDERFLOW;
 	}
@@ -41,24 +58,28 @@ int main(int argc, const char * argv[]) {
 	
 	int tos = -1;
 	char *stack = (char *)malloc(sizeof(char *));
-	char choice;
+	char choice = '3';
 	
-	printf("\n\t1. Push an element.\n\t2. Pop an element.\n\t3. Display current stack.\n\tAnything else for exit.\nEnter your choice: ");
-	scanf("%s", &choice);
 	while (choice == '1' || choice == '2' || choice == '3') {
+		printf("\n\t1. Push an element.\n\t2. Pop an element.\n\t3. Display current stack.\n\tAnything else for exit.\nEnter your choice: ");
+		scanf(" %c", &choice);
 		if (choice == '1') {
 			char item;
 			printf("\n\tEnter element to be pushed: ");
-			scanf("%s", &item);
+			scanf(" %c", &item);
 			push(stack, item, &tos);
-			printf("\nCurrent Stack: ");
-			display(stack, tos);
+			if (!isStackFull(tos)) {
+				printf("\nCurrent Stack: ");
+				display(stack, tos);
+			}
 		}
 		else if (choice == '2') {
 			char item = pop(stack, &tos);
-			printf("\n\tPopped item = %c\n", item);
-			printf("\nCurrent Stack: ");
-			display(stack, tos);
+			if (item != UNDERFLOW) {
+				printf("\n\tPopped item = %c\n", item);
+				printf("\nCurrent Stack: ");
+				display(stack, tos);
+			}
 		}
 		else if (choice == '3') {
 			printf("\nCurrent Stack: ");
@@ -66,8 +87,6 @@ int main(int argc, const char * argv[]) {
 		}
 		else
 			exit(0);
-		printf("\n\t1. Push an element.\n\t2. Pop an element.\n\t3. Display current stack.\n\tAnything else for exit.\nEnter your choice: ");
-		scanf("%s", &choice);
 	}
 	return 0;
 }

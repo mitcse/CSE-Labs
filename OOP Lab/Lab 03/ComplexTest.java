@@ -1,92 +1,107 @@
+//
+//  ComplexTest.java
+//  ComplexTest
+//
+//  Created by Avikant Saini on 8/28/15.
+//  Copyright © 2015 avikantz. All rights reserved.
+
 import java.util.Scanner;
-
-class Complex
-{
-
-	double a, b;
+class Complex {
+	private double re;
+	private double im;
+	private String id; // For identifying
 	
-	void getNumbers(double a, double b)
-	{
-		this.a = a;
-		this.b = b;
+	private Scanner sc = new Scanner (System.in);
+	
+	// Constructors
+	public Complex () {
+		this.re = 0.0;
+		this.im = 0.0;
 	}
-
-	void printNumbers()
-	{
-		System.out.println("Complex number is " +this.a+ " + i" +this.b);
+	public Complex (String id) {
+		this.re = 0.0;
+		this.im = 0.0;
+		this.id = id;
 	}
-
-	Complex addNumbers(Complex c2)
-	{
-		Complex c3 = new Complex();
-		c3.a = this.a + c2.a;
-		c3.b = this.b + c2.b;
-		return c3;
+	public Complex (double re, double im) {
+		this.re = re;
+		this.im = im;
+		this.id = "";
 	}
-
-	Complex diffOfNumbers(Complex c2)
-	{
-		Complex c4 = new Complex();
-		c4.a = this.a - c2.a;
-		c4.b = this.b - c2.b;
-		return c4;
+	
+	// Setters
+	public void setReal (double re) {
+		this.re = re;
 	}
-
-}
-
-class ComplexTest
-{
-	public static void main(String args[])
-	{
-		Scanner userEntry = new Scanner (System.in);
-		char f, x;
-		int flag;
-		double a, b, c, d;
-		f = 'y';
-		while (f == 'y')
-		{
-			System.out.println("Enter first complex number");
-			a = userEntry.nextDouble();
-			b = userEntry.nextDouble();
-			Complex c1 = new Complex();
-			c1.getNumbers(a, b);
-
-			c1.printNumbers();
-
-			System.out.println("Do you want to enter another number? y or n?");
-			x = userEntry.next().charAt(0);
-			if (x == 'y')
-			{
-				System.out.println("Enter second complex number");
-
-				c = userEntry.nextDouble();
-				d = userEntry.nextDouble();
-				Complex c2 = new Complex();
-				c2.getNumbers(c, d);
-
-				c2.printNumbers();
-
-				System.out.println("Enter 1 to add, 2 to find difference");
-				flag = userEntry.nextInt();
-
-
-				if (flag == 1)
-				{
-					Complex c3 = new Complex();
-					c3 = c1.addNumbers(c2);
-					c3.printNumbers();
-				}
-				if (flag == 2)
-				{
-					Complex c3 = new Complex();
-					c3 = c1.diffOfNumbers(c2);
-					c3.printNumbers();
-				}
-			}
-
-			System.out.println("Do you want to go again? y or n?");
-			f = userEntry.next().charAt(0);
-		}
+	public void setImaginary (double im) {
+		this.im = im;
+	}
+	public void setID (String id) {
+		this.id = id;
+	}
+	
+	public void input () {
+		System.out.print("\n\tEnter Real (" + this.id + ") : ");
+		this.re = sc.nextDouble();
+		System.out.print("\n\tEnter Imaginary (" + this.id + ") : ");
+		this.im = sc.nextDouble();
+	}
+	
+	// Display (Override the toString() method)
+	@Override
+	public String toString () {
+		return ("\t" + this.id + " = " + this.re + ((this.im < 0)?" ":" +") + this.im + "i.\n");
+	}
+	
+	// add and substract
+	public static Complex add (Complex a, Complex b) {
+		Complex s = new Complex (a.re + b.re, a.im + b.im);
+		return s;
+	}
+	public static Complex substract (Complex a, Complex b) {
+		Complex d = new Complex (a.re - b.re, a.im - b.im);
+		return d;
+	}
+	
+	// Additional Methods for the glory of the Sontaran Empire
+	public static Complex conjugate (Complex a) {
+		Complex c = new Complex (a.re, - a.im);
+		return c;
+	}
+	
+	public static Complex multiply (Complex a, Complex b) {
+		Complex p = new Complex (a.re * b.re - a.im * b.im, a.im * b.re + a.re * b.im);
+		return p;
+	}
+	
+	public static Complex divide (Complex a, Complex b) {
+		Complex r = Complex.multiply (a, Complex.conjugate(b));
+		double bxbc = (b.re * b.re + b.im * b.im);
+		r.setReal (r.re/bxbc);
+		r.setImaginary (r.im/bxbc);
+		return r;
 	}
 }
 
+public class ComplexTest {
+	public static void main (String [] args) {
+		Complex a = new Complex ("A");
+		Complex b = new Complex ("B");
+		a.input();
+		b.input();
+		
+		Complex s = Complex.add (a, b);
+		s.setID ("A + B");
+		
+		Complex d = Complex.substract (a, b);
+		d.setID ("A - B");
+		
+		Complex p = Complex.multiply (a, b);
+		p.setID ("A x B");
+		
+		Complex r = Complex.divide (a, b);
+		r.setID ("A / B");
+		
+		System.out.println ("" + a + b + s + d + p + r);
+	}
+}
