@@ -51,12 +51,14 @@ int pop (int *stack, int *tos) {
 // Return the result of an binary operation
 
 int operationResult (char op, int a, int b) {
-	if (op == '+') return a+b;
-	else if (op == '-') return a-b;
-	else if (op == '*') return a*b;
-	else if (op == '/') return (int)a/b;
-	else if (op == '$') return (int)pow(a, b);
-	return 0;
+	switch (op) {
+		case '+': return a+b;
+		case '-': return a-b;
+		case '*': return a*b;
+		case '/': return (int)(a/b);
+		case '$': return (int)pow(a, b);
+		default : return 0;
+	}
 }
 
 // Get the index of a character in a string
@@ -76,7 +78,7 @@ BOOL isOperator (char op) {
 	return NO;
 }
 
-// Checking if the character is a number
+// Checking if the character is a number or a alphabet
 
 BOOL isNumber (char op) {
 	if (indexOf(op, "0123456789") != -1)
@@ -84,19 +86,31 @@ BOOL isNumber (char op) {
 	return NO;
 }
 
+BOOL isAlphabet (char op) {
+	if ((op >= 'A' && op <= 'Z') || (op >= 'a' && op <= 'z'))
+		return YES;
+	return NO;
+}
+
 // Get the numeric value of a character (ASCII method)
 
 int numericValue (char character) {
-	return (int)(character - 48);
+	return (int)(character - '0');
 }
 
 /**
  *	The algorithm goes as follows.
  *	Since it's a postfix expression, loop into the expression.
- *	If a number is found, push it into the numberic stack.
- *	If an operator is found, pop two integers from the stack, perform the operation, and push the result back to the stack.
- *	If anything other than an operator and number is found, return the error code.
- *	Finally if at the end, there is only one element in the stack (tos == 0), return that element, else return the error code.
+ *
+ *	1. If a number is found, push it into the numberic stack.
+ *
+ *	2. If a variable (alphabet) is found, input it's value from the user, then push the value into the stack.
+ *
+ *	3. If an operator is found, pop two integers from the stack, perform the operation, and push the result back to the stack.
+ *
+ *	4. If anything other than an operator and number is found, return the error code.
+ *
+ *	5. Finally if at the end, there is only one element in the stack @code(tos == 0)@endcode return that element, else return the error code.
  */
 
 int postfix (char * exp) {
@@ -109,9 +123,15 @@ int postfix (char * exp) {
 		char z = *(exp + i);
 		if (isNumber(z))
 			push(stack, numericValue(z), &tos);
+		if (isAlphabet(z)) {
+			int numz;
+			printf("\n\tEnter the value of '%c': ", z);
+			scanf("%d", &numz);
+			push(stack, numz, &tos);
+		}
 		else if (isOperator(z)) {
-			int a = pop(stack, &tos);
 			int b = pop(stack, &tos);
+			int a = pop(stack, &tos);
 			push(stack, operationResult(z, a, b), &tos);
 		}
 		else
