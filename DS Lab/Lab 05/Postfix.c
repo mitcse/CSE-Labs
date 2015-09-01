@@ -12,7 +12,7 @@
 #include <string.h>
 
 #define SIZE 1000
-#define UNDERFLOW_INT -32768
+#define UNDERFLOW_INT -32767
 
 // Boolean type, just for readability
 
@@ -81,7 +81,7 @@ BOOL isOperator (char op) {
 // Checking if the character is a number or a alphabet
 
 BOOL isNumber (char op) {
-	if (indexOf(op, "0123456789") != -1)
+	if (op >= '0' && op <= '9')
 		return YES;
 	return NO;
 }
@@ -95,7 +95,7 @@ BOOL isAlphabet (char op) {
 // Get the numeric value of a character (ASCII method)
 
 int numericValue (char character) {
-	return (int)(character - '0');
+	return (int)(character - 48);
 }
 
 /**
@@ -123,7 +123,7 @@ int postfix (char * exp) {
 		char z = *(exp + i);
 		if (isNumber(z))
 			push(stack, numericValue(z), &tos);
-		if (isAlphabet(z)) {
+		else if (isAlphabet(z)) {
 			int numz;
 			printf("\n\tEnter the value of '%c': ", z);
 			scanf("%d", &numz);
@@ -152,7 +152,7 @@ int main(int argc, const char * argv[]) {
 	int result = postfix(string);
 	
 	if (result == UNDERFLOW_INT) {
-		printf("\n\tINVALID EXPRESSION.");
+		printf("\n\tINVALID EXPRESSION.\n\n\n");
 		exit(6);
 	}
 	

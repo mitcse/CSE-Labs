@@ -60,7 +60,7 @@ int indexOf (char character, char *string) {
 // Checking of the character is an operator
 
 BOOL isOperator (char op) {
-	if (indexOf(op, "+-*/$") != -1)
+	if (indexOf(op, "+-*/%$") != -1)
 		return YES;
 	return NO;
 }
@@ -68,9 +68,7 @@ BOOL isOperator (char op) {
 // Checking if the character is an operand
 
 BOOL isOperand (char op) {
-	if ((op >= 65 && op <= 90) || (op >= 97 && op <= 122))
-		return YES;
-	if (op >= 48 && op <= 57)
+	if ((op >= 65 && op <= 90) || (op >= 97 && op <= 122) || (op >= 48 && op <= 57))
 		return YES;
 	return NO;
 }
@@ -82,22 +80,21 @@ int operatorPrecedence (char op) {
 	else if (indexOf(op, "+-") != -1) return 1;
 	else if (indexOf(op, "*/%") != -1) return 2;
 	else if (op == '$') return 3;
-	else if (indexOf(op, ")]}") != -1) return 4;
-	return -1;
+	else return -1;
 }
 
 /**
  *	The algorithm goes as follows.
  *
- *	Reverse the Expression and parse the inputs in the expression one by one.
+ *	Parse the inputs in the expression one by one.
  *
  *	1. If the input is an operand, then place it in the output buffer.
  *
  *  2. If the input is an operator, push it into the stack.
  *
- *	3. If the operator in stack has lower precedence than input operator, then pop the operator present in stack and add it to output buffer.
+ *	3. While the operator in stack has higher precedence than input operator, then pop the operator present in stack and add it to output buffer.
  *
- *	4. If the input is an open brace, push it into the stack
+ *	4. If the input is an open brace, push it into the stack.
  *
  *	5. If the input is a close brace, pop elements in stack one by one until we encounter close brace. Discard braces while writing to output buffer.
  *
@@ -113,35 +110,38 @@ char * toPostfix (char * exp) {
 	int l = (int)strlen(exp);
 	int i;
 	
-	for (i = 0; i < l -1; ++i) {
+	for (i = 0; i < l; ++i) {
 		char z = *(exp + i);
-		
-		if (z == ' ')
-			continue;
 		
 		if (isOperand(z))
 			push(postfix, z, &tosp);
-		
-		if (isOperator(z))
+			
+		else if (operatorPrecedence(z) == 0)
 			push(operator, z, &toso);
 		
-		if (operatorPrecedence(*(operator + toso)) < operatorPrecedence(z)) {
-			char op =  pop(operator, &toso);
-			if (isOperator(op))
-				push(postfix, op, &tosp);
+		else if (isOperator(z)) {
+			if (!isStackEmpty(toso) && operatorPrecedence(z) <= operatorPrecedence(*(operator + toso))) {
+				char op =  pop(operator, &toso);
+				if (isOperator(op))
+					push(postfix, op, &tosp);
+				push(operator, z, &toso);
+			}
+			else
+				push(operator, z, &toso);
 		}
 		
-		if (operatorPrecedence(z) == 0)
-			push(operator, z, &toso);
-		
-		if (operatorPrecedence(z) == 4) {
+		else if ((indexOf(z, ")]}") != -1)) {
 			while (operatorPrecedence(*(operator + toso)) != 0)
 				push(postfix, pop(operator, &toso), &tosp);
+			char item = pop(operator, &toso);
 		}
+		
+		else
+			continue;
 		
 	}
 	
-	while (isStackFull(toso))
+	while (!isStackEmpty(toso))
 		push(postfix, pop(operator, &toso), &tosp);
 	
 	return postfix;

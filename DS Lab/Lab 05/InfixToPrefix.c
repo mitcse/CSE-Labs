@@ -71,7 +71,7 @@ int indexOf (char character, char *string) {
 // Checking of the character is an operator
 
 BOOL isOperator (char op) {
-	if (indexOf(op, "+-*/$") != -1)
+	if (indexOf(op, "+-*/%$") != -1)
 		return YES;
 	return NO;
 }
@@ -89,11 +89,10 @@ BOOL isOperand (char op) {
 // Operator Precedence
 
 int operatorPrecedence (char op) {
-	if (indexOf(op, "([{") != -1) return 0;
+	if (indexOf(op, ")]}") != -1) return 0;
 	else if (indexOf(op, "+-") != -1) return 1;
 	else if (indexOf(op, "*/%") != -1) return 2;
 	else if (op == '$') return 3;
-	else if (indexOf(op, ")]}") != -1) return 4;
 	return -1;
 }
 
@@ -106,7 +105,7 @@ int operatorPrecedence (char op) {
  *
  *  2. If the input is an operator, push it into the stack.
  *
- *	3. If the operator in stack has equal or higher precedence than input operator, then pop the operator present in stack and add it to output buffer.
+ *	3. While the operator in stack has higher precedence than input operator, then pop the operator present in stack and add it to output buffer.
  *
  *	4. If the input is an close brace, push it into the stack.
  *
@@ -125,32 +124,39 @@ char * toPrefix (char * exp) {
 	int l = (int)strlen(exp);
 	int i;
 	
-	for (i = l - 1; i > 0; --i) {
+	for (i = l - 1; i >= 0; --i) {
 		char z = *(exp + i);
-		
-		if (z == ' ')
-			continue;
 		
 		if (isOperand(z))
 			push(prefix, z, &tosp);
-		
-		if (isOperator(z))
+			
+		else if (operatorPrecedence(z) == 0)
 			push(operator, z, &toso);
 		
-		if (operatorPrecedence(*(operator + toso)) > operatorPrecedence(z)) {
-			char op =  pop(operator, &toso);
-			if (isOperator(op))
-				push(prefix, op, &tosp);
-		}
+		else if (isOperator(z)) {
+			if (!isStackEmpty(toso) && operatorPrecedence(z) < operatorPrecedence(*(operator + toso))) {
+				char op =  pop(operator, &toso);
+				if (isOperator(op))
+					push(prefix, op, &tosp);
+				push(operator, z, &toso);	
+			}
+			else
+				push(operator, z, &toso);
+		} 
 		
-		if (operatorPrecedence(z) == 4)
-			push(operator, z, &toso);
-		
-		if (operatorPrecedence(z) == 0)
+		else if (indexOf(z, "([{") != -1) {
 			while (operatorPrecedence(*(operator + toso)) != 0)
 				push(prefix, pop(operator, &toso), &tosp);
+			char item = pop(operator, &toso);
+		}
 		
-	}
+		else
+			continue;
+		
+	}  
+	
+	while(!isStackEmpty(toso))
+		push(prefix, pop(operator, &toso), &tosp);
 	
 	reverse(prefix, tosp);
 	return prefix;

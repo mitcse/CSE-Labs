@@ -2,6 +2,8 @@
 //  Prefix.c
 //  Evaulation of Prefix Operation
 //
+//	NOT COMPLETE! BUGGY!
+//
 //  Created by Avikant Saini on 8/30/15.
 //  Copyright © 2015 avikantz. All rights reserved.
 //
@@ -81,7 +83,7 @@ BOOL isOperator (char op) {
 // Checking if the character is a number or a alphabet
 
 BOOL isNumber (char op) {
-	if (indexOf(op, "0123456789") != -1)
+	if (op >= '0' && op <= '9')
 		return YES;
 	return NO;
 }
@@ -123,7 +125,7 @@ int prefix (char * exp) {
 		char z = *(exp + i);
 		if (isNumber(z))
 			push(stack, numericValue(z), &tos);
-		if (isAlphabet(z)) {
+		else if (isAlphabet(z)) {
 			int numz;
 			printf("\n\tEnter the value of '%c': ", z);
 			scanf("%d", &numz);
@@ -154,7 +156,7 @@ int main(int argc, const char * argv[]) {
 	int result = prefix(string);
 	
 	if (result == UNDERFLOW_INT) {
-		printf("\n\tINVALID EXPRESSION.");
+		printf("\n\tINVALID EXPRESSION.\n\n");
 		exit(6);
 	}
 	
