@@ -105,13 +105,15 @@ int operatorPrecedence (char op) {
  *
  *  2. If the input is an operator, push it into the stack.
  *
- *	3. While the operator in stack has higher precedence than input operator, then pop the operator present in stack and add it to output buffer.
+ *	3. While the stack is not empty and operator in stack has higher precedence than input operator, then pop the operator present in stack and add it to output buffer.
  *
- *	4. If the input is an close brace, push it into the stack.
+ *	4. Push the input operator into the output stack.
  *
- *	5. If the input is a open brace, pop elements in stack one by one until we encounter open brace. Discard braces while writing to output buffer.
+ *	5. If the input is an close brace, push it into the stack.
  *
- *	6. Display the output buffer in reverse order.
+ *	6. If the input is a open brace, pop elements in stack one by one until we encounter open brace. Discard braces while writing to output buffer.
+ *
+ *	7. Display the output buffer in reverse order.
  */
 
 char * toPrefix (char * exp) {
@@ -129,31 +131,29 @@ char * toPrefix (char * exp) {
 		
 		if (isOperand(z))
 			push(prefix, z, &tosp);
-			
+		
 		else if (operatorPrecedence(z) == 0)
 			push(operator, z, &toso);
 		
 		else if (isOperator(z)) {
-			if (!isStackEmpty(toso) && operatorPrecedence(z) < operatorPrecedence(*(operator + toso))) {
+			while (!isStackEmpty(toso) && operatorPrecedence(z) < operatorPrecedence(*(operator + toso))) {
 				char op =  pop(operator, &toso);
 				if (isOperator(op))
 					push(prefix, op, &tosp);
-				push(operator, z, &toso);	
 			}
-			else
-				push(operator, z, &toso);
-		} 
+			push(operator, z, &toso);
+		}
 		
 		else if (indexOf(z, "([{") != -1) {
 			while (operatorPrecedence(*(operator + toso)) != 0)
 				push(prefix, pop(operator, &toso), &tosp);
-			char item = pop(operator, &toso);
+			pop(operator, &toso);
 		}
 		
 		else
 			continue;
 		
-	}  
+	}
 	
 	while(!isStackEmpty(toso))
 		push(prefix, pop(operator, &toso), &tosp);
