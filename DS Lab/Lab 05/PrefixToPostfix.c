@@ -120,6 +120,10 @@ char * toPostfix (char * prefix) {
 		else
 			continue;
 	}
+	while (isStackFull(toso)) {
+		char op =  pop(operands, &toso);
+		strcat(postfix, &op);
+	}
 	
 	return postfix;
 }

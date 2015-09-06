@@ -51,8 +51,6 @@ class Complex {
 		this.im = sc.nextDouble();
 	}
 	
-	// Display (Override the toString() method)
-	@Override
 	public void display () {
 		System.out.print ("\t" + this.id + " = " + this.re + ((this.im < 0)?" ":" +") + this.im + "i.\n");
 	}
@@ -91,7 +89,7 @@ public class ComplexTest {
 	public static void main (String [] args) {
 		Complex a = new Complex ("A");
 		Complex b = new Complex (a);
-		b.setID ("B")
+		b.setID ("B");
 		
 		a.input();
 		b.input();
