@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define SIZE 10
+#define SIZE 25
 #define UNDERFLOW_CHAR '\0'
 
 /// Boolean type, just for readability
@@ -32,8 +32,8 @@ typedef CQUEUE_t * CQUEUE_p_t;
 
 // Queue methods
 
-BOOL isFullQueue (CQUEUE_p_t queue) {
-	if ((queue->rear + 1)%SIZE == queue->front)
+BOOL isFullQueue (CQUEUE_t queue) {
+	if ((queue.rear + 1)%SIZE == queue.front)
 		return YES;
 	return NO;
 }
@@ -45,8 +45,8 @@ BOOL isEmptyQueue (CQUEUE_t queue) {
 }
 
 void insert (CQUEUE_p_t queue, char * item) {
-	if (isFullQueue(queue)) {
-		printf("\nQueue Overflow!\n\n");
+	if (isFullQueue(*queue)) {
+		printf("\n\tQUEUE OVERFLOW!\n\n");
 		return;
 	}
 	
@@ -60,7 +60,7 @@ void insert (CQUEUE_p_t queue, char * item) {
 
 char * delete (CQUEUE_p_t queue) {
 	if (isEmptyQueue(*queue)) {
-		printf("\nQueue Underflow!\n\n");
+		printf("\n\tQUEUE UNDERFLOW!\n\n");
 		return UNDERFLOW_CHAR;
 	}
 	
@@ -76,9 +76,9 @@ char * delete (CQUEUE_p_t queue) {
 
 void display (CQUEUE_t queue) {
 	if (isEmptyQueue(queue))
-		printf("\nEmpty Queue.\n");
+		printf("\n\tEMPTY QUEUE!\n");
 	else {
-		printf("\nCurrent Queue : ");
+		printf("\n | Current Queue : ");
 		int i;
 		for (i = queue.front; i != queue.rear; i = (i+1)%SIZE)
 			printf("\t%s", *(queue.arr + i));
@@ -91,26 +91,25 @@ int main(int argc, const char * argv[]) {
 	
 	CQUEUE_p_t queue = (CQUEUE_p_t)calloc(SIZE, sizeof(CQUEUE_t));
 	queue->arr = (char **)calloc(SIZE, sizeof(char *));
-	queue->front = -1;
-	queue->rear = -1;
+	queue->front = queue->rear = -1;
 	
 	char choice;
 	
 	do {
-		printf("\n\t1. Insert\n\t2. Delete\n\t3. Display Queue.\n\tQ. Quit\nEnter Choice : ");
+		printf("\n------------------------------------------------------------\n | 1. Insert\n | 2. Delete\n | 3. Display Queue.\n | Q. Quit\n | Enter choice : ");
 		scanf(" %c", &choice);
 		
 		char * item = (char *)calloc(SIZE, sizeof(char));
 		
 		if (choice == '1') {
-			printf("\tEnter item to be inserted: ");
+			printf("\n | Enter item to be inserted: ");
 			scanf("%s", item);
 			insert(queue, item);
 		}
 		else if (choice == '2') {
 			item = delete(queue);
 			if (item != UNDERFLOW_CHAR)
-				printf("\tDeleted item: %s\n", item);
+				printf("\n | Deleted item: '%s'.\n", item);
 		}
 		
 		display(*queue);
