@@ -1,6 +1,6 @@
-package p1;
+package Max.p1;
 import java.util.Scanner;
-public class Max {
+class Max {
 	int max(int a,int b,int c) {
 		if (a>b && a>c)
 			return a;

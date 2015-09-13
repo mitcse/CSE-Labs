@@ -1,5 +1,4 @@
-package p1;
-import p1.Max;
+package Max.p1;
 import java.util.Scanner;
 public class Max2 {
 	public static void main(String args[]) {

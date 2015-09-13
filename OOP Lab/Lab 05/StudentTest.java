@@ -152,14 +152,14 @@ public class StudentTest {
         char choice;
         do {
             System.out.print("\n\t1. Display Records." + 
-                               "\n\t2. Sort wrt Name." +
-                               "\n\t3. Sort wrt Semester (Desceding)." +
-                               "\n\t4. Sort wrt CGPA (Descending)." +
-                               "\n\t5. List all Students whose name begins with a character." +
-                               "\n\t6. List all Students whose name contains a string." +
-                               "\n\t7. Change the names of all students to shortened form." +
-                               "\nAnything else for exit." +
-                               "\n\n\t Enter choice: ");
+							"\n\t2. Sort wrt Name." +
+							"\n\t3. Sort wrt Semester (Desceding)." +
+							"\n\t4. Sort wrt CGPA (Descending)." +
+							"\n\t5. List all Students whose name begins with a character." +
+							"\n\t6. List all Students whose name contains a string." +
+							"\n\t7. Change the names of all students to shortened form." +
+							"\nAnything else for exit." +
+							"\n\n\t Enter choice: ");
             choice = sc.next().charAt(0);
 			sc.nextLine();
             

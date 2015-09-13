@@ -1,111 +1,195 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<ctype.h>
-#include<string.h>
-#include<math.h>
+//
+//  InfixToPrefix.c
+//  Convertnig Infix expression to Prefix
+//
+//  Created by Avikant Saini on 8/31/15.
+//  Copyright © 2015 avikantz. All rights reserved.
+//
 
-# define SIZE 1000
+#include <stdio.h>
+#include <math.h>
+#include <stdlib.h>
+#include <string.h>
 
-void push (char *s, char e, int *top)
-{
-	if (*top == SIZE-1)
+#define SIZE 1000
+#define UNDERFLOW_CHAR '\0'
+
+// Boolean type, just for readability
+
+typedef enum {
+	NO = 0,
+	YES = 1,
+} BOOL;
+
+typedef struct Stack {
+	char *arr;
+	int tos;
+} STACK_t;
+
+typedef STACK_t * STACK_p_t;
+
+void initStack (STACK_p_t stack) {
+	stack->arr = (char *)calloc(SIZE, sizeof(char));
+	stack->tos = -1;
+}
+
+// Stack methods for character stack
+
+BOOL isStackFull (STACK_t stack) {
+	if (stack.tos == SIZE - 1)
+		return YES;
+	return NO;
+}
+
+BOOL isStackEmpty (STACK_t stack) {
+	if (stack.tos == -1)
+		return YES;
+	return NO;
+}
+
+void push (STACK_p_t stack, char item) {
+	if (stack->tos == SIZE - 1)
 		return;
-	(*top) += 1;
-	*(s+(*top)) = e;
+	stack->tos += 1;
+	*(stack->arr + stack->tos) = item;
 }
 
-char pop (char *s, int *top)
-{
-	if (*top == -1)
-		return -32767;
-	return *(s+((*top)--));
+char top (STACK_t stack) {
+	if (stack.tos == -1)
+		return UNDERFLOW_CHAR;
+	return *(stack.arr + stack.tos);
 }
 
-void reverse (char *s, int top)
-{
+char pop (STACK_p_t stack) {
+	if (stack->tos == -1)
+		return UNDERFLOW_CHAR;
+	return *(stack->arr + (stack->tos)--);
+}
+
+// Reversing stack
+
+void reverse (STACK_p_t stack) {
 	int i;
-	for (i=0; i<=top/2; i++)
-	{
-		char c = *(s + i);
-		*(s + i) = *(s + top - i);
-		*(s + top - i) = c;
+	for (i = 0; i <= stack->tos/2; ++i) {
+		char ch = *(stack->arr + i);
+		*(stack->arr + i) = *(stack->arr + stack->tos - i);
+		*(stack->arr + stack->tos - i) = ch;
 	}
 }
 
-int indexOf (char  c, char *s)
-{
-	char *p = strchr(s, c);
-	if (p)
-		return (int) (p-s);
+// Get the index of a character in a string
+
+int indexOf (char character, char *string) {
+	char *ptr = strchr(string, character);
+	if (ptr)
+		return (int)(ptr - string);
 	return -1;
 }
 
-int isOp (char op)
-{
-	if (indexOf(op, "+-*/") != -1)
-		return 1;
-	return 0;
+// Checking of the character is an operator
+
+BOOL isOperator (char op) {
+	if (indexOf(op, "+-*/%$") != -1)
+		return YES;
+	return NO;
 }
 
-int prec (char op)
-{
-	if (indexOf(op, ")]}") != -1)
-		return 0;
-	else if (indexOf(op, "+-") != -1)
-		return 1;
-	else if (indexOf(op, "*/") != -1)
-		return 2;
-	else
-		return -1;
+// Checking if the character is an operand
+
+BOOL isOperand (char op) {
+	if ((op >= 65 && op <= 90) || (op >= 97 && op <= 122))
+		return YES;
+	if (op >= 48 && op <= 57)
+		return YES;
+	return NO;
 }
 
-char *toPrefixExpn (char *e)
-{
-	int top1, top2;
-	top1 = -1;
-	top2 = -1;
-	char *pre = (char *) calloc (SIZE, sizeof(char));
-	char *op = (char *) calloc (SIZE, sizeof(char));
-	int l, i;
-	l = strlen(e);
-	for (i=l-1; i>=0; --i)
-	{
-		char z = *(e+i);
-		if (isdigit(z) || isalpha(z))
-			push (pre, z, &top1);
-		else if (prec(z) == 0)
-			push (op, z, &top2);
-		else if (isOp(z))
-		{
-			while ((top2 != -1) && (prec(z) < prec(*(op+top2))))
-			{
-				char o = pop (op, &top1);
-				if (isOp(o))
-					push (pre, o, &top1);
+// Operator Precedence
+
+int operatorPrecedence (char op) {
+	if (indexOf(op, ")]}") != -1) return 0;
+	else if (indexOf(op, "+-") != -1) return 1;
+	else if (indexOf(op, "*/%") != -1) return 2;
+	else if (op == '$') return 3;
+	return -1;
+}
+
+/**
+ *	The algorithm goes as follows.
+ *
+ *	Reverse the Expression and parse the inputs in the expression one by one.
+ *
+ *	1. If the input is an operand, then place it in the output buffer.
+ *
+ *  2. If the input is an operator, push it into the stack.
+ *
+ *	3. While the stack is not empty and operator in stack has higher precedence than input operator, then pop the operator present in stack and add it to output buffer.
+ *
+ *	4. Push the input operator into the output stack.
+ *
+ *	5. If the input is an close brace, push it into the stack.
+ *
+ *	6. If the input is a open brace, pop elements in stack one by one until we encounter open brace. Discard braces while writing to output buffer.
+ *
+ *	7. Display the output buffer in reverse order.
+ */
+
+char * toPrefix (char * exp) {
+	
+	STACK_p_t prefix = (STACK_p_t)malloc(sizeof(STACK_t));
+	STACK_p_t operator = (STACK_p_t)malloc(sizeof(STACK_t));
+	initStack(prefix);
+	initStack(operator);
+	
+	int l = (int)strlen(exp);
+	int i;
+	
+	for (i = l - 1; i >= 0; --i) {
+		char z = *(exp + i);
+		
+		if (isOperand(z))
+			push(prefix, z);
+		
+		else if (operatorPrecedence(z) == 0)
+			push(operator, z);
+		
+		else if (isOperator(z)) {
+			while (!isStackEmpty(*operator) && operatorPrecedence(z) < operatorPrecedence(top(*operator))) {
+				char op =  pop(operator);
+				if (isOperator(op))
+					push(prefix, op);
 			}
-			push (op, z, &top2);
+			push(operator, z);
 		}
-		else if (indexOf (z, "([{") != -1)
-		{
-			while (prec(*(op + top2)) != 0)
-				push (pre, pop (op, &top2), &top1);
-			pop (op, &top2);
+		
+		else if (indexOf(z, "([{") != -1) {
+			while (operatorPrecedence(top(*operator)) != 0)
+				push(prefix, pop(operator));
+			pop(operator);
 		}
+		
 		else
 			continue;
+		
 	}
-	while (top2 != -1)
-		push (pre, pop (op, &top2), &top1);
-	reverse (pre, top1);
-	return pre;
+	
+	while(!isStackEmpty(*operator))
+		push(prefix, pop(operator));
+	
+	reverse(prefix);
+	return prefix->arr;
 }
 
-int main()
-{
-	char *expn = (char *) calloc (SIZE, sizeof(char));
-	printf ("Enter expression\n");
-	scanf ("%s", expn);
-	char *p = toPrefixExpn (expn);
-	printf ("Result is %s\n", p);
+int main(int argc, const char * argv[]) {
+	
+	char *infix = (char *)calloc(SIZE, sizeof(char));
+	
+	printf("\n\tThis program will convert an Infix expression to Prefix.\n\te.g. (1 + (4 * 5)) = +*145.\n\n\tEnter an valid Infix expression : ");
+	fgets(infix, SIZE, stdin);
+	
+	char *prefix = toPrefix(infix);
+	
+	printf("\n\n\tInfix: %s\n\tPrefix: %s\n\n", infix, prefix);
+	
 	return 0;
 }

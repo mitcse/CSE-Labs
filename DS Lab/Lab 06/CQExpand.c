@@ -60,7 +60,8 @@ BOOL isFullQueue (CQUEUE_p_t queue) {
 	
 	if ((queue->front == queue->rear + 1) || (queue->front == 0 && queue->rear == queue->maxSize - 1)) {
 		
-		queue->arr = (int *)realloc(queue->arr, queue->maxSize * 2);
+		// Use realloc like this. It may or may mot work.
+		queue->arr = (int *)realloc(queue->arr, queue->maxSize * 2 * sizeof(int));
 		
 		if (queue->front > queue->rear) {
 			int i, k;
