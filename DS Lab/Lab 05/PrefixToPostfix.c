@@ -14,49 +14,46 @@
 #define SIZE 1000
 #define UNDERFLOW_CHAR '\0'
 
-// Boolean type, just for readability
+typedef enum { NO, YES } BOOL;
 
-typedef enum {
-	NO = 0,
-	YES = 1,
-} BOOL;
+typedef struct Stack {
+	char ** arr;
+	int tos;
+} STACK_t;
 
-// Stack methods for character stack
+typedef STACK_t * STACK_p_t;
 
-BOOL isStackFull (int tos) {
-	if (tos == SIZE - 1)
+void initStack (STACK_p_t stack) {
+	stack->arr = (char **)calloc(SIZE, sizeof(char *));
+	stack->tos = -1;
+}
+
+BOOL isStackFull (STACK_t stack) {
+	if (stack.tos == SIZE - 1)
 		return YES;
 	return NO;
 }
 
-BOOL isStackEmpty (int tos) {
-	if (tos == -1)
+BOOL isStackEmpty (STACK_t stack) {
+	if (stack.tos == -1)
 		return YES;
 	return NO;
 }
 
-void push (char *stack, char item, int *tos) {
-	if (*tos == SIZE - 1)
+void push (STACK_p_t stack, char * item) {
+	if (isStackFull(*stack)) {
+		printf("\n\tSTACK OVERFLOW!\n\n");
 		return;
-	(*tos) += 1;
-	*(stack + (*tos)) = item;
-}
-
-char pop (char *stack, int *tos) {
-	if (*tos == -1)
-		return UNDERFLOW_CHAR;
-	return *(stack + ((*tos)--));
-}
-
-// Reversing stack
-
-void reverse (char *stack, int tos) {
-	int i;
-	for (i = 0; i <= tos/2; ++i) {
-		char ch = *(stack + i);
-		*(stack + i) = *(stack + tos - i);
-		*(stack + tos - i) = ch;
 	}
+	*(stack->arr + ++(stack->tos)) = item;
+}
+
+char * pop (STACK_p_t stack) {
+	if (isStackEmpty(*stack)) {
+		printf("\n\tSTACK UNDERFLOW!\n\n");
+		return UNDERFLOW_CHAR;
+	}
+	return *(stack->arr + ((stack->tos)--));
 }
 
 // Get the index of a character in a string
@@ -71,7 +68,7 @@ int indexOf (char character, char *string) {
 // Checking of the character is an operator
 
 BOOL isOperator (char op) {
-	if (indexOf(op, "+-*/%$") != -1)
+	if (indexOf(op, "+-*/%^$") != -1)
 		return YES;
 	return NO;
 }
@@ -86,46 +83,59 @@ BOOL isOperand (char op) {
 	return NO;
 }
 
+char * stringFromCharacter (char op) {
+	char * string = (char *)calloc(2, sizeof(char));
+	*string = op;
+	*(string + 1) = '\0';
+	return string;
+}
+
 /**
- *	The algorithm goes as follows.
+ *	The algorithm goes as follows:
  *
- *	Reverse the Expression and parse the inputs in the expression one by one.
+ *	Loop through the expression in reverse order.
  *
- *	1. If the input is an operand, then place it in the output buffer.
+ *	If input is an operand, convert the character to string, and push it in stack.
  *
+ *	If input is an operator, pop two elements from the stack, concatenate them and the operator, and push it back to the stack
+ *	@code strcpy(tempString, pop(stack));
+ strcat(tempString, pop(stack));
+ strcat(tempString, stringFromCharacter(z));
+ *	@endcode
+ *
+ *	Push the result in the stack.
+ *
+ *	Repeat these steps until arr of input prefix string ends.
+ *
+ *	Return the first element of the stack.
  *
  */
 
 char * toPostfix (char * prefix) {
 	
-	char * postfix = (char *)calloc(SIZE, sizeof(char));
-	int toso = -1;
-	char * operands = (char *)calloc(SIZE, sizeof(char));
+	STACK_p_t stack = (STACK_p_t)malloc(sizeof(STACK_t));
+	initStack(stack);
+	
 	int l = (int)strlen(prefix), i;
 	
 	for (i = l - 1; i >= 0; --i) {
 		char z = *(prefix + i);
-		if (isOperand(z))
-			push(operands, z, &toso);
-		else if (isOperator(z)) {
-			char a = pop(operands, &toso);
-			char b = pop(operands, &toso);
-			char * string = (char *)calloc(4, sizeof(char));
-			int toss = -1;
-			push(string, a, &toss);
-			push(string, b, &toss);
-			push(string, z, &toss);
-			strcat(postfix, string);
+		
+		if (isOperand(z)) {
+			push(stack, stringFromCharacter(z));
 		}
-		else
-			continue;
-	}
-	while (isStackFull(toso)) {
-		char op =  pop(operands, &toso);
-		strcat(postfix, &op);
+		
+		else if (isOperator(z)) {
+			char *tempString = (char *)malloc(SIZE * sizeof(char));
+			strcpy(tempString, pop(stack));
+			strcat(tempString, pop(stack));
+			strcat(tempString, stringFromCharacter(z));
+			push(stack, tempString);
+		}
+		
 	}
 	
-	return postfix;
+	return *(stack->arr);
 }
 
 
