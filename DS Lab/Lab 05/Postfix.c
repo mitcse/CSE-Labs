@@ -121,19 +121,23 @@ int postfix (char * exp) {
 	
 	for (i = 0; i < l; ++i) {
 		char z = *(exp + i);
+		
 		if (isNumber(z))
 			push(stack, numericValue(z), &tos);
+		
 		else if (isAlphabet(z)) {
 			int numz;
 			printf("\n\tEnter the value of '%c': ", z);
 			scanf("%d", &numz);
 			push(stack, numz, &tos);
 		}
+		
 		else if (isOperator(z)) {
 			int b = pop(stack, &tos);
 			int a = pop(stack, &tos);
 			push(stack, operationResult(z, a, b), &tos);
 		}
+		
 		else
 			return UNDERFLOW_INT;
 	}

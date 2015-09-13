@@ -184,7 +184,7 @@ int main(int argc, const char * argv[]) {
 	
 	char *infix = (char *)calloc(SIZE, sizeof(char));
 	
-	printf("\n\tThis program will convert an Infix expression to Prefix.\n\te.g. (1 + (4 * 5)) = +*145.\n\n\tEnter an valid Infix expression : ");
+	printf("\n\tThis program will convert an Infix expression to Prefix.\n\te.g. \"A/B * C - D + E/F/(G+H)\" = \"+-*/ABCD//EF+GH\".\n\n\tEnter an valid Infix expression : ");
 	fgets(infix, SIZE, stdin);
 	
 	char *prefix = toPrefix(infix);

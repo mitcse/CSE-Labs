@@ -21,31 +21,49 @@ typedef enum {
 	YES = 1,
 } BOOL;
 
+typedef struct Stack {
+	char *arr;
+	int tos;
+} STACK_t;
+
+typedef STACK_t * STACK_p_t;
+
+void initStack (STACK_p_t stack) {
+	stack->arr = (char *)calloc(SIZE, sizeof(char));
+	stack->tos = -1;
+}
+
 // Stack methods for character stack
 
-BOOL isStackFull (int tos) {
-	if (tos == SIZE - 1)
+BOOL isStackFull (STACK_t stack) {
+	if (stack.tos == SIZE - 1)
 		return YES;
 	return NO;
 }
 
-BOOL isStackEmpty (int tos) {
-	if (tos == -1)
+BOOL isStackEmpty (STACK_t stack) {
+	if (stack.tos == -1)
 		return YES;
 	return NO;
 }
 
-void push (char *stack, char item, int *tos) {
-	if (*tos == SIZE - 1)
+void push (STACK_p_t stack, char item) {
+	if (stack->tos == SIZE - 1)
 		return;
-	(*tos) += 1;
-	*(stack + (*tos)) = item;
+	stack->tos += 1;
+	*(stack->arr + stack->tos) = item;
 }
 
-char pop (char *stack, int *tos) {
-	if (*tos == -1)
+char top (STACK_t stack) {
+	if (stack.tos == -1)
 		return UNDERFLOW_CHAR;
-	return *(stack + ((*tos)--));
+	return *(stack.arr + stack.tos);
+}
+
+char pop (STACK_p_t stack) {
+	if (stack->tos == -1)
+		return UNDERFLOW_CHAR;
+	return *(stack->arr + (stack->tos)--);
 }
 
 // Get the index of a character in a string
@@ -92,7 +110,7 @@ int operatorPrecedence (char op) {
  *
  *  2. If the input is an operator, push it into the stack.
  *
- *	3. While the stack is not empty and operator in stack has higher precedence than input operator, then pop the operator present in stack and add it to output buffer.
+ *	3. While the stack is not empty and operator in stack has higher or equal precedence than input operator, then pop the operator present in stack and add it to output buffer.
  *
  *	4. Add the input operator to the stack.
  *
@@ -104,10 +122,10 @@ int operatorPrecedence (char op) {
 
 char * toPostfix (char * exp) {
 	
-	int tosp = -1;
-	char *postfix = (char *)calloc(SIZE, sizeof(char));
-	int toso = -1;
-	char *operator = (char *)calloc(SIZE, sizeof(char));
+	STACK_p_t postfix = (STACK_p_t)calloc(SIZE, sizeof(STACK_t));
+	STACK_p_t operator = (STACK_p_t)calloc(SIZE, sizeof(STACK_t));
+	initStack(postfix);
+	initStack(operator);
 	
 	int l = (int)strlen(exp);
 	int i;
@@ -116,24 +134,24 @@ char * toPostfix (char * exp) {
 		char z = *(exp + i);
 		
 		if (isOperand(z))
-			push(postfix, z, &tosp);
+			push(postfix, z);
 		
 		else if (operatorPrecedence(z) == 0)
-			push(operator, z, &toso);
+			push(operator, z);
 		
 		else if (isOperator(z)) {
-			while (!isStackEmpty(toso) && operatorPrecedence(z) < operatorPrecedence(*(operator + toso))) {
-				char op =  pop(operator, &toso);
+			while (!isStackEmpty(*operator) && operatorPrecedence(z) <= operatorPrecedence(top(*operator))) {
+				char op =  pop(operator);
 				if (isOperator(op))
-					push(postfix, op, &tosp);
+					push(postfix, op);
 			}
-			push(operator, z, &toso);
+			push(operator, z);
 		}
 		
 		else if ((indexOf(z, ")]}") != -1)) {
-			while (operatorPrecedence(*(operator + toso)) != 0)
-				push(postfix, pop(operator, &toso), &tosp);
-			pop(operator, &toso);
+			while (operatorPrecedence(top(*operator)) != 0)
+				push(postfix, pop(operator));
+			pop(operator);
 		}
 		
 		else
@@ -141,17 +159,17 @@ char * toPostfix (char * exp) {
 		
 	}
 	
-	while (!isStackEmpty(toso))
-		push(postfix, pop(operator, &toso), &tosp);
+	while (!isStackEmpty(*operator))
+		push(postfix, pop(operator));
 	
-	return postfix;
+	return postfix->arr;
 }
 
 int main(int argc, const char * argv[]) {
 	
 	char *infix = (char *)calloc(SIZE, sizeof(char));
 	
-	printf("\n\tThis program will convert an Infix expression to Postfix.\n\te.g. (1 + (4 * 5)) = 145*+.\n\n\tEnter an valid parenthesized Infix expression : ");
+	printf("\n\tThis program will convert an Infix expression to Postfix.\n\te.g. (4 + 8) * (6 - 5) / ((3 - 2) * (2 + 2)) = 48+65-*32-22+*/.\n\n\tEnter an valid Infix expression : ");
 	fgets(infix, SIZE, stdin);
 	
 	char *postfix = toPostfix(infix);
