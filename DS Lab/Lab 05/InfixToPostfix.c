@@ -96,8 +96,8 @@ BOOL isOperand (char op) {
 int operatorPrecedence (char op) {
 	if (indexOf(op, "([{") != -1) return 0;
 	else if (indexOf(op, "+-") != -1) return 1;
-	else if (indexOf(op, "*/%^") != -1) return 2;
-	else if (op == '$') return 3;
+	else if (indexOf(op, "*/%") != -1) return 2;
+	else if (indexOf(op, "^$") != -1) return 3;
 	else return -1;
 }
 
@@ -108,15 +108,13 @@ int operatorPrecedence (char op) {
  *
  *	1. If the input is an operand, then place it in the output buffer.
  *
- *  2. If the input is an operator, push it into the stack.
+ *	2. If the input is an opening brace, push it into the stack.
  *
- *	3. While the stack is not empty and operator in stack has higher or equal precedence than input operator, then pop the operator present in stack and add it to output buffer.
+ *	3. If the input is an operator, while the stack is not empty and operator in stack has higher or equal precedence than input operator, then pop the operator present in stack and add it to output buffer.
  *
  *	4. Add the input operator to the stack.
  *
- *	5. If the input is an open brace, push it into the stack.
- *
- *	6. If the input is a close brace, pop elements in stack one by one until we encounter close brace. Discard braces while writing to output buffer.
+ *	5. If the input is a close brace, pop elements in stack one by one until we encounter opening brace. Discard braces while writing to output buffer.
  *
  */
 

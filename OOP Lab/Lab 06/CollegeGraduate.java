@@ -1,94 +1,52 @@
-import java.util.*;
+//
+//	CollegeGraduate.java
+//	Created by Avikant Saini on 9/14/15
+//
 
-class Person
-{
-	private String name;
-	private GregorianCalendar dob;
+import java.util.GregorianCalendar;
+import java.util.Scanner;
 
-	Person()
-	{
-		System.out.println("In default constructor of person");
-		Scanner userEntry = new Scanner(System.in);
-		System.out.print("Enter name: ");
-		name = userEntry.nextLine();
-		System.out.print("Enter date of birth: ");
-		int y, m, d;
-		d = userEntry.nextInt();
-		m = userEntry.nextInt();
-		y = userEntry.nextInt();
-		dob = new GregorianCalendar(y, m, d);
+public class CollegeGraduate extends Person {
+	
+	private double gpa;
+	private int yearGraduated;
+
+	public CollegeGraduate () {
+		super ();
+		gpa = 0.0;
+		yearGraduated = 0;
+	}
+	
+	public double getGPA () {
+		return gpa ;
+	}
+	
+	public int getYearOfGraduation () {
+		return yearGraduated;
+	}
+	
+	public void inputFields () {
+		Scanner sc = new Scanner (System.in);
+		
+		System.out.print ("Enter name: ");
+		setName (sc.nextLine ());
+		
+		System.out.print ("Enter dob (yyyy/mm/dd): ");
+		GregorianCalendar db = new GregorianCalendar (sc.nextInt(), sc.nextInt() - 1, sc.nextInt());
+		setDOB (db);
+		
+		System.out.print ("Enter gpa: ");
+		gpa = sc.nextDouble ();
+		
+		System.out.print ("Enter year of graduation: ");
+		yearGraduated = sc.nextInt();
+	}
+	
+	public void display () {
+		super.display ();
+		System.out.println ("GPA: " + gpa +
+							"\nYear of Graduation: " + yearGraduated);
+		
 	}
 
-	String getName()
-	{
-		return this.name;
-	}
-
-	GregorianCalendar getDOB()
-	{
-		return this.dob;
-	}
-
-	void display()
-	{
-		System.out.println("Student details->");
-		System.out.println("Name : " +name);
-		System.out.println("Date of Birth : " +dob.get(Calendar.DATE) + ":" +dob.get(Calendar.MONTH) + ":" +dob.get(Calendar.YEAR));
-	}
-}
-
-class CollegeGraduate extends Person
-{
-	private float gpa;
-	private int yrOfGrad;
-
-	CollegeGraduate()
-	{
-		super();
-		System.out.println("In College Graduate default constructor ");
-		Scanner sc = new Scanner(System.in);
-		System.out.println("Enter GPA: ");
-		gpa = sc.nextFloat();
-		System.out.println("Enter year of graduation: ");
-		yrOfGrad = sc.nextInt();
-	}
-
-	float getGpa()
-	{
-		return this.gpa;
-	}
-
-	float getGradYr()
-	{
-		return this.yrOfGrad;
-	}
-
-	void display()
-	{
-		super.display();
-		System.out.println("GPA is: "+gpa);
-		System.out.println("Year of graduation is: "+yrOfGrad);
-	}
-
-	public static void main(String args[])
-	{
-		System.out.println("Is the person a college graduate? (y/n)");
-		Scanner sc = new Scanner(System.in);
-		char x;
-		x = sc.next().charAt(0);
-		if (x == 'y')
-		{
-			CollegeGraduate cg1 = new CollegeGraduate();
-			cg1.display();
-		}
-		else if (x == 'n')
-		{
-			Person p1 = new Person();
-			p1.display();
-		}
-		else
-		{
-			System.out.println("Invalid Input!");
-		}
-	}
 }

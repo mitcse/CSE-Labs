@@ -129,7 +129,7 @@ int operatorPrecedence (char op) {
  *
  *	5. If the input is an close brace, push it into the stack.
  *
- *	6. If the input is a open brace, pop elements in stack one by one until we encounter open brace. Discard braces while writing to output buffer.
+ *	6. If the input is a open brace, pop elements in stack one by one until we encounter close brace. Discard braces while writing to output buffer.
  *
  *	7. Display the output buffer in reverse order.
  */
