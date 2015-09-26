@@ -45,8 +45,7 @@ public class Person {
 	
 	public void display () {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy");
-		System.out.println ("\n\nName: " + name +
-						    "\nDOB: " + dateFormat.format(dateOfBirth.getTime()));
+		System.out.println ("\n\nName: " + name + "\nDOB: " + dateFormat.format(dateOfBirth.getTime()));
 	}
 	
 }

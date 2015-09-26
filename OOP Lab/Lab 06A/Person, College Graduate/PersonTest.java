@@ -12,18 +12,18 @@ public class PersonTest {
 
 		Scanner sc = new Scanner (System.in);
 		
-		int choice;
+		char choice;
 		
-		System.out.println ("1. Person\n2. College Graduate : Person\nExit.\nChoice: ");
-		choice = sc.nextInt();
+		System.out.print ("1. Person\n2. College Graduate : Person\nQ. Quit.\nChoice: ");
+		choice = sc.next().charAt(0);
 		
-		if (choice == 1) {
+		if (choice == '1') {
 			Person person = new Person ();
 			person.inputFields ();
 			person.display ();
 		}
 		
-		else if (choice == 2) {
+		else if (choice == '2') {
 			CollegeGraduate cg = new CollegeGraduate ();
 			cg.inputFields ();
 			cg.display ();
