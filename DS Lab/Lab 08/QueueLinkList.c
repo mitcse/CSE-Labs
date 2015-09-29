@@ -33,10 +33,8 @@ void insert (NODE_p_t queue, int item) {
 	
 	temp->data = item;
 	
-	if (queue->next == NULL) {
+	if (queue->next == NULL)
 		queue->next = temp;
-		queue->data = item;
-	}
 	
 	else {
 		p = queue->next;
@@ -48,19 +46,20 @@ void insert (NODE_p_t queue, int item) {
 	}
 }
 
-NODE_p_t delete (NODE_p_t queue) {
+int delete (NODE_p_t queue) {
 	NODE_p_t temp = createNode();
 	
 	if (queue->next == NULL) {
 		printf("\n\tEMPTY QUEUE!\n\n");
-		return NULL;
+		return UNDERFLOW_INT;
 	}
 	
 	else {
 		temp = queue->next;
+		int item = temp->data;
 		queue->next = temp->next;
 		free(temp);
-		return temp;
+		return item;
 	}
 }
 
@@ -70,14 +69,14 @@ void display (NODE_p_t queue) {
 	if (queue->next != NULL)  {
 		printf("\n\tCURRENT QUEUE: ");
 		while (temp->next != NULL) {
-			printf(" %c ->", temp->data);
+			printf(" %d ->", temp->data);
 			temp = temp->next;
 		}
-		printf(" %c", temp->data);
+		printf(" %d", temp->data);
 		temp = temp->next;
 	}
 	
-	printf("\n-------------------------------------------------\n");
+	printf("\n-------------------------------------------------------------------------\n");
 }
 
 
@@ -98,9 +97,9 @@ int main (int argc, const char * argv []) {
 			insert(queue, item);
 		}
 		else if (choice == '2') {
-			NODE_p_t item = delete(queue);
-			if (item != NULL)
-				printf("\n\tDeleted item: %d\n\n", item->data);
+			int item = delete(queue);
+			if (item != UNDERFLOW_INT)
+				printf("\n\tDeleted item: %d\n\n", item);
 		}
 		display(queue);
 		

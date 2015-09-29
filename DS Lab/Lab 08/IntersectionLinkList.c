@@ -1,6 +1,6 @@
 //
 //  IntersectionLinkedList.c
-//  Intersection operation using doubly circular linked list
+//  Intersection operation using singly linked list
 //
 //  Created by Avikant Saini on 9/29/15.
 //  Copyright © 2015 avikantz. All rights reserved.
@@ -36,6 +36,7 @@ void insert (NODE_p_t list, char item) {
 	temp->data = item;
 	
 	if (list->next == NULL) {
+		temp->prev = list;
 		list->next = temp;
 		list->data = item;
 	}
@@ -45,6 +46,7 @@ void insert (NODE_p_t list, char item) {
 		
 		while (p->next != NULL)
 			p = p->next;
+		temp->prev = p;
 		p->next = temp;
 		
 	}
@@ -107,10 +109,12 @@ int main (int argc, const char * argv []) {
 		temp = temp->next;
 	}
 	
-	printf("\n\tList 1: ");
+	printf("\n\t      List 1: ");
 	display(list1);
-	printf("\n\tList 2: ");
+	printf("\n\t      List 2: ");
 	display(list2);
 	printf("\n\tIntersection: ");
 	display(newList);
+	
+	printf("\n\n");
 }

@@ -22,7 +22,7 @@ typedef NODE_t * NODE_p_t;
 
 NODE_p_t createNode () {
 	NODE_p_t temp = (NODE_p_t)malloc(sizeof(NODE_t));
-	temp->next = NULL;
+	temp->next = temp;
 	temp->data = UNDERFLOW_CHAR;
 	return temp;
 }
@@ -32,25 +32,24 @@ void insert (NODE_p_t list, char item) {
 	NODE_p_t p;
 	
 	temp->data = item;
+	temp->next = list;
 	
-	if (list->next == NULL) {
+	if (list->next == list)
 		list->next = temp;
-		list->data = item;
-	}
 	
 	else {
 		p = list->next;
 		
-		while (p->next != NULL)
+		while (p->next != list)
 			p = p->next;
 		p->next = temp;
 		
 	}
 }
 
-BOOL listContainsItem (NODE_p_t node, char item) {
-	NODE_p_t temp = node->next;
-	while (temp != NULL) {
+BOOL listContainsItem (NODE_p_t list, char item) {
+	NODE_p_t temp = list->next;
+	while (temp != list) {
 		if (temp->data == item)
 			return YES;
 		temp = temp->next;
@@ -61,8 +60,8 @@ BOOL listContainsItem (NODE_p_t node, char item) {
 void display (NODE_p_t list) {
 	NODE_p_t temp = list->next;
 	
-	if (list->next != NULL)  {
-		while (temp->next != NULL) {
+	if (temp != list)  {
+		while (temp->next != list) {
 			printf(" %c ->", temp->data);
 			temp = temp->next;
 		}
@@ -99,13 +98,13 @@ int main (int argc, const char * argv []) {
 	NODE_p_t temp1 = list1->next;
 	NODE_p_t temp2 = list2->next;
 	
-	while (temp1 != NULL) {
+	while (temp1 != list1) {
 		char item = temp1->data;
 		if (!listContainsItem(unionList, item))
 			insert(unionList, item);
 		temp1 = temp1->next;
 	}
-	while (temp2 != NULL) {
+	while (temp2 != list2) {
 		char item = temp2->data;
 		if (!listContainsItem(unionList, item))
 			insert(unionList, item);
