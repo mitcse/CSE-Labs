@@ -1,8 +1,8 @@
 //
-//  Merge Linked List.c
-//  Merging two linked lists sorted in ascending order
+//  UnionLinkedList.c
+//  Union operation using singly circular linked list
 //
-//  Created by Avikant Saini on 9/28/15.
+//  Created by Avikant Saini on 9/29/15.
 //  Copyright © 2015 avikantz. All rights reserved.
 //
 
@@ -48,6 +48,16 @@ void insert (NODE_p_t list, char item) {
 	}
 }
 
+BOOL listContainsItem (NODE_p_t node, char item) {
+	NODE_p_t temp = node->next;
+	while (temp != NULL) {
+		if (temp->data == item)
+			return YES;
+		temp = temp->next;
+	}
+	return NO;
+}
+
 void display (NODE_p_t list) {
 	NODE_p_t temp = list->next;
 	
@@ -61,19 +71,18 @@ void display (NODE_p_t list) {
 	}
 }
 
-
 int main (int argc, const char * argv []) {
 	
 	NODE_p_t list1 = createNode();
 	NODE_p_t list2 = createNode();
-	NODE_p_t newList = createNode();
+	NODE_p_t unionList = createNode();
 	
 	int i, n;
 	char item;
 	
 	printf("\n\tList 1: Enter number of elements: ");
 	scanf("%d", &n);
-	printf("\n\tEnter List 1 elements in ascending order: ");
+	printf("\n\tEnter List 1 elements: ");
 	for (i = 0; i < n; ++i) {
 		scanf(" %c", &item);
 		insert(list1, item);
@@ -81,7 +90,7 @@ int main (int argc, const char * argv []) {
 	
 	printf("\n\tList 2: Enter number of elements: ");
 	scanf("%d", &n);
-	printf("\n\tEnter List 2 elements in ascending order: ");
+	printf("\n\tEnter List 2 elements: ");
 	for (i = 0; i < n; ++i) {
 		scanf(" %c", &item);
 		insert(list2, item);
@@ -90,24 +99,16 @@ int main (int argc, const char * argv []) {
 	NODE_p_t temp1 = list1->next;
 	NODE_p_t temp2 = list2->next;
 	
-	while (temp1 != NULL && temp2 != NULL) {
-		char c1 = temp1->data;
-		char c2 = temp2->data;
-		if (c1 > c2) {
-			insert(newList, c2);
-			temp2 = temp2->next;
-		}
-		else {
-			insert(newList, c1);
-			temp1 = temp1->next;
-		}
-	}
 	while (temp1 != NULL) {
-		insert(newList, temp1->data);
+		char item = temp1->data;
+		if (!listContainsItem(unionList, item))
+			insert(unionList, item);
 		temp1 = temp1->next;
 	}
 	while (temp2 != NULL) {
-		insert(newList, temp2->data);
+		char item = temp2->data;
+		if (!listContainsItem(unionList, item))
+			insert(unionList, item);
 		temp2 = temp2->next;
 	}
 	
@@ -115,8 +116,8 @@ int main (int argc, const char * argv []) {
 	display(list1);
 	printf("\n\tList 2: ");
 	display(list2);
-	printf("\n\tMerged List: ");
-	display(newList);
+	printf("\n\t Union: ");
+	display(unionList);
 	
 	printf("\n\n");
 }

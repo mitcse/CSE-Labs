@@ -1,5 +1,5 @@
 //
-//  Queue Using Linked List.c
+//  QueueLinkedList.c
 //  Linked List Queue
 //
 //  Created by Avikant Saini on 9/28/15.
@@ -27,7 +27,7 @@ NODE_p_t createNode () {
 	return temp;
 }
 
-NODE_p_t insert (NODE_p_t queue, int item) {
+void insert (NODE_p_t queue, int item) {
 	NODE_p_t temp = createNode();
 	NODE_p_t p;
 	
@@ -46,8 +46,6 @@ NODE_p_t insert (NODE_p_t queue, int item) {
 		p->next = temp;
 		
 	}
-	queue->data++;
-	return queue;
 }
 
 NODE_p_t delete (NODE_p_t queue) {
@@ -71,10 +69,12 @@ void display (NODE_p_t queue) {
 	
 	if (queue->next != NULL)  {
 		printf("\n\tCURRENT QUEUE: ");
-		while (temp != NULL) {
-			printf("\t%d", temp->data);
+		while (temp->next != NULL) {
+			printf(" %c ->", temp->data);
 			temp = temp->next;
 		}
+		printf(" %c", temp->data);
+		temp = temp->next;
 	}
 	
 	printf("\n-------------------------------------------------\n");
@@ -95,7 +95,7 @@ int main (int argc, const char * argv []) {
 			int item;
 			printf("\n\tEnter item to be inserted: ");
 			scanf("%d", &item);
-			queue = insert(queue, item);
+			insert(queue, item);
 		}
 		else if (choice == '2') {
 			NODE_p_t item = delete(queue);
@@ -106,6 +106,7 @@ int main (int argc, const char * argv []) {
 		
 	} while (choice == '1' || choice == '2' || choice == '3');
 	
-	return 0;
+	printf("\n\n");
 	
+	return 0;
 }
