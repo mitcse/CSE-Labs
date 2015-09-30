@@ -59,10 +59,10 @@ void addCar (NODE_p_t queue, char *lpNo) {
 }
 
 void removeCar (NODE_p_t queue, char *lpno) {
-	NODE_p_t temp = queue->next;
+	NODE_p_t temp = queue;
 	NODE_p_t p;
 	
-	while (temp != queue) {
+	while (temp->next != queue) {
 		p = temp->next;
 		if (strcmp(lpno, p->lpNo) == 0) {
 			(queue->data)--;
@@ -116,17 +116,17 @@ int main (int argc, const char * argv []) {
 		
 		if (arrDep == 'A') {
 			
-			if (scratchEmUp->data < 5) {
+			if (scratchEmUp->data < 10) {
 				printf("\n\tAdding car '%s' to ScratchEmUp garage.\n", lpNo);
 				addCar(scratchEmUp, lpNo);
 			}
 			
-			else if (knockEmDown->data < 1) {
+			else if (knockEmDown->data < 8) {
 				printf("\n\tAdding car '%s' to KnockEmDown garage.\n", lpNo);
 				addCar(knockEmDown, lpNo);
 			}
 			
-			else if (streetThugs->data < 1) {
+			else if (streetThugs->data < 8) {
 				printf("\n\tAdding car '%s' to the Street.\n", lpNo);
 				addCar(streetThugs, lpNo);
 			}

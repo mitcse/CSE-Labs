@@ -52,7 +52,7 @@ void insert (NODE_p_t list, int coeff, int pow) {
 }
 
 double peval (NODE_p_t polyn, double x) {
-	double result;
+	double result = 0.0;
 	NODE_p_t temp = polyn->next;
 	while (temp != polyn) {
 		result += temp->coeff * pow(x, temp->pow);
