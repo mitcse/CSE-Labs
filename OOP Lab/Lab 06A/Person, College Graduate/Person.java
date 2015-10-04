@@ -37,10 +37,10 @@ public class Person {
 		Scanner sc = new Scanner (System.in);
 		
 		System.out.print ("Enter name: ");
-		String name = sc.nextLine ();
+		name = sc.nextLine ();
 		
 		System.out.print ("Enter dob (yyyy/mm/dd): ");
-		GregorianCalendar dob = new GregorianCalendar (sc.nextInt(), sc.nextInt() - 1, sc.nextInt());
+		dob = new GregorianCalendar (sc.nextInt(), sc.nextInt() - 1, sc.nextInt());
 	}
 	
 	public void display () {
