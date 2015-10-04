@@ -1,10 +1,10 @@
 //
+//  Stack.java
 //
-//
-//
+//  Created by Avikant Saini on 10/3/15
 //
 
-interface Stack {
+public interface Stack {
 	void push (int item);
 	int pop ();
 }

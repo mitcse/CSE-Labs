@@ -1,3 +1,9 @@
+//
+//  Employee.java
+//
+//  Created by Avikant Saini on 10/3/15
+//
+
 import java.util.*;
 import java.io.*;
 
@@ -14,10 +20,10 @@ public class Employee {
 		Scanner sc = new Scanner (System.in);
 
 		try {
-			System.out.print("Enter name: ");
+			System.out.print("            Enter name : ");
 			name = sc.nextLine();
 
-			System.out.print("Enter age: ");
+			System.out.print("             Enter age : ");
 			String ageS = sc.nextLine();
 
 			age = Integer.parseInt(ageS);
@@ -25,7 +31,7 @@ public class Employee {
 			if (age < 0 || age > 100)
 				throw new IOException();
 
-			System.out.print("Enter gross salary: ");
+			System.out.print("    Enter gross salary : ");
 			String grossSalaryStr = sc.nextLine();
 
 			grossSalary = Double.parseDouble(grossSalaryStr);
@@ -33,7 +39,7 @@ public class Employee {
 			if (grossSalary < 0)
 				throw new IOException();
 
-			System.out.print("Enter take home salary: ");
+			System.out.print("Enter take home salary : ");
 			String takeHomeSalaryStr = sc.nextLine();
 
 			takeHomeSalary = Float.parseFloat(takeHomeSalaryStr);
@@ -41,7 +47,7 @@ public class Employee {
 			if (takeHomeSalary < 0)
 				throw new IOException();
 
-			System.out.print("Enter grade: ");
+			System.out.print("            Enter grade : ");
 			String gradeStr = sc.nextLine();
 
 			if (gradeStr.length() > 1)
@@ -51,16 +57,16 @@ public class Employee {
 
 		}
 		catch (Exception exception) {
-			System.err.println("Error occured: " + exception + "\nTry again...");
+			System.err.println("\nError occured: " + exception + ". Try again.\n");
 			input();
 		}
 	}
 
 	public void display() {
-		System.out.println("\t            Name | " + name);
+		System.out.println("\n\n\t            Name | " + name);
 		System.out.println("\t             Age | " + age);
 		System.out.println("\t    Gross Salary | " + grossSalary);
 		System.out.println("\tTake Home Salary | " + takeHomeSalary);
-		System.out.println("\t           Grade | " + grade);
+		System.out.println("\t           Grade | " + grade + "\n\n");
 	}
 }

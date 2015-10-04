@@ -1,7 +1,7 @@
 //
+//  DynamicStack.java
 //
-//
-//
+//  Created by Avikant Saini on 10/3/15
 //
 
 import java.util.Scanner;
@@ -35,9 +35,4 @@ class DynamicStack implements Stack {
 		return arr[tos--];
 	}
 
-	public void display () {
-		System.out.print("\n\tCURRENT STACK: ");
-		for (int i = 0; i <= tos; ++i)
-			System.out.print("\t" + arr[i]);
-	}
 }
