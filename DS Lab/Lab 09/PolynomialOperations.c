@@ -11,8 +11,6 @@
 #include <string.h>
 #include <math.h>
 
-#define UNDERFLOW_CHAR '\0'
-
 typedef enum { NO, YES } BOOL;
 
 typedef struct Node {
