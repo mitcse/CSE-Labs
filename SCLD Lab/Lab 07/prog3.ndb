@@ -1,0 +1,97 @@
+NDB006
+The number of symbol table entries is: 3
+The length of the symbol table is: 37
+
+Index Hierarchy Path
+----- --------------
+!	&null_hpath&
+.	|mux4_1:m1|
+:	|mux4_1:m2|
+
+The number of name info structs is : 83
+
+InsOrder BitField SymTableIndex NextSyn SynParent Loc ChainType NextChain ChainParent FanOut DirExp ParExp ShareExp NodeName
+-------- -------- ------------- ------- --------- --- --------- --------- ----------- ------ ------ ------ -------- --------
+"	IeEA	!	5	0	:10	x
+#	IeEA	!	5	0	:11	y
+$	IeEA	!	5	0	:12	z
+%	IeEA	!	5	0	:13	{
+&	IeEA	!	5	0	:14	|
+'	IeEA	!	5	0	:15	}
+(	IeEA	!	5	0	:16	~
+)	IeEA	!	5	0	:17	"!
+*	IeEA	!	5	0	:18	""
++	IeEA	!	5	0	:19	"#
+,	IeEA	!	5	0	:20	"$
+-	IeEA	!	5	0	:21	"%
+.	IeEA	!	5	0	:22	"&
+/	IeEA	!	6	0	:23	"'
+0	IeEA	!	6	0	:24	"(
+1	IeEA	!	6	0	:25	")
+2	IeEA	!	6	0	:26	"*
+3	IeEA	!	6	0	:27	"+
+4	IeEA	!	6	0	:28	",
+5	IeEA	!	6	0	:29	"-
+6	IeEA	!	6	0	:30	".
+7	IeEA	!	6	0	:31	"/
+8	IeEA	!	6	0	:32	"0
+9	IeEA	!	6	0	:33	"1
+:	IeEA	!	6	0	:34	"2
+;	IeEA	!	6	0	:35	"3
+<	IeEA	!	6	0	:36	"4
+=	IeEA	!	6	0	:37	"5
+>	IeEA	!	6	0	:38	"6
+?	IeEA	!	6	0	:39	"7
+@	IeEA	!	5	0	:6	t
+A	IeEA	!	5	0	:7	u
+B	IeEA	!	5	0	:8	v
+C	IeEA	!	5	0	:9	w
+D	IeE[	!	3	0	f1	r
+E	IeE[	!	3	0	f2	s
+F	"?%_n	!	2	0	2	D	E	i0	!	i0	q
+G	"?%_n	!	2	0	2	D	E	i1	!	i1	p
+H	"?%_n	!	2	0	2	D	E	i2	!	i2	o
+I	IeEA	.	17	0	:10	"W
+J	IeEA	.	18	0	:11	"X
+K	IeEA	.	19	0	:12	"Y
+L	IeEA	.	19	0	:13	"Z
+M	IeEA	.	19	0	:14	"[
+N	IeEA	.	19	0	:15	"\
+O	IeEA	.	20	0	:16	"]
+P	IeEA	.	21	0	:17	"^
+Q	IeEA	.	21	0	:18	"_
+R	IeEA	.	21	0	:19	"`
+S	IeEA	.	21	0	:20	"a
+T	IeEA	.	21	0	:21	"b
+U	IeEA	.	22	0	:22	"c
+V	IeEA	.	24	0	:23	"d
+W	IeEA	.	24	0	:24	"e
+X	IeEA	.	24	0	:25	"f
+Y	IeEA	.	24	0	:26	"g
+Z	IeEA	.	24	0	:27	"h
+[	IeEA	.	24	0	:28	"i
+\	IeEA	.	24	0	:29	"j
+]	IeEA	.	17	0	:8	"U
+^	IeEA	.	17	0	:9	"V
+_	IeEA	:	17	0	:10	"{
+`	IeEA	:	18	0	:11	"|
+a	IeEA	:	19	0	:12	"}
+b	IeEA	:	19	0	:13	"~
+c	IeEA	:	19	0	:14	#!
+d	IeEA	:	19	0	:15	#"
+e	IeEA	:	20	0	:16	##
+f	IeEA	:	21	0	:17	#$
+g	IeEA	:	21	0	:18	#%
+h	IeEA	:	21	0	:19	#&
+i	IeEA	:	21	0	:20	#'
+j	IeEA	:	21	0	:21	#(
+k	IeEA	:	22	0	:22	#)
+l	IeEA	:	24	0	:23	#*
+m	IeEA	:	24	0	:24	#+
+n	IeEA	:	24	0	:25	#,
+o	IeEA	:	24	0	:26	#-
+p	IeEA	:	24	0	:27	#.
+q	IeEA	:	24	0	:28	#/
+r	IeEA	:	24	0	:29	#0
+s	IeEA	:	17	0	:8	"y
+t	IeEA	:	17	0	:9	"z

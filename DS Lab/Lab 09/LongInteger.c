@@ -33,27 +33,16 @@ NODE_p_t createNode () {
 
 void insert (NODE_p_t list, int val) {
 	NODE_p_t temp = createNode();
-	NODE_p_t p;
+	
+	NODE_p_t p = list->next;
 	
 	temp->value = val;
+	temp->next = p;
 	temp->prev = list;
 	
 	list->next = temp;
+	p->prev = temp;
 	
-	if (list->prev == list) {
-		temp->next = list;
-		list->prev = temp;
-	}
-	
-	else {
-		p = list->prev;
-		
-		while (p->prev != list)
-			p = p->prev;
-		
-		temp->next = p;
-		p->prev = temp;
-	}
 	(list->value)++;
 }
 
@@ -63,7 +52,7 @@ void inputLongInteger (NODE_p_t li) {
 	char * longint = (char *)malloc(SIZE * sizeof(char));
 	scanf(" %s", longint);
 	
-	for (i = 0; i <= strlen(longint)/2; ++i) {
+	for (i = 0; i < strlen(longint)/2; ++i) {
 		char temp = *(longint + i);
 		*(longint + i) = *(longint + strlen(longint) - 1 - i);
 		*(longint + strlen(longint) - 1 - i) = temp;
