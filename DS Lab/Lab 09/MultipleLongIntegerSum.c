@@ -1,6 +1,6 @@
 //
-//  LongInteger.c
-//  Long Integer Addition using Linked Lists
+//  MultipleLongIntegerSum.c
+//  Multiple Long Integer Addition using Linked Lists
 //
 //  Created by Avikant Saini on 10/29/15.
 //  Copyright © 2015 avikantz. All rights reserved.
@@ -46,20 +46,32 @@ void insert (NODE_p_t list, int val) {
 	(list->value)++;
 }
 
-void inputLongInteger (NODE_p_t li) {
+BOOL inputLongInteger (NODE_p_t li) {
 	
 	int i;
 	char * longint = (char *)malloc(SIZE * sizeof(char));
 	scanf(" %s", longint);
 	
-	for (i = (int)strlen(longint) - 1; i >= 0; --i)
-		insert(li, *(longint + i) - '0');
+	if (strlen(longint) == 1 && *longint == '0')
+		return NO;
+	
+	for (i = (int)strlen(longint) - 1; i >= 0; --i) {
+		char z = *(longint + i);
+		if (z < 48 || z > 57) {
+			printf("\n\tNot a decimal number... Exiting\n\n");
+			exit(69);
+		}
+		insert(li, z - '0');
+	}
+	
+	return YES;
 	
 }
 
 NODE_p_t createAndInputLongInteger () {
 	NODE_p_t li = createNode();
-	inputLongInteger(li);
+	if (!inputLongInteger(li))
+		return NULL;
 	return li;
 }
 
@@ -110,28 +122,60 @@ void displayLongInteger (NODE_p_t longInteger, int maxSize) {
 	}
 }
 
-int max (int a, int b, int c) {
-	return (a>b?((a>c)?a:c):(b>c)?b:c);
+int maxLength (NODE_p_t * longIntegers) {
+	int max = 0, i = 0;
+	while (*(longIntegers + i) != NULL) {
+		NODE_p_t temp = temp = *(longIntegers + i++);
+		if (temp->value > max)
+			max = temp->value;
+	}
+	return max;
 }
 
 int main (int argc, const char * argv []) {
 	
-	printf("\n\tEnter A: ");
-	NODE_p_t lia = createAndInputLongInteger();
-	printf("\n\tEnter B: ");
-	NODE_p_t lib = createAndInputLongInteger();
+	int count = 0, i;
 	
-	NODE_p_t lic = addLongIntegers(lia, lib);
+	printf("\n\nThis program will calculate the sum of multiple 'long integers' using linked lists.\nEnter multiple 'long integers' one by one... Enter 0 to stop:\n\n");
 	
-	int maxSize = max(lia->value, lib->value, lic->value);
+	NODE_p_t *longIntegers = (NODE_p_t *)calloc(SIZE, sizeof(NODE_p_t));
 	
-	printf("\n\t    A =   ");
-	displayLongInteger(lia, maxSize);
-	printf("\n\t    B = + ");
-	displayLongInteger(lib, maxSize);
+	while ((*(longIntegers + count++) = createAndInputLongInteger()) != NULL);
+	count--;
 	
-	printf("\n\tA + B =   ");
-	displayLongInteger(lic, maxSize);
+	int max = maxLength(longIntegers) + 1;
+	
+	NODE_p_t sum = createNode();
+	
+	if (count == 1) {
+		sum = *longIntegers;
+		printf("\n\tSum = Number entererd = ");
+		displayLongInteger(sum, max);
+		exit(0);
+	}
+	
+	sum = addLongIntegers(*longIntegers, *(longIntegers + 1));
+	
+	if (count > 2) {
+		for (i = 2; i < count; ++i)
+			sum = addLongIntegers(sum, *(longIntegers + i));
+	}
+	
+	printf("\n\n\t   ");
+	displayLongInteger(*longIntegers, max);
+	
+	i = 1;
+	while (*(longIntegers + i) != NULL) {
+		printf("\n\t + ");
+		displayLongInteger(*(longIntegers + i++), max);
+	}
+	
+	printf("\n\t---");
+	for (i = 0; i < max; ++i)
+		printf("--");
+	
+	printf("\n\t = ");
+	displayLongInteger(sum, max);
 	
 	printf("\n\n");
 	return 0;

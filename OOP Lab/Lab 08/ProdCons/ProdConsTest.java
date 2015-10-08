@@ -26,7 +26,7 @@ class Thing {
 			}
 		}
 		isAvailable = false;
-		notifyAll();
+		notify();
 		return count;
 	}
 
@@ -60,10 +60,10 @@ class Producer extends Thread {
 	@Override
 	public void run () {
 		for (int i = 1; i <= n; ++i) {
-			thing.put(i);
-			System.out.println("\tProducer - Put -> " + i + " | ");
 			try {
-				sleep(100);
+				thing.put(i);
+				System.out.println("\tProducer - Put -> " + i + " | ");
+				sleep(20);
 			}
 			catch (InterruptedException e) {
 				System.err.println("Interrupted: " + e);
@@ -87,8 +87,14 @@ class Consumer extends Thread {
 	@Override
 	public void run () {
 		for (int i = 1; i <= n; ++i) {
-			int no = thing.get();
-			System.out.println("\t                | " + i + " -> Get - Consumer\n");
+			try {
+				int no = thing.get();
+				System.out.println("\t                | " + i + " -> Get - Consumer\n");
+				sleep(20);
+			}
+			catch (InterruptedException e) {
+				System.err.println("Interrupted: " + e);
+			}
 		}
 	}
 
