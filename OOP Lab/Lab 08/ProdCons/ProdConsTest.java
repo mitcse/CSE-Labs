@@ -1,27 +1,26 @@
-//
-//	ProdConsTest.java
-//
-//	Created by Avikant Saini on 10/06/15
-//
-
 import java.util.Scanner;
 
-class Thing {
-
+class RandomClassName
+{
 	private int count;
 	private boolean isAvailable;
 
-	public Thing () {
+	public RandomClassName ()
+	{
 		count = 0;
 		isAvailable = false;
 	}
 
-	public synchronized int get () {
-		while (!isAvailable) {
-			try {
+	public synchronized int get ()
+	{
+		while (!isAvailable)
+		{
+			try
+			{
 				wait();
 			}
-			catch (InterruptedException e) {
+			catch (InterruptedException e)
+			{
 				System.err.println("Interrupted: " + e);
 			}
 		}
@@ -30,12 +29,16 @@ class Thing {
 		return count;
 	}
 
-	public synchronized void put (int n) {
-		while (isAvailable) {
-			try {
+	public synchronized void put (int n)
+	{
+		while (isAvailable)
+		{
+			try
+			{
 				wait();
 			}
-			catch (InterruptedException e) {
+			catch (InterruptedException e)
+			{
 				System.err.println("Interrupted: " + e);
 			}
 		}
@@ -43,79 +46,82 @@ class Thing {
 		isAvailable = true;
 		notify();
 	}
-
 }
 
-class Producer extends Thread {
-
-	private Thing thing;
+class Producer extends Thread
+{
+	private RandomClassName randomClassInstance;
 	private int n;
 
-	public Producer (Thing thing, int n) {
-		this.thing = thing;
+	public Producer (RandomClassName randomClassInstance, int n)
+	{
+		this.randomClassInstance = randomClassInstance;
 		this.n = n;
 		start();
 	}
 
-	@Override
-	public void run () {
-		for (int i = 1; i <= n; ++i) {
-			try {
-				thing.put(i);
-				System.out.println("\tProducer - Put -> " + i + " | ");
+	public void run ()
+	{
+		for (int i = 1; i <= n; ++i)
+		{
+			try
+			{
+				randomClassInstance.put(i);
+				System.out.println("Producer Put\t" + i + "\n");
 				sleep(20);
 			}
-			catch (InterruptedException e) {
+			catch (InterruptedException e)
+			{
 				System.err.println("Interrupted: " + e);
 			}
 		}
 	}
-
 }
 
-class Consumer extends Thread {
-
-	private Thing thing;
+class Consumer extends Thread
+{
+	private RandomClassName randomClassInstance;
 	private int n;
 
-	public Consumer (Thing thing, int n) {
-		this.thing = thing;
+	public Consumer (RandomClassName randomClassInstance, int n)
+	{
+		this.randomClassInstance = randomClassInstance;
 		this.n = n;
 		start();
 	}
 
-	@Override
-	public void run () {
-		for (int i = 1; i <= n; ++i) {
-			try {
-				int no = thing.get();
-				System.out.println("\t                | " + i + " -> Get - Consumer\n");
+	public void run ()
+	{
+		for (int i = 1; i <= n; ++i)
+		{
+			try
+			{
+				int no = randomClassInstance.get();
+				System.out.println("\n" + i + "Get Consumer\n");
 				sleep(20);
 			}
-			catch (InterruptedException e) {
+			catch (InterruptedException e)
+			{
 				System.err.println("Interrupted: " + e);
 			}
 		}
 	}
-
 }
 
-public class ProdConsTest {
-
-	public static void main (String [] args) {
+public class ProducerConsumer
+{
+	public static void main (String args[])
+	{
 		
-		Scanner sc = new Scanner(System.in);
-		System.out.print("\n\tEnter number of items: ");
-		int n = sc.nextInt();
+		Scanner userEntry = new Scanner(System.in);
+		System.out.print("\nEnter number of items\n");
+		int n = userEntry.nextInt();
 
 		System.out.println("\n");
 
-		Thing thing = new Thing();
+		RandomClassName randomClassInstance = new RandomClassName();
 
-		Producer producer = new Producer(thing, n);
-		Consumer consumer = new Consumer(thing, n);
-
+		Producer producer = new Producer(randomClassInstance, n);
+		Consumer consumer = new Consumer(randomClassInstance, n);
 	}
-
 }
-
