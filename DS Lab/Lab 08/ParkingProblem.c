@@ -18,13 +18,12 @@
 #include <string.h>
 
 #define SIZE 50
-#define UNDERFLOW_CHAR '\0'
 
 typedef enum { NO, YES } BOOL;
 
 typedef struct Node {
 	int data;
-	char *lpNo;
+	char * lpNo;
 	struct Node * next;
 } NODE_t;
 
@@ -32,54 +31,41 @@ typedef NODE_t * NODE_p_t;
 
 NODE_p_t createNode () {
 	NODE_p_t temp = (NODE_p_t)malloc(sizeof(NODE_t));
+	temp->lpNo = (char *)calloc(SIZE, sizeof(char));
 	temp->next = temp;
 	temp->data = 0;
-	temp->lpNo = (char *)malloc(SIZE * sizeof(char));
 	return temp;
 }
 
-void addCar (NODE_p_t queue, char *lpNo) {
+void addCar (NODE_p_t garage, char * lpNo) {
 	NODE_p_t temp = createNode();
-	NODE_p_t p;
-	
 	strcpy(temp->lpNo, lpNo);
-	temp->next = queue;
 	
-	if (queue->next == queue)
-		queue->next = temp;
+	NODE_p_t p = garage->next;
 	
-	else {
-		p = queue->next;
+	while (p->next != garage)
+		p = p->next;
+	
+	p->next = temp;
+	temp->next = garage;
+	
+	(garage->data)++;
+}
+
+BOOL removeCar (NODE_p_t garage, char * lpNo) {
+	NODE_p_t p = garage;
+	
+	while (p->next != garage) {
 		
-		while (p->next != queue)
-			p = p->next;
-		p->next = temp;
-	}
-	(queue->data)++;
-}
-
-void removeCar (NODE_p_t queue, char *lpno) {
-	NODE_p_t temp = queue;
-	NODE_p_t p;
-	
-	while (temp->next != queue) {
-		p = temp->next;
-		if (strcmp(lpno, p->lpNo) == 0) {
-			(queue->data)--;
-			temp->next = p->next;
-			free(p);
-			return;
-		}
-		temp = temp->next;
-	}
-}
-
-BOOL containsCar (NODE_p_t queue, char *lpno) {
-	NODE_p_t temp = queue->next;
-	while (temp != queue) {
-		if (strcmp(lpno, temp->lpNo) == 0)
+		NODE_p_t temp = p->next;
+		if (strcmp(temp->lpNo, lpNo) == 0) {
+			
+			p->next = temp->next;
+			
+			(garage->data)--;
 			return YES;
-		temp = temp->next;
+		}
+		p = p->next;
 	}
 	return NO;
 }
@@ -116,17 +102,17 @@ int main (int argc, const char * argv []) {
 		
 		if (arrDep == 'A') {
 			
-			if (scratchEmUp->data < 10) {
+			if (scratchEmUp->data < 3) {
 				printf("\n\tAdding car '%s' to ScratchEmUp garage.\n", lpNo);
 				addCar(scratchEmUp, lpNo);
 			}
 			
-			else if (knockEmDown->data < 8) {
+			else if (knockEmDown->data < 2) {
 				printf("\n\tAdding car '%s' to KnockEmDown garage.\n", lpNo);
 				addCar(knockEmDown, lpNo);
 			}
 			
-			else if (streetThugs->data < 8) {
+			else if (streetThugs->data < 2) {
 				printf("\n\tAdding car '%s' to the Street.\n", lpNo);
 				addCar(streetThugs, lpNo);
 			}
@@ -139,20 +125,14 @@ int main (int argc, const char * argv []) {
 		
 		else if (arrDep == 'D') {
 			
-			if (containsCar(scratchEmUp, lpNo)) {
+			if (removeCar(scratchEmUp, lpNo))
 				printf("\n\tRemoving car '%s' from ScratchEmUp garage.\n", lpNo);
-				removeCar(scratchEmUp, lpNo);
-			}
 			
-			else if (containsCar(knockEmDown, lpNo)) {
+			else if (removeCar(knockEmDown, lpNo))
 				printf("\n\tRemoving car '%s' from KnockEmDown garage.\n", lpNo);
-				removeCar(knockEmDown, lpNo);
-			}
 			
-			else if (containsCar(streetThugs, lpNo)) {
+			else if (removeCar(streetThugs, lpNo))
 				printf("\n\tRemoving car '%s' from the street.\n", lpNo);
-				removeCar(streetThugs, lpNo);
-			}
 			
 			else {
 				printf("\n\tCar '%s' not found in both garages or streets. It's probably stolen by aliens. There's nothing you can do now, except weep silently or loudly.\n", lpNo);
@@ -173,3 +153,4 @@ int main (int argc, const char * argv []) {
 	
 	return 0;
 }
+

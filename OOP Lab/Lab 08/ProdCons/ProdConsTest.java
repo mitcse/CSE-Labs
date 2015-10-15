@@ -63,7 +63,7 @@ class Producer extends Thread {
 			try {
 				thing.put(i);
 				System.out.println("\tProducer - Put -> " + i + " | ");
-				sleep(20);
+				sleep(100);
 			}
 			catch (InterruptedException e) {
 				System.err.println("Interrupted: " + e);
@@ -90,7 +90,7 @@ class Consumer extends Thread {
 			try {
 				int no = thing.get();
 				System.out.println("\t                | " + i + " -> Get - Consumer\n");
-				sleep(20);
+				sleep(200);
 			}
 			catch (InterruptedException e) {
 				System.err.println("Interrupted: " + e);

@@ -1,6 +1,6 @@
 //
-//  MultipleLongIntegerSum.c
-//  Multiple Long Integer Addition using Linked Lists
+//  LongInteger.c
+//  Long Integer Addition using Linked Lists
 //
 //  Created by Avikant Saini on 10/29/15.
 //  Copyright © 2015 avikantz. All rights reserved.
@@ -143,7 +143,7 @@ int main (int argc, const char * argv []) {
 	while ((*(longIntegers + count++) = createAndInputLongInteger()) != NULL);
 	count--;
 	
-	int max = maxLength(longIntegers) + 1;
+	int max = maxLength(longIntegers);
 	
 	NODE_p_t sum = createNode();
 	
@@ -160,6 +160,9 @@ int main (int argc, const char * argv []) {
 		for (i = 2; i < count; ++i)
 			sum = addLongIntegers(sum, *(longIntegers + i));
 	}
+	
+	if (sum->value > max)
+		max = sum->value;
 	
 	printf("\n\n\t   ");
 	displayLongInteger(*longIntegers, max);
