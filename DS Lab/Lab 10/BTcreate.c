@@ -53,7 +53,7 @@ void insertIterBT (TNode **rt, int item)
     }
   do
     {
-      printf("1 to insert to left, 2 to insert to right\n");
+      printf("1 to insert to left, 2 to insert to right: ");
       scanf("%d", &ch);
       present = t;
       if (ch == 1)
@@ -98,12 +98,12 @@ int main()
   root = NULL;
   while (1)
     {
-      printf("1 to insert, 2 to list level order traversals, 3 to exit\n");
+      printf("1 to insert, 2 to list level order traversals, 3 to exit: ");
       scanf(" %d", &ch);
       switch(ch)
 	{
 	case 1:
-	  printf("Enter node\n");
+	  printf("Enter node: ");
 	  scanf(" %d", &el);
 	  insertIterBT(&root, el);
 	  break;
