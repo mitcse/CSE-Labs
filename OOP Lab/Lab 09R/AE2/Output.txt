@@ -1,0 +1,6 @@
+Enter size of integer array: 5
+Enter elements of integer array: 1 5 3 6 8
+Integer array: Array contents: 1 5 3 6 8 
+Enter size of double array: 3
+Enter elements of double array: 1.5 3.6 1.4
+Double array: Array contents: 1.5 3.6 1.4

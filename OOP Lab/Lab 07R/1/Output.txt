@@ -1,0 +1,29 @@
+Enter the size of the fixed stack: 3
+Options:
+(1) Push
+(2) Pop
+(0) Move on to Dynamic stack
+Your options: 1  
+Enter an integer to push: 1
+Options:
+(1) Push
+(2) Pop
+(0) Move on to Dynamic stack
+Your options: 0Options:
+(1) Create new Entry
+(2) Display all entries
+(0) Exit
+Your option: 1
+Enter the student details: 
+Name: Asd
+Options:
+(1) Push
+(2) Pop
+(0) Exit
+Your options: 1
+Enter an integer to push: 6
+Options:
+(1) Push
+(2) Pop
+(0) Exit
+Your options: 0

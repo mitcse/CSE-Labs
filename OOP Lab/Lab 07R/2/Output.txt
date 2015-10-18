@@ -1,0 +1,8 @@
+Enter the details of the Employee: 
+Name: Random Guy
+Grade: A
+Age: 25
+Salary: 80000
+Take home salary: 7500
+Employee details:
+Name: Random Guy, Age: 25, Salary: 80000.0, Take home salary: 7500.0, Grade: A

@@ -1,0 +1,14 @@
+Options:
+(1) Set start
+(2) Display next
+(3) Reset
+(0) Exit
+Your option: 1
+Enter the starting position: 3
+Options:
+(1) Set start
+(2) Display next
+(3) Reset
+(0) Exit
+Your option: 2
+Next element is: 5
