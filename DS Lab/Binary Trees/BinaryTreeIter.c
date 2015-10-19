@@ -1,18 +1,14 @@
 //
-//	BinaryTree.c
+//	BinaryTreeIter.c
+//	Iterative thingies for binary tree.
 //
 //	Created by Avikant Saini on 10/19/15
 //
 
 /**
- Sample input : 1 10 1 8 1 1 3 1 1 1 5 1 2 1 2 2 1 2 2 1 for
- 10
-	/   \
- 8      2
- /  \    /
- 3    5  2
- Inorder:  3 8 5 10 2 2
- Preorder:  10 8 3 5 2 2
+ *	Sample input : 1 10 1 8 1 1 3 1 1 1 5 1 2 1 2 2 1 2 2 1
+ *	 Inorder:  3 8 5 10 2 2
+ *	Preorder:  10 8 3 5 2 2
  */
 
 #include <stdio.h>
