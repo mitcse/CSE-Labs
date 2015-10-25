@@ -91,13 +91,76 @@ TNODE_p_t createNode () {
 	
 	root = initNode(data);
 	
-	printf("\tLeft of '%s' | ", root->data);
+	printf("\t Left of '%s' | ", root->data);
 	root->left = createNode();
 	
 	printf("\tRight of '%s' | ", root->data);
 	root->right = createNode();
 	
 	return root;
+}
+
+#pragma mark - Tree insertions
+
+void insertIterative (TNODE_p_t *root, String item) {
+	
+	int ch;
+	TNODE_p_t t = *root;
+	TNODE_p_t present = NULL;
+	TNODE_p_t newnode;
+	
+	if (*root == NULL) {
+		*root = initNode(item);
+		return;
+	}
+	
+	do {
+		printf("\tCurrent: '%s' | 1. Left%s; 2. Right%s | Choice: ", t->data, ((t->left == NULL)?"(*)":""), ((t->right == NULL)?"(*)":""));
+		scanf(" %d", &ch);
+		present = t;
+		
+		if (ch == 1)
+			t = t->left;
+		else if (ch == 2)
+			t = t->right;
+		
+		if (t == NULL) {
+			newnode = initNode(item);
+			(ch == 1)?(present->left = newnode):(present->right = newnode);
+			return;
+		}
+		
+	} while (YES);
+}
+
+void insertRecursive (TNODE_p_t *root, String item) {
+	if (*root == NULL) {
+		*root = initNode(item);
+		return;
+	}
+	else {
+		int ch;
+		TNODE_p_t t = *root;
+		printf("\tCurrent: '%s' | 1. Left%s; 2. Right%s | Choice: ", t->data, ((t->left == NULL)?"(*)":""), ((t->right == NULL)?"(*)":""));
+		scanf(" %d", &ch);
+		
+		if (ch == 1)
+			insertRecursive(&(t->left), item);
+		else if (ch == 2)
+			insertRecursive(&(t->right), item);
+	}
+}
+
+#pragma mark - Search
+
+TNODE_p_t search (TNODE_p_t root, String item) {
+	if (root == NULL)
+		return NULL;
+	if (strcmp(root->data, item) == 0)
+		return root;
+	TNODE_p_t left = search(root->left, item);
+	TNODE_p_t right = search(root->right, item);
+	return (left != NULL)?left:((right != NULL)?right:NULL);
 }
 
 #pragma mark - Recursive transversals
@@ -153,6 +216,18 @@ void levelOrder (TNODE_p_t root) {
 
 #pragma mark - Iterative transversals
 
+/**
+ *	Initilize an empty stack.
+ *	if (stack is empty, or, node is not null)
+ *		if (node is not null)
+ *			visit node
+ *			if (node->right is not null)
+ *				push node->right into the stack
+ *			node = node->left
+ *		else
+ *			node = pop stack
+ */
+
 void preorderIterative (TNODE_p_t root) {
 	STACK_p_t stack = initStack();
 	TNODE_p_t temp = root;
@@ -167,6 +242,18 @@ void preorderIterative (TNODE_p_t root) {
 			temp = pop(stack);
 	}
 }
+
+/**
+ *	Initilize an empty stack
+ *	if (stack is not empty, or node is not null)
+ *		if (node is not null)
+ *			push node into the stack
+ *			node = node->left
+ *		else
+ *			node = pop stack
+ *			visit node
+ *			node = node->right
+ */
 
 void inorderIterative (TNODE_p_t root) {
 	STACK_p_t stack = initStack();
@@ -205,32 +292,79 @@ void postorderIterative (TNODE_p_t root) {
 	}
 }
 
+
 #pragma mark - Main
 
 int main (int argc, const char * argv []) {
 	
+	printf("\n\tStart inserting into the tree...\n");
 	TNODE_p_t tree = createNode();
 	
-	printf("\n\tPreorder (Rec): \n");
-	preorderRecursive(tree);
-	
-	printf("\n\tPreorder (Iter): \n");
-	preorderIterative(tree);
-	
-	printf("\n\n\tInorder (Rec): \n");
-	inorderRecursive(tree);
-	
-	printf("\n\tInorder (Iter): \n");
-	inorderIterative(tree);
-	
-	printf("\n\n\tPostorder (Rec): \n");
-	postorderRecursive(tree);
-	
-	printf("\n\tPostorder (Iter): \n");
-	postorderIterative(tree);
-	
-	printf("\n\n\tLevel Order: \n");
-	levelOrder(tree);
+	int choice;
+	do {
+		printf("\n---------------------------------------------------------------------");
+		printf("\n\t0. Rebuild tree (recursive)\n\t1. Insert element (iterative)\n\t2. Insert element (recursive)\n\t3. Preorder transversal (recursive)\n\t4. Preorder transversal (iterative)\n\t5. Inorder transversal (recursive)\n\t6. Inorder transversal (iterative)\n\t7. Postorder transversal (recursive)\n\t8. Postorder transversal (iterative)\n\t9. Level order transversal (recursive)\n\t10. Search for an item (recursive)\n\tEnter choice: ");
+		scanf(" %d", &choice);
+		
+		String item = initString(SIZE);
+		
+		switch (choice) {
+				
+			case 0: tree = createNode();
+				break;
+				
+			case 1: printf("\n\tEnter item to be inserted: ");
+				scanf(" %s", item);
+				insertIterative(&tree, item);
+				break;
+				
+			case 2: printf("\n\tEnter item to be inserted: ");
+				scanf(" %s", item);
+				insertRecursive(&tree, item);
+				break;
+				
+			case 3: printf("\n\tPreorder (Rec): ");
+				preorderRecursive(tree);
+				break;
+				
+			case 4: printf("\n\tPreorder (Iter): ");
+				preorderIterative(tree);
+				break;
+				
+			case 5: printf("\n\n\tInorder (Rec): ");
+				inorderRecursive(tree);
+				break;
+				
+			case 6: printf("\n\tInorder (Iter): ");
+				inorderIterative(tree);
+				break;
+				
+			case 7: printf("\n\n\tPostorder (Rec): ");
+				postorderRecursive(tree);
+				break;
+				
+			case 8: printf("\n\tPostorder (Iter): ");
+				postorderIterative(tree);
+				break;
+				
+			case 9: printf("\n\n\tLevel Order: ");
+				levelOrder(tree);
+				break;
+				
+			case 10: printf("\tEnter item to be searched: ");
+				scanf(" %s", item);
+				TNODE_p_t loc = search(tree, item);
+				if (loc != NULL)
+					printf("\n\t'%s' is present in the tree. (%p)\n", item, loc);
+				else
+					printf("\n\t'%s' is not present in the tree.\n", item);
+				break;
+				
+			default: break;
+				
+		}
+		
+	} while (choice >= 0 && choice <= 10);
 	
 }
 

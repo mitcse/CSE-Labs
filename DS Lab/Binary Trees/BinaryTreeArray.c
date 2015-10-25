@@ -11,8 +11,9 @@
  *	Preorder: 6 4 5 8 7 9 2
  *
  *	Another sample tree:  3 1 2 3 4 5 6 7 8 9 A B C D E F	(Complete binary tree of height 3)
- *	 Inorder: 8 4 9 2 A 5 B 1 C 6 D 3 E 7 F
- *	Preorder: 1 2 4 8 9 5 A B 3 6 C D 7 E F
+ *	  Inorder: 8 4 9 2 A 5 B 1 C 6 D 3 E 7 F
+ *	 Preorder: 1 2 4 8 9 5 A B 3 6 C D 7 E F
+ *	Postorder: 8 9 4 A B 5 2 C D 6 E F 7 3 1
  */
 
 #include <stdio.h>
@@ -91,6 +92,16 @@ void inorderTransversal (TREE_p_t tree, int pos) {
 	
 }
 
+void postorderTransversal (TREE_p_t tree, int pos) {
+	
+	if (pos >= tree->capacity || *(tree->arr + pos) == '#')
+		return;
+	
+	postorderTransversal(tree, pos * 2);
+	postorderTransversal(tree, pos * 2 + 1);
+	printf(" %c", *(tree->arr + pos));
+}
+
 int main (int argc, const char * argv[]) {
 	
 	int height;
@@ -102,7 +113,7 @@ int main (int argc, const char * argv[]) {
 	
 	char choice = '\0';
 	do {
-		printf("\n\n\t1. Input tree (overwrite)\n\t2. Inorder transversal\n\t3. Preorder transversal\n\tChoice: ");
+		printf("\n\n\t1. Input tree (overwrite)\n\t2. Inorder transversal\n\t3. Preorder transversal\n\t4. Postorder transversal\n\tChoice: ");
 		scanf(" %c", &choice);
 		
 		if (choice == '1') {
@@ -118,11 +129,16 @@ int main (int argc, const char * argv[]) {
 		}
 		
 		else if (choice == '3') {
-			printf("\n\n\tPreorder: ");
+			printf("\n\n\t Preorder: ");
 			preorderTransversal(tree, 1);
 		}
 		
-	} while (choice >= '1' && choice <= '3');
+		else if (choice == '4') {
+			printf("\n\n\tPostorder: ");
+			postorderTransversal(tree, 1);
+		}
+		
+	} while (choice >= '1' && choice <= '4');
 	
 	printf("\n\n");
 	

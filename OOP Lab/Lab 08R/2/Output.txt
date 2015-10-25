@@ -1,8 +1,0 @@
-Enter the number of rows and columns: 
-2 3
-Input values into the matrix: 
-6 4 2
-7 4 1
-Sum of row 1 elements: 12
-Sum of row 2 elements: 12
-Sum of all elements: 24

@@ -1,8 +1,0 @@
-Enter size of integer array: 3
-Enter elements of integer array: 1 2 3
-Enter elements of integer array to swap: 0 2
-Swapped integer array: 3 2 1 
-Enter size of double array: 4
-Enter elements of double array: 1.1 2.4 3.1 4.6
-Enter elements of double array to swap: 3 1
-Swapped double array: 1.1 4.6 3.1 2.4
