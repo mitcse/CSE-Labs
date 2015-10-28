@@ -11,6 +11,10 @@ abstract class Figure {
 	int dim2;
 	abstract double area(int dim1, int dim2);
 
+	static void printStuff(){System.out.println("STATIC STUFF");}
+
+	void printX (){System.out.println(" STUFF");}
+
 }
 
 class Rectangle extends Figure {
@@ -19,12 +23,24 @@ class Rectangle extends Figure {
 		return dim1 * dim2;
 	}
 
+	static void printStuff () {
+		System.out.println("RECT STUFF");
+	}
+
+	void printX () {
+		System.out.println("RECT X");
+	}
+
 }
 
 class Triangle extends Figure {
 
 	double area(int dim1, int dim2) {
 		return 0.5 * dim1 * dim2;
+	}
+
+	static void printStuff () {
+		System.out.println("TRI STUFF");
 	}
 }
 
@@ -55,12 +71,16 @@ public class FigureTest {
 		dim1 = sc.nextInt();
 		dim2 = sc.nextInt();
 		System.out.println("Rectangle area = " + figure.area(dim1, dim2));
+		Rectangle.printStuff();
+		figure.printX();
+		Figure.printStuff();
 
 		figure = triangle;
 		System.out.print("Enter the base and height of triangle: ");
 		dim1 = sc.nextInt();
 		dim2 = sc.nextInt();
 		System.out.println("Triangle area = " + figure.area(dim1, dim2));
+		Triangle.printStuff();
 
 		figure = square;
 		System.out.print("Enter the side of the square: ");

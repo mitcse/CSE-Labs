@@ -34,19 +34,19 @@ public class ExchangeTest {
 		String stringArray[] = {"Herp", "Derp", "Land", "Yolo"};
 		
 		System.out.println("\n\tInitally: ");
-		GArray.<Integer>display(intArray);
-		GArray.<Double>display(doubleArray);
-		GArray.<String>display(stringArray);
+		GArray.display(intArray);
+		GArray.display(doubleArray);
+		GArray.display(stringArray);
 		
 		System.out.println("\n\tSwapping indices '1' and '2': ");
 		
-		GArray.<Integer>exchange(intArray, 1, 2);
-		GArray.<Double>exchange(doubleArray, 1, 2);
-		GArray.<String>exchange(stringArray, 1, 2);
+		GArray.exchange(intArray, 1, 2);
+		GArray.exchange(doubleArray, 1, 2);
+		GArray.exchange(stringArray, 1, 2);
 		
-		GArray.<Integer>display(intArray);
-		GArray.<Double>display(doubleArray);
-		GArray.<String>display(stringArray);
+		GArray.display(intArray);
+		GArray.display(doubleArray);
+		GArray.display(stringArray);
 	
 	}
 

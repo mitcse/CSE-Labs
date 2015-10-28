@@ -61,7 +61,7 @@ void removeDuplicates (NODE_p_t list) {
 
 void freeMemory (NODE_p_t list) {
 	NODE_p_t p = list;
-	while (p != list) {
+	while (p != NULL) {
 		NODE_p_t temp = p;
 		p = p->next;
 		free(temp);

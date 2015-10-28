@@ -95,8 +95,8 @@ public class GenericStackTest {
 		
 		System.out.print("\n\tEnter the size of the stacks: ");
 		int n = sc.nextInt();
-		Stack <Student> sstack = new Stack<Student>(n);
-		Stack <Employee> estack = new Stack<Employee>(n);
+		Stack <Student> sstack = new Stack<>(n);
+		Stack <Employee> estack = new Stack<>(n);
 		
 		int choice;
 		do {
