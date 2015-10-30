@@ -111,14 +111,50 @@ void levelOrder (TNODE_p_t root) {
 
 #pragma mark - Search
 
-TNODE_p_t search (TNODE_p_t root, int data) {
+TNODE_p_t search (TNODE_p_t root, int item) {
 	if (root == NULL)
 		return NULL;
+	if (root->data == item)
+		return root;
+	TNODE_p_t left = search(root->left, item);
+	TNODE_p_t right = search(root->right, item);
+	return (left != NULL)?left:((right != NULL)?right:NULL);
+}
+
+#pragma mark - Delete
+
+TNODE_p_t minValueNode (TNODE_p_t root) {
+	TNODE_p_t temp = root;
+	while (temp->left != NULL)
+		temp = temp->left;
+	return temp;
+}
+
+TNODE_p_t delete (TNODE_p_t root, int item) {
+	if (root == NULL)
+		return root;
 	
-	if (data < root->data)
-		return search(root->left, data);
-	else if (data > root->data)
-		return search(root->right, data);
+	if (item < root->data)
+		root->left = delete(root->left, item);
+	else if (item > root->data)
+		root->right = delete(root->right, item);
+	
+	else {
+		if (root->left == NULL) {
+			TNODE_p_t temp = root->right;
+			free(root);
+			return temp;
+		}
+		else if (root->right == NULL) {
+			TNODE_p_t temp = root->left;
+			free(root);
+			return temp;
+		}
+		
+		TNODE_p_t temp = minValueNode(root->right); // node with two children: Get the inorder successor (smallest in the right subtree)
+		root->data = temp->data;  // Copy the inorder successor's content to this node
+		root->right = delete(root->right, temp->data);  // Delete the inorder successor
+	}
 	return root;
 }
 
@@ -151,9 +187,21 @@ int main (int argc, const char * argv []) {
 			int item;
 			printf("\n\tEnter item to be searched: ");
 			scanf(" %d", &item);
-			
-			if (search(tree, item) != NULL)
-				printf("\n\t%d is present in the tree.", item);
+			TNODE_p_t element = search(tree, item);
+			if (element != NULL)
+				printf("\n\t%d is present in the tree. (%p)", item, element);
+			else
+				printf("\n\t%d is not present in the tree.", item);
+		}
+		
+		else if (choice == 4) {
+			int item;
+			printf("\n\tEnter item to be deleted: ");
+			scanf(" %d", &item);
+			TNODE_p_t element = search(tree, item);
+			if (element != NULL) {
+				delete(tree, item);
+			}
 			else
 				printf("\n\t%d is not present in the tree.", item);
 		}
