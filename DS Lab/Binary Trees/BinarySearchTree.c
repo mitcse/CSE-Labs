@@ -1,8 +1,9 @@
 //
 //  BinarySearchTree.c
-//  Binary search tree and shit.
+//  Binary search tree - Preorder, inorder, postorder traversal (Recursive), Level order (Recursive and iterative)
+//	Insertion, deletion, search, height, node count, leaf count.
 //
-//  Created by Avikant Saini on 10/19/15.
+//  Created by Avikant Saini on 10/30/15.
 //  Copyright © 2015 avikantz. All rights reserved.
 //
 
@@ -19,6 +20,45 @@ typedef struct TNode {
 } TNODE_t;
 
 typedef TNODE_t * TNODE_p_t;
+
+#pragma mark - Queue
+
+typedef struct Queue {
+	TNODE_p_t data;
+	struct Queue *next;
+} QUEUE_t;
+
+typedef QUEUE_t * QUEUE_p_t;
+
+QUEUE_p_t initQueue (TNODE_p_t data) {
+	QUEUE_p_t queue = (QUEUE_p_t)malloc(sizeof(QUEUE_t));
+	queue->data = data;
+	queue->next = NULL;
+}
+
+void insertQueue (QUEUE_p_t *queue, TNODE_p_t data) {
+	QUEUE_p_t temp = initQueue(data);
+	if (*queue == NULL) {
+		*queue = temp;
+		return;
+	}
+	QUEUE_p_t p = *queue;
+	while (p->next != NULL)
+		p = p->next;
+	p->next = temp;
+}
+
+TNODE_p_t deleteQueue (QUEUE_p_t *queue) {
+	if (*queue == NULL)
+		return NULL;
+	QUEUE_p_t temp = *queue;
+	*queue = temp->next;
+	return temp->data;
+}
+
+BOOL isEmptyQueue (QUEUE_p_t queue) {
+	return (queue == NULL);
+}
 
 #pragma mark - Tree creation
 
@@ -54,6 +94,26 @@ TNODE_p_t buildTree () {
 		}
 	} while (data != -99);
 	return root;
+}
+
+#pragma mark - Node count
+
+int nodeCount (TNODE_p_t root) {
+	if (root == NULL)
+		return 1;
+	int leftCount = nodeCount(root->left);
+	int rightCount = nodeCount(root->right);
+	return (leftCount + rightCount);
+}
+
+int leafCount (TNODE_p_t root) {
+	if (root == NULL)
+		return 0;
+	if (root->left == NULL && root->right == NULL)
+		return 1;
+	int leftCount = leafCount(root->left);
+	int rightCount = leafCount(root->right);
+	return (leftCount + rightCount);
 }
 
 #pragma mark - Height
@@ -109,16 +169,31 @@ void levelOrder (TNODE_p_t root) {
 		printLevel(root, i);
 }
 
+void levelOrderIter (TNODE_p_t root) {
+	if (root == NULL)
+		return;
+	QUEUE_p_t queue = initQueue(root);
+	while (!isEmptyQueue(queue)) {
+		TNODE_p_t temp = deleteQueue(&queue);
+		printf(" %d", temp->data);
+		if (temp->left != NULL)
+			insertQueue(&queue, temp->left);
+		if (temp->right != NULL)
+			insertQueue(&queue, temp->right);
+	}
+}
+
 #pragma mark - Search
 
 TNODE_p_t search (TNODE_p_t root, int item) {
 	if (root == NULL)
 		return NULL;
-	if (root->data == item)
+	if (item == root->data)
 		return root;
-	TNODE_p_t left = search(root->left, item);
-	TNODE_p_t right = search(root->right, item);
-	return (left != NULL)?left:((right != NULL)?right:NULL);
+	else if (item > root->data)
+		return search(root->right, item);
+	else
+		return search(root->left, item);
 }
 
 #pragma mark - Delete
@@ -151,9 +226,9 @@ TNODE_p_t delete (TNODE_p_t root, int item) {
 			return temp;
 		}
 		
-		TNODE_p_t temp = minValueNode(root->right); // node with two children: Get the inorder successor (smallest in the right subtree)
-		root->data = temp->data;  // Copy the inorder successor's content to this node
-		root->right = delete(root->right, temp->data);  // Delete the inorder successor
+		TNODE_p_t temp = minValueNode(root->right);
+		root->data = temp->data;
+		root->right = delete(root->right, temp->data);
 	}
 	return root;
 }
@@ -162,12 +237,14 @@ TNODE_p_t delete (TNODE_p_t root, int item) {
 
 int main (int argc, const char * argv []) {
 	
+	printf("\n-------------------------BINARY SEARCH TREE-------------------------\n");
+	
 	TNODE_p_t tree = buildTree();
 	
 	int choice;
 	do {
 		// TODO
-		printf("\n\n-------------------------------------------------------------\n\t 1. Rebuild tree.\n\t 2. Insert an item.\n\t 3. Search for item.\n\t 4. Delete an item.\n\t 5. Calculate height.\n\t 6. Calculate number of nodes.\n\t 7. Calculate number of leaves.\n\t 8. Preorder transversal.\n\t 9. Inorder transversal.\n\t10. Postorder transversal.\n\t11. Level order transversal.\n\tChoice: ");
+		printf("\n\n-------------------------------------------------------------\n\t 1. Rebuild tree.\n\t 2. Insert an item.\n\t 3. Search for item.\n\t 4. Delete an item.\n\t 5. Calculate height.\n\t 6. Calculate number of nodes.\n\t 7. Calculate number of leaves.\n\t 8. Preorder transversal.\n\t 9. Inorder transversal.\n\t10. Postorder transversal.\n\t11. Level order transversal.\n\t12. Level order transversal (Iterative).\n\tChoice: ");
 		scanf(" %d", &choice);
 		
 		if (choice == 1)
@@ -210,6 +287,14 @@ int main (int argc, const char * argv []) {
 			printf("\n\tHeight of the tree = %d.\n", height(tree));
 		}
 		
+		else if (choice == 6) {
+			printf("\n\tNumber of nodes in the tree = %d.\n", nodeCount(tree) - 1);
+		}
+		
+		else if (choice == 7) {
+			printf("\n\tNumber of leaves in the tree = %d.\n", leafCount(tree));
+		}
+		
 		else if (choice == 8) {
 			printf("\n\t   Preorder: ");
 			preorderTransversal(tree);
@@ -230,7 +315,12 @@ int main (int argc, const char * argv []) {
 			levelOrder(tree);
 		}
 		
-	} while (choice >= 1 && choice <= 11);
+		else if (choice == 12) {
+			printf("\n\tLevel order: ");
+			levelOrderIter(tree);
+		}
+		
+	} while (choice >= 1 && choice <= 12);
 	
 }
 
