@@ -168,8 +168,8 @@ public class DrawShapes extends Applet {
 
     public void drawHexagon (Graphics g, Point startPoint, Point endPoint) {
         int deav = (int)(endPoint.y - startPoint.y)/(endPoint.x + startPoint.x);
-        int xPoints[] = {startPoint.x, startPoint.x + deav, startPoint.x + deav * 2, endPoint.x - deav * 2, endPoint.x - deav, endPoint.x};
-        int yPoints[] = {startPoint.y, startPoint.y + deav, startPoint.y + deav * 2, endPoint.y - deav * 2, endPoint.y - deav, endPoint.y};
+        int xPoints[] = {startPoint.x, startPoint.x + deav, startPoint.x + deav * 2, endPoint.x, endPoint.x - deav * 2, endPoint.x - deav};
+        int yPoints[] = {startPoint.y, startPoint.y + deav, startPoint.y + deav * 2, endPoint.y, endPoint.y - deav * 2, endPoint.y - deav};
         int pointCount = 6;
         g.drawPolygon(xPoints, yPoints, pointCount);
     }
