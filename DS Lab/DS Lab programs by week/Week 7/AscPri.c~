@@ -1,0 +1,139 @@
+#include<stdio.h>
+#include<stdlib.h>
+#define MAX 100
+
+typedef struct
+{
+  int f, r;
+  int Q[2][MAX];
+}Queue;
+
+int isFull(Queue *q)
+{
+  if(q->r == MAX-1)
+    return 1;
+  return 0;
+
+}
+
+int isEmpty(Queue *q)
+{
+  if(q->f == -1)
+    return 1;
+  return 0;
+}
+
+void push(Queue *q, int ele, int pri)
+{
+  int loc, i;
+  loc = 0;
+  if(!isFull(q))
+    {
+    if(q->f == -1)
+      {
+	q->f = q->r = 0;
+	q->Q[0][0] = ele;
+	q->Q[1][0] = pri;
+	return;
+      }
+
+
+    else if(pri == 0)
+      {
+      for(i=(q->r)+1;i>0;i--)
+	{
+	  q->Q[0][i] = q->Q[0][i-1];
+	  q->Q[1][i] = q->Q[1][i-1];
+	}
+      q->Q[0][0] = ele;
+      q->Q[1][0] = pri;  
+      (q->r)++;
+      return;
+      }
+
+    if(q->Q[1][q->r] < pri)
+      {
+	++(q->r);
+	q->Q[0][q->r] = ele;
+	q->Q[1][q->r] = pri;
+	return;
+      }
+    
+    else
+      {
+	for(loc = 0; loc < (q->r)+1; loc++)
+	  {
+	    if(pri<=q->Q[1][loc])
+	      {
+		
+		for(i = (q->r); i > loc; i--)
+		  {
+		    q->Q[0][i+1] = q->Q[0][i];
+		    q->Q[1][i+1] = q->Q[1][i];
+		  }
+	      
+		q->Q[0][loc] = ele;
+		q->Q[1][loc] = pri;
+		(q->r)++;
+		return;
+	      }
+	  }
+      }
+
+
+    }
+  printf("Queue is empty!\n");
+}
+
+int pop(Queue *q){
+  if(!isEmpty(q)){
+    return (q->Q[0][(q->r)--]);
+  }
+  printf("Already empty!\n");
+  return -20;
+}
+
+void display(Queue *q){
+  int i;
+  printf("\n");
+  for(i = 0; i<=q->r; i++)
+    printf("%d ->", q->Q[0][i]);
+  printf("\n");
+  for(i = 0; i<=q->r; i++)
+    printf("%d ->", q->Q[1][i]);
+  printf("\n");
+}
+
+int main(){
+  Queue q;
+  q.f = q.r = -1;
+  int ch, ele, pri;
+  ch = 1;
+  while(ch!=4){
+    printf("\n1. Insert Element\n2. Delete Element\n3. Display queue\n4. Exit\nEnter choice: ");
+    scanf("%d", &ch);
+    switch(ch){
+    case 1:
+      printf("Enter element: ");
+      scanf("%d", &ele);
+      printf("Enter priority: ");
+      scanf("%d", &pri);
+      push(&q,ele,pri); 
+      break;
+    case 2:
+      ele = pop(&q);
+      if(ele!=-20)
+	printf("Element popped: %d", ele);
+      break;
+    case 3:
+      display(&q);
+      break;
+    case 4:
+      break;
+
+    }
+
+  }
+  
+  return 0;
+}

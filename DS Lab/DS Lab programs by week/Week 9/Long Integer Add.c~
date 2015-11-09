@@ -1,0 +1,150 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+
+#define SIZE 500
+
+typedef struct Node
+{
+	int value;
+	struct Node * next;
+	struct Node * prev;
+} NODE;
+
+NODE * createNode ()
+{
+	NODE *temp = (NODE *)malloc(sizeof(NODE));
+	temp->value = 0;
+	temp->prev = temp;
+	temp->next = temp;
+	return temp;
+}
+
+void insert (NODE *list, int val)
+{
+	NODE *temp = createNode();
+	NODE *p;
+	
+	temp->value = val;
+	temp->prev = list;
+	
+	list->next = temp;
+	
+	if (list->prev == list)
+	{
+		temp->next = list;
+		list->prev = temp;
+	}
+	
+	else
+	{
+		p = list->prev;
+		
+		while (p->prev != list)
+			p = p->prev;
+		
+		temp->next = p;
+		p->prev = temp;
+	}
+	(list->value)++;
+}
+
+void inputLongInteger (NODE *li)
+{
+	
+	int i;
+	char *longint = (char *)malloc(SIZE * sizeof(char));
+	scanf(" %s", longint);
+	
+	for (i = 0; i <= strlen(longint)/2; ++i)
+	{
+		char temp = *(longint + i);
+		*(longint + i) = *(longint + strlen(longint) - 1 - i);
+		*(longint + strlen(longint) - 1 - i) = temp;
+	}
+	
+	for (i = 0; i < strlen(longint); ++i)
+		insert(li, *(longint + i) - '0');
+	
+}
+
+NODE* createAndInputLongInteger ()
+{
+	NODE *li = createNode();
+	inputLongInteger(li);
+	return li;
+}
+
+NODE* addLongIntegers (NODE *lia, NODE *lib)
+{
+	NODE *lic = createNode();
+	
+	int carry = 0, sum = 0;
+	NODE *tempa = lia->prev;
+	NODE *tempb = lib->prev;
+	
+	while (tempa != lia && tempb != lib)
+	{
+		sum = tempa->value + tempb->value + carry;
+		carry = sum / 10;
+		sum = sum % 10;
+		insert(lic, sum);
+		tempa = tempa->prev;
+		tempb = tempb->prev;
+	}
+	while (tempa != lia)
+	{
+		sum = tempa->value + carry;
+		carry = sum / 10;
+		sum = sum % 10;
+		insert(lic, sum);
+		tempa = tempa->prev;
+	}
+	while (tempb != lib)
+	{
+		sum = tempb->value + carry;
+		carry = sum / 10;
+		sum = sum % 10;
+		insert(lic, sum);
+		tempb = tempb->prev;
+	}
+	if (carry != 0)
+		insert(lic, carry);
+	
+	return lic;
+}
+
+void displayLongInteger (NODE *longInteger)
+{
+	NODE *temp = longInteger->next;
+	while (temp != longInteger)
+	{
+		printf("%d", temp->value);
+		temp = temp->next;
+	}
+	printf("\n");
+}
+
+int main ()
+{
+	
+	printf("Enter A\n");
+	NODE *lia = createAndInputLongInteger();
+	printf("Enter B\n");
+	NODE *lib = createAndInputLongInteger();
+	
+	NODE *lic = addLongIntegers(lia, lib);
+	
+	printf("A = ");
+	displayLongInteger(lia);
+	printf("B = ");
+	displayLongInteger(lib);
+	
+	printf("A + B = ");
+	displayLongInteger(lic);
+	
+	printf("\n");
+	return 0;
+}
+

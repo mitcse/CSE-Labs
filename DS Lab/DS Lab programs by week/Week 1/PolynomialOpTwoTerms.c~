@@ -1,0 +1,118 @@
+#include<stdio.h>
+#include<iostream.h>
+
+void main()
+{
+	int **p;
+	int **q;
+	int **r;
+	int x1, x2, y1, y2, i, j, m, n;
+	printf("Enter max powers of x and y in first polynomial\n");
+	scanf("%d %d", &x1, &y1);
+	printf("Enter max powers of x and y in second polynomial\n");
+	scanf("%d %d", &x2, &y2);
+	if (x1>x2)
+	{
+		m = x1;
+	}
+	else
+	{
+		m = x2;
+	}
+	if (y1>y2)
+	{
+		n = y1;
+	}
+	else
+	{
+		n = y2;
+	}
+
+	// Dynamic initialisation 2D arrays
+
+	if (x1>x2)
+	{
+		if (y1>y2)
+		{
+			p = (int**) calloc(y1, sizeof(int*));
+			q = (int**) calloc(y1, sizeof(int*));
+			r = (int**) calloc(y1, sizeof(int*));
+			for (i=0; i<y1; i++)
+			{
+				p[i] = (int*) calloc(x1, sizeof(int));
+				q[i] = (int*) calloc(x1, sizeof(int));
+				r[i] = (int*) calloc(x1, sizeof(int));
+			}
+		}
+		else
+		{
+			p = (int**) calloc(y2, sizeof(int*));
+			q = (int**) calloc(y2, sizeof(int*));
+			r = (int**) calloc(y2, sizeof(int*));
+			for (i=0; i<y2; i++)
+			{
+				p[i] = (int*) calloc(x1, sizeof(int));
+				q[i] = (int*) calloc(x1, sizeof(int));
+				r[i] = (int*) calloc(x1, sizeof(int));
+			}
+		}
+	else
+	{
+		if (y1>y2)
+		{
+			p = (int**) calloc(y1, sizeof(int*));
+			q = (int**) calloc(y1, sizeof(int*));
+			r = (int**) calloc(y1, sizeof(int*));
+			for (i=0; i<y1; i++)
+			{
+				p[i] = (int*) calloc(x2, sizeof(int));
+				q[i] = (int*) calloc(x2, sizeof(int));
+				r[i] = (int*) calloc(x2, sizeof(int));
+			}
+		}
+		else
+		{
+			p = (int**) calloc(y2, sizeof(int*));
+			q = (int**) calloc(y2, sizeof(int*));
+			r = (int**) calloc(y2, sizeof(int*));
+			for (i=0; i<y2; i++)
+			{
+				p[i] = (int*) calloc(x2, sizeof(int));
+				q[i] = (int*) calloc(x2, sizeof(int));
+				r[i] = (int*) calloc(x2, sizeof(int));
+			}
+		}
+	}
+	printf("Enter first matrix\n");
+	for (i=0; i<x1; i++)
+	{
+		for (j=0; j<y1; j++)]
+		{
+			scanf("%d", &p[i][j];
+		}
+	}
+	printf("Enter second matrix\n");
+	for (i=0; i<x2; i++)
+	{
+		for(j=0; j<y2; j++)
+		{
+			scanf("%d", &q[i][j]);
+		}
+	}
+	for (i=0; i<m; i++)
+	{
+		for (j=0; j<n; j++)
+		{
+			r[i][j] = p[i][j] + q[i][j];
+		}
+	}
+	printf("Sum of matrices is\n");
+	for (i=0; i<m; i++)
+	{
+		for(j=0; j<n; j++)
+		{
+			printf("%d", r[i][j]);
+		}
+		printf("\n");
+	}
+}
