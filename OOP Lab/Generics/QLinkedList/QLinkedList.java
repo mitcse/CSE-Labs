@@ -8,12 +8,12 @@
 
 import java.util.*;
 
-class Node<Type> {
+class Node<T> {
 	
-	Type data;
-	Node<Type> next;
+	T data;
+	Node<T> next;
 
-	public Node (Type data) {
+	public Node (T data) {
 		this.data = data;
 		this.next = null;
 	}
@@ -25,12 +25,12 @@ class Node<Type> {
 
 }
 
-class List<Type> {
+class List<T> {
 
-	Node<Type> head;
+	Node<T> head;
 
-	public void insertFront (Type data) {
-		Node<Type> temp = new Node<Type>(data);
+	public void insertFront (T data) {
+		Node<T> temp = new Node<T>(data);
 		if (head == null)
 			head = temp;
 		else {
@@ -39,41 +39,44 @@ class List<Type> {
 		}
 	}
 
-	public void insertRear (Type data) {
-		Node<Type> temp = new Node<Type>(data);
+	public void insertRear (T data) {
+		Node<T> temp = new Node<T>(data);
 		if (head == null)
 			head = temp;
 		else {
-			Node<Type> curr = head;
+			Node<T> curr = head;
 			while (curr.next != null)
 				curr = curr.next;
 			curr.next = temp;
 		}
 	}
 
-	public Type deleteFront () {
+	public T deleteFront () {
 		if (head == null)
 			return null;
-		Type data = head.data;
+		T data = head.data;
 		head = head.next;
 		return data;
 	}
 
-	public Type deleteRear () {
+	public T deleteRear () {
 		if (head == null)
 			return null;
-		Node<Type> temp = head;
-		while (temp.next != null)
+		Node<T> temp = head;
+		Node<T> tpre = head;
+		while (temp.next != null) {
+			tpre = temp;
 			temp = temp.next;
-		Type data = temp.data;
-		temp = null;
+		}
+		T data = temp.data;
+		tpre.next = null;
 		return data;
 	}
 
 	@Override
 	public String toString () {
 		String str = "\t";
-		Node<Type> temp = head;
+		Node<T> temp = head;
 		while (temp.next != null) {
 			str += temp.data + " -> ";
 			temp = temp.next;
@@ -84,7 +87,7 @@ class List<Type> {
 
 }
 
-public class QLinkedList {
+public class QLinkedList<T> {
 
 	public static void main (String [] args) {
 		
@@ -124,27 +127,27 @@ public class QLinkedList {
 						stringList.insertRear(sc.nextLine());
 				}
 
-				// else if (ch == 3) {
-				// 	Type item;
-				// 	if (lch == 1)
-				// 		item = integerList.deleteFront();
-				// 	else if (lch == 2)
-				// 		item = doubleList.deleteFront();
-				// 	else if (lch == 3)
-				// 		item = stringList.deleteFront();
-				// 	System.out.println("\n\tDeleted item: " + item);
-				// }
+				else if (ch == 3) {
+					Object item = null;
+					if (lch == 1)
+						item = integerList.deleteFront();
+					else if (lch == 2)
+						item = doubleList.deleteFront();
+					else if (lch == 3)
+						item = stringList.deleteFront();
+					System.out.println("\n\tDeleted item: " + item);
+				}
 
-				// else if (ch == 4) {
-				// 	Type item;
-				// 	if (lch == 1)
-				// 		item = integerList.deleteRear();
-				// 	else if (lch == 2)
-				// 		item = doubleList.deleteRear();
-				// 	else if (lch == 3)
-				// 		item = stringList.deleteRear();
-				// 	System.out.println("\n\tDeleted item: " + item);
-				// }
+				else if (ch == 4) {
+					Object item = null;
+					if (lch == 1)
+						item = integerList.deleteRear();
+					else if (lch == 2)
+						item = doubleList.deleteRear();
+					else if (lch == 3)
+						item = stringList.deleteRear();
+					System.out.println("\n\tDeleted item: " + item);
+				}
 
 				if (lch == 1)
 					System.out.println("\n\tInteger list: " + integerList);
@@ -156,10 +159,6 @@ public class QLinkedList {
 			} while (ch >= 1 && ch <= 4);
 
 		} while (lch >= 1 && lch <= 3);
-
-	}
-
-	public void operateOnLists () {
 
 	}
 

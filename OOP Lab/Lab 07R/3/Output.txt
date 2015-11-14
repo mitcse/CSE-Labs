@@ -1,7 +1,0 @@
-Options:
-(1) Create new Entry
-(2) Display all entries
-(0) Exit
-Your option: 1
-Enter the student details: 
-Name: Asd

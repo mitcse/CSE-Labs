@@ -7,9 +7,9 @@
 
 class Largest {
 
-	public static <Type extends Comparable<Type>> Type largest (Type a, Type b, Type c) {
+	public static <T extends Comparable<T>> T largest (T a, T b, T c) {
 		
-		Type max = a;
+		T max = a;
 		
 		if (b.compareTo(max) > 0)
 			max = b; 

@@ -12,16 +12,18 @@ import java.util.*;
 class SearchString implements Runnable {
 
 	String str;
+	String searchItem;
 
-	public SearchString (String str) {
+	public SearchString (String str, String searchItem) {
 		this.str = str;
+		this.searchItem = searchItem;
 	}
 
 	public void run () {
 		Scanner sc = new Scanner(str);
 		while (sc.hasNextLine()) {
 			String s = sc.nextLine();
-			if (s.contains(".java"))
+			if (s.contains(searchItem))
 				System.out.println("\t" + s);
 		}
 	}
@@ -32,7 +34,6 @@ public class SearchFileThreads {
 
 	public static void main (String [] args) throws IOException {
 		
-		FileInputStream fin = null;
 		Scanner sc = new Scanner(System.in);
 		Scanner fileScanner = null;
 
@@ -63,9 +64,10 @@ public class SearchFileThreads {
 			while (fileScanner.hasNextLine()) {
 				lineNo++;
 				if (lineNo % linesInOneThread == 0) {
-					sstrs[i] = new SearchString("" + sb);
+					sstrs[i] = new SearchString("" + sb, ".java");
 					threads[i] = new Thread(sstrs[i]);
 					threads[i].start();
+					Thread.sleep(1000);
 					sb = new StringBuffer("");
 				}
 				else
@@ -82,6 +84,9 @@ public class SearchFileThreads {
 			}
 
 		}
+		catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		finally {
 			fileScanner.close();
 		}
