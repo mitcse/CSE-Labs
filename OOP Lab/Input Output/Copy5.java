@@ -1,5 +1,5 @@
 //
-//	Copy2.java
+//	Copy4.java
 //	Copies the contents of a input file to output file passed as argument
 //
 //
@@ -8,36 +8,34 @@
 
 
 import java.io.*;
+import java.util.Scanner;
 
-public class Copy3 {
+public class Copy4 {
 
 	public static void main (String [] args) throws IOException, FileNotFoundException {
 
 		File source = null;
 		File dest = null;
 
-		InputStream is = null;
-		OutputStream os = null;
+		Scanner fs = null;
+		PrintWriter pw = null;
 
 		try {
 
 			source = new File(args[0]);
 			dest = new File(args[1]);
 
-			is = new FileInputStream(source);
-			os = new FileOutputStream(dest);
+			fs = new Scanner(source);
+			pw = new PrintWriter(dest);
 
-			byte[] buffer = new byte[1024];
-			int length;
-
-			while ((length = is.read(buffer)) > 0) {
-				os.write(buffer, 0, length);
+			while(fs.hasNextLine()) {
+				pw.println(fs.nextLine());
 			}
 
 		} 
 		finally {
-			is.close();
-			os.close();
+			fs.close();
+			pw.close();
 		}
 
 	}

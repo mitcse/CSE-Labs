@@ -30,11 +30,9 @@ public class NumberOperations {
 
         field1 = new JTextField("");
         field1.setHorizontalAlignment(JTextField.CENTER);
-        field1.setBorder(BorderFactory.createLineBorder(new Color(0x3A5069)));
 
         field2 = new JTextField("");
         field2.setHorizontalAlignment(JTextField.CENTER);
-        field2.setBorder(BorderFactory.createLineBorder(new Color(0x3A5069)));
 
         JPanel fieldPanel = new JPanel(new GridLayout(3, 1));
 
