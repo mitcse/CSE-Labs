@@ -21,7 +21,7 @@ typedef struct TNode {
 
 typedef TNODE_t * TNODE_p_t;
 
-#pragma mark - Queue
+#pragma mark - Queue utilities
 
 typedef struct Queue {
 	TNODE_p_t data;
@@ -34,6 +34,7 @@ QUEUE_p_t initQueue (TNODE_p_t data) {
 	QUEUE_p_t queue = (QUEUE_p_t)malloc(sizeof(QUEUE_t));
 	queue->data = data;
 	queue->next = NULL;
+	return queue;
 }
 
 void insertQueue (QUEUE_p_t *queue, TNODE_p_t data) {
@@ -60,6 +61,33 @@ BOOL isEmptyQueue (QUEUE_p_t queue) {
 	return (queue == NULL);
 }
 
+#pragma mark - Array utilities
+
+void insertionSort (int *arr, int l) {
+	int i, j, x;
+	for (i = 1; i < l - 1; ++i) {
+		x = *(arr + i);
+		j = i;
+		while (j > 0 && *(arr + j - 1) > x) {
+			*(arr + j) = *(arr + j - 1);
+			--j;
+		}
+		*(arr + j) = x;
+	}
+}
+
+int * inputAnArray (int *size) {
+	printf("\n\tEnter number of elements in the array: ");
+	scanf(" %d", size);
+	int n = *size;
+	int i;
+	int *arr = (int *)calloc(n, sizeof(int));
+	printf("\tEnter %d elements: ", n);
+	for (i = 0; i < n; ++i)
+		scanf(" %d", (arr+i));
+	return arr;
+}
+
 #pragma mark - Tree creation
 
 TNODE_p_t initNode (int data) {
@@ -71,29 +99,55 @@ TNODE_p_t initNode (int data) {
 }
 
 TNODE_p_t insert (TNODE_p_t root, int data) {
+	
 	if (root == NULL)
 		return initNode(data);
+	
 	if (data < root->data)
 		root->left = insert(root->left, data);
+	
 	else if (data > root->data)
 		root->right = insert(root->right, data);
+	
 	return root;
 }
 
 TNODE_p_t buildTree () {
+	
 	int data;
 	TNODE_p_t root = NULL;
+	
 	do {
 		printf("\tEnter data (-99 for break): ");
 		scanf(" %d", &data);
+		
 		if (data != -99) {
 			if (root == NULL)
 				root = initNode(data);
 			else
 				insert(root, data);
+			
 		}
 	} while (data != -99);
+	
 	return root;
+}
+
+TNODE_p_t buildTreeFromSortedArray (int *arr, int start, int end) {
+	
+	if (start > end)
+		return NULL;
+	
+	int mid = (start + end)/2;
+	
+	TNODE_p_t root = initNode(*(arr + mid));
+	
+	root->left = buildTreeFromSortedArray(arr, start, mid - 1);
+	root->right = buildTreeFromSortedArray(arr, mid + 1, end);
+	
+	return root;
+	
+	return NULL;
 }
 
 #pragma mark - Node count
@@ -118,11 +172,11 @@ int leafCount (TNODE_p_t root) {
 
 #pragma mark - Height
 
-int height (TNODE_p_t root) {
+int heightTree (TNODE_p_t root) {
 	if (root == NULL)
 		return 0;
-	int leftHeight = height(root->left);
-	int rightHeight = height(root->right);
+	int leftHeight = heightTree(root->left);
+	int rightHeight = heightTree(root->right);
 	return (leftHeight > rightHeight)?(leftHeight + 1):(rightHeight + 1);
 }
 
@@ -164,7 +218,7 @@ void printLevel (TNODE_p_t root, int level) {
 }
 
 void levelOrder (TNODE_p_t root) {
-	int h = height(root), i;
+	int h = heightTree(root), i;
 	for (i = 1; i <= h; ++i)
 		printLevel(root, i);
 }
@@ -185,15 +239,15 @@ void levelOrderIter (TNODE_p_t root) {
 
 #pragma mark - Search
 
-TNODE_p_t search (TNODE_p_t root, int item) {
+TNODE_p_t searchTree (TNODE_p_t root, int item) {
 	if (root == NULL)
 		return NULL;
 	if (item == root->data)
 		return root;
 	else if (item > root->data)
-		return search(root->right, item);
+		return searchTree(root->right, item);
 	else
-		return search(root->left, item);
+		return searchTree(root->left, item);
 }
 
 #pragma mark - Delete
@@ -233,6 +287,86 @@ TNODE_p_t delete (TNODE_p_t root, int item) {
 	return root;
 }
 
+#pragma mark - Inorder predecessor and successor
+
+/**
+ *	Recursive way
+ *	If root is null, return;
+ *
+ *	If the item is found:
+ *
+ *		If the left subtree of root is not null,
+ *			The predecessor would be the right most child of root's left subtree.
+ *
+ *		If the right subtree of root is not null,
+ *			The successor would be the left most child of root's right subtree.
+ *
+ *	If the item is lesser than root's data, set the successor to the root, and search in the left subtree.
+ *
+ *	If the item is greater than root's data, set the predecessor to the root, and search in the right subtree.
+ *
+ *	Easy way: Store the inorder traversal into a list/arr/string/whatever, find the element and its previous and next elements. To get where the element will be present, of not already in the tree, just get it from the list.
+ */
+
+void predecessorSuccessor (TNODE_p_t root, int item, TNODE_p_t *predecessor, TNODE_p_t *successor) {
+	
+	if (root == NULL)
+		return;
+	
+	if (root->data == item) {
+		
+		if (root->left != NULL) {
+			TNODE_p_t temp = root->left;
+			while (temp->right != NULL)
+				temp = temp->right;
+			*predecessor = temp;
+		}
+		
+		if (root->right != NULL) {
+			TNODE_p_t temp = root->right;
+			while (temp->left != NULL)
+				temp = temp->left;
+			*successor = temp;
+		}
+		
+		return;
+	}
+	else if (item < root->data) {
+		*successor = root;
+		predecessorSuccessor(root->left, item, predecessor, successor);
+	}
+	else if (item > root->data) {
+		*predecessor = root;
+		predecessorSuccessor(root->right, item, predecessor, successor);
+	}
+	
+}
+
+#pragma mark - Lowest common ancestor
+
+/**
+ *	Assume both the items are present in the BST.
+ *	Use the property of the BST.
+ *
+ *	If both items are smaller than the root, the LCA lies in the left subtree
+ *	If both items are greatrer than the root, the LCA lies in the right subtree
+ *	Else LCA is the current root node.
+ */
+
+TNODE_p_t lowestCommonAncestor (TNODE_p_t root, int itema, int itemb) {
+	
+	if (root == NULL)
+		return NULL;
+	
+	if (root->data > itema && root->data > itemb)
+		return lowestCommonAncestor(root->left, itema, itemb);
+	
+	if (root->data < itema && root->data < itema)
+		return lowestCommonAncestor(root->right, itema, itemb);
+	
+	return root;
+}
+
 #pragma mark - Main
 
 int main (int argc, const char * argv []) {
@@ -244,27 +378,58 @@ int main (int argc, const char * argv []) {
 	int choice;
 	do {
 		// TODO
-		printf("\n\n-------------------------------------------------------------\n\t 1. Rebuild tree.\n\t 2. Insert an item.\n\t 3. Search for item.\n\t 4. Delete an item.\n\t 5. Calculate height.\n\t 6. Calculate number of nodes.\n\t 7. Calculate number of leaves.\n\t 8. Preorder transversal.\n\t 9. Inorder transversal.\n\t10. Postorder transversal.\n\t11. Level order transversal.\n\t12. Level order transversal (Iterative).\n\tChoice: ");
+		printf("\n\n-------------------------------------------------------------");
+		printf("\n\t 1. Rebuild tree.");
+		printf("\n\t 2. Insert an item.");
+		printf("\n\t 3. Search for item.");
+		printf("\n\t 4. Delete an item.");
+		printf("\n\t 5. Calculate height.");
+		printf("\n\t 6. Calculate number of nodes.");
+		printf("\n\t 7. Calculate number of leaves.");
+		printf("\n\t 8. Preorder transversal.");
+		printf("\n\t 9. Inorder transversal.");
+		printf("\n\t10. Postorder transversal.");
+		printf("\n\t11. Level order transversal.");
+		printf("\n\t12. Level order transversal (Iterative)");
+		printf("\n\t13. Inorder successor and predecessor.");
+		printf("\n\t14. Lowest common ancestor.");
+		printf("\n\tChoice: ");
 		scanf(" %d", &choice);
 		
-		if (choice == 1)
-			tree = buildTree();
+		if (choice == 1) {
+			int bch;
+			printf("\n\t1. Rebuild using recursion.\n\t2. Rebuild a balanced BST from an array.\n\tChoice: ");
+			scanf(" %d", &bch);
+			if (bch == 1) {
+				tree = buildTree();
+				printf("\n\tTree is successfully rebuilt.");
+			}
+			else if (bch == 2) {
+				int n;
+				int *arr = inputAnArray(&n);
+				insertionSort(arr, n);
+				tree = buildTreeFromSortedArray(arr, 0, n-1);
+				printf("\n\tTree is successfully rebuilt.");
+			}
+		}
 		
 		else if (choice == 2) {
 			int item;
 			printf("\n\tEnter item to be inserted: ");
 			scanf(" %d", &item);
-			if (search(tree, item) != NULL)
+			if (searchTree(tree, item) != NULL)
 				printf("\n\tItem already present!\n\n");
-			else
+			else {
 				insert(tree, item);
+				printf("\n\t%d is successfully inserted to the tree.", item);
+			}
 		}
 		
 		else if (choice == 3) {
 			int item;
 			printf("\n\tEnter item to be searched: ");
 			scanf(" %d", &item);
-			TNODE_p_t element = search(tree, item);
+			TNODE_p_t element = searchTree(tree, item);
 			if (element != NULL)
 				printf("\n\t%d is present in the tree. (%p)", item, element);
 			else
@@ -275,16 +440,17 @@ int main (int argc, const char * argv []) {
 			int item;
 			printf("\n\tEnter item to be deleted: ");
 			scanf(" %d", &item);
-			TNODE_p_t element = search(tree, item);
+			TNODE_p_t element = searchTree(tree, item);
 			if (element != NULL) {
 				delete(tree, item);
+				printf("\n\t%d is successfully deleted from the tree.", item);
 			}
 			else
 				printf("\n\t%d is not present in the tree.", item);
 		}
 		
 		else if (choice == 5) {
-			printf("\n\tHeight of the tree = %d.\n", height(tree));
+			printf("\n\tHeight of the tree = %d.\n", heightTree(tree));
 		}
 		
 		else if (choice == 6) {
@@ -320,7 +486,43 @@ int main (int argc, const char * argv []) {
 			levelOrderIter(tree);
 		}
 		
-	} while (choice >= 1 && choice <= 12);
+		else if (choice == 13) {
+			int item;
+			printf("\n\tEnter item to get the inorder successor and predessor for: ");
+			scanf(" %d", &item);
+			TNODE_p_t searchResult = searchTree(tree, item);
+			if (searchResult != NULL) {
+				TNODE_p_t pred = NULL, succ = NULL;
+				predecessorSuccessor(tree, item, &pred, &succ);
+				if (pred == NULL)
+					pred = searchResult;
+				if (succ == NULL)
+					succ = searchResult;
+				printf("\n\tPredecessor: %d (%p)", pred->data, pred);
+				printf("\n\t  Successor: %d (%p)", succ->data, succ);
+			}
+			else
+				printf("\n\t%d is not present in the tree.", item);
+		}
+		
+		else if (choice == 14) {
+			int itema, itemb;
+			printf("\n\tEnter the two numbers to find the LCA: ");
+			scanf(" %d", &itema);
+			scanf(" %d", &itemb);
+			TNODE_p_t searcha = searchTree(tree, itema);
+			TNODE_p_t searchb = searchTree(tree, itemb);
+			if (searcha == NULL)
+				printf("\n\t'%d' is not present in the tree.", itema);
+			if (searchb == NULL)
+				printf("\n\t'%d' is not present in the tree.", itemb);
+			if (searcha != NULL && searchb != NULL) {
+				TNODE_p_t lca = lowestCommonAncestor(tree, itema, itemb);
+				printf("\n\tLCA (%d, %d) = %d (%p).", itema, itemb, lca->data, lca);
+			}
+		}
+		
+	} while (choice >= 1 && choice <= 14);
 	
 }
 
