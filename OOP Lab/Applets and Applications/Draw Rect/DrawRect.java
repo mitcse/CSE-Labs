@@ -17,7 +17,7 @@ import java.util.*;
 public class DrawRect extends Applet {
 
     Point startPoint, endPoint;
-    ArrayList startPoints, endPoints;
+    ArrayList<Point> startPoints, endPoints;
 
     public DrawRect () {
 

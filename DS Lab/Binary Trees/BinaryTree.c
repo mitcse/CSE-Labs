@@ -292,6 +292,57 @@ void postorderIterative (TNODE_p_t root) {
 	}
 }
 
+#pragma mark - BST checker
+
+void inorderToStack (TNODE_p_t root, STACK_p_t *stack) {
+	if (root != NULL) {
+		inorderToStack(root->left, stack);
+		push(*stack, root);
+		inorderToStack(root->right, stack);
+	}
+}
+
+BOOL isBST (TNODE_p_t root) {
+	
+	STACK_p_t stack = initStack();
+	inorderToStack(root, &stack);
+	
+	if (isEmpty(stack))
+		return YES;
+	
+	TNODE_p_t last = pop(stack);
+	
+	while (!isEmpty(stack)) {
+		
+		TNODE_p_t slast = pop(stack);
+		
+		if (strcmp(last->data, slast->data) < 0)
+			return NO;
+	}
+	
+	return YES;
+}
+
+#pragma mark - Mirror Checker
+
+BOOL isMirror (TNODE_p_t root) {
+	
+	STACK_p_t stack = initStack();
+	inorderToStack(root, &stack);
+	
+	if (stack->tos < 1)
+		return YES;
+	
+	int i;
+	for (i = 0; i <= stack->tos/2; ++i) {
+		TNODE_p_t nodei = *(stack->arr + i);
+		TNODE_p_t nodeli = *(stack->arr + stack->tos - i);
+		if (strcmp(nodei->data, nodeli->data) != 0)
+			return NO;
+	}
+	
+	return YES;
+}
 
 #pragma mark - Main
 
@@ -303,7 +354,7 @@ int main (int argc, const char * argv []) {
 	int choice;
 	do {
 		printf("\n---------------------------------------------------------------------");
-		printf("\n\t0. Rebuild tree (recursive)\n\t1. Insert element (iterative)\n\t2. Insert element (recursive)\n\t3. Preorder transversal (recursive)\n\t4. Preorder transversal (iterative)\n\t5. Inorder transversal (recursive)\n\t6. Inorder transversal (iterative)\n\t7. Postorder transversal (recursive)\n\t8. Postorder transversal (iterative)\n\t9. Level order transversal (recursive)\n\t10. Search for an item (recursive)\n\tEnter choice: ");
+		printf("\n\t0. Rebuild tree (recursive)\n\t1. Insert element (iterative)\n\t2. Insert element (recursive)\n\t3. Preorder transversal (recursive)\n\t4. Preorder transversal (iterative)\n\t5. Inorder transversal (recursive)\n\t6. Inorder transversal (iterative)\n\t7. Postorder transversal (recursive)\n\t8. Postorder transversal (iterative)\n\t9. Level order transversal (recursive)\n\t10. Search for an item (recursive)\n\t11. Check if it's BST.\n\t12. Check if it's a Mirror.\n\tEnter choice: ");
 		scanf(" %d", &choice);
 		
 		String item = initString(SIZE);
@@ -351,7 +402,8 @@ int main (int argc, const char * argv []) {
 				levelOrder(tree);
 				break;
 				
-			case 10: printf("\tEnter item to be searched: ");
+			case 10: {
+				printf("\tEnter item to be searched: ");
 				scanf(" %s", item);
 				TNODE_p_t loc = search(tree, item);
 				if (loc != NULL)
@@ -359,12 +411,37 @@ int main (int argc, const char * argv []) {
 				else
 					printf("\n\t'%s' is not present in the tree.\n", item);
 				break;
+			}
+				
+			case 11: {
+				if (isBST(tree)) {
+					printf("\n\tTree is BST. Inorder: ");
+					inorderRecursive(tree);
+				}
+				else {
+					printf("\n\tTree is not a BST. Inorder: ");
+					inorderRecursive(tree);
+				}
+				break;
+			}
+				
+			case 12: {
+				if (isMirror(tree)) {
+					printf("\n\tTree is a mirror. Inorder: ");
+					inorderRecursive(tree);
+				}
+				else {
+					printf("\n\tTree is not a mirror. Inorder: ");
+					inorderRecursive(tree);
+				}
+				break;
+			}
 				
 			default: break;
 				
 		}
 		
-	} while (choice >= 0 && choice <= 10);
+	} while (choice >= 0 && choice <= 12);
 	
 }
 

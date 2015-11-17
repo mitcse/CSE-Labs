@@ -28,9 +28,11 @@ typedef struct Stack {
 
 typedef STACK_t * STACK_p_t;
 
-void initStack (STACK_p_t stack) {
+STACK_p_t initStack () {
+	STACK_p_t stack = (STACK_p_t)malloc(sizeof(STACK_t));
 	stack->arr = (char *)calloc(SIZE, sizeof(char));
 	stack->tos = -1;
+	return stack;
 }
 
 // Stack methods for character stack
@@ -120,10 +122,8 @@ int operatorPrecedence (char op) {
 
 char * toPostfix (char * exp) {
 	
-	STACK_p_t postfix = (STACK_p_t)calloc(SIZE, sizeof(STACK_t));
-	STACK_p_t operator = (STACK_p_t)calloc(SIZE, sizeof(STACK_t));
-	initStack(postfix);
-	initStack(operator);
+	STACK_p_t postfix = initStack();
+	STACK_p_t operator = initStack();
 	
 	int l = (int)strlen(exp);
 	int i;

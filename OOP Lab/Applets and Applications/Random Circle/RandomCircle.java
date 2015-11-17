@@ -25,6 +25,8 @@ public class RandomCircle extends Applet {
     private Panel labelPanel;
 
     public RandomCircle () {
+    
+    	setLayout(new FlowLayout());
 
         redrawButton = new Button("Redraw");
         redrawButton.addKeyListener(new KeyAdapter() {
@@ -56,8 +58,8 @@ public class RandomCircle extends Applet {
         labelPanel.add(circumferenceLabel);
         labelPanel.add(areaLabel);
 
-        add(labelPanel);
         add(redrawButton);
+        add(labelPanel);
     }
 
     @Override
@@ -90,8 +92,10 @@ public class RandomCircle extends Applet {
     @Override
     public void paint (Graphics g) {
         super.paint(g);
+        Graphics2D g2 = (Graphics2D)g;
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g.setColor(new Color(0x3A5069));
-        g.drawOval(40, 80, (int) getDiameter(), (int) getDiameter());
+        g.drawOval(120, 120, (int) getDiameter(), (int) getDiameter());
         radiusLabel.setText("Radius = " + String.format("%.2f", getRadius()));
         diamaterLabel.setText("Diameter = " + String.format("%.2f", getDiameter()));
         circumferenceLabel.setText("Circumference = " + String.format("%.2f", getCircumference()));

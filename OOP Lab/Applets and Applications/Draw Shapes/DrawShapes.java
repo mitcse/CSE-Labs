@@ -10,11 +10,11 @@ import java.applet.*;
 import java.awt.event.*;
 import java.util.*;
 
-/* <applet code="DrawShapes" width=848 height=480>
+/* <applet code="DrawShapes" width=848 height=480 align=absmiddle>
  * </applet>
  * */
 
- enum ShapeType {
+enum ShapeType {
     ShapeTypeOval,
     ShapeTypeArc,
     ShapeTypeRect,
@@ -36,7 +36,7 @@ public class DrawShapes extends Applet {
 
     CheckboxGroup checkBoxGroup;
 
-    final String kButtonTitles [] = {"Rectangle", "Rounded Rectangle", "Line", "Arc", "Oval", "Hexagon Bezier"};
+    final String kButtonTitles [] = {"Rectangle", "Rounded Rectangle", "Line", "Arc", "Oval", "Bezier"};
     final ShapeType kShapeTypes [] = {ShapeType.ShapeTypeRect, ShapeType.ShapeTypeRoundRect, ShapeType.ShapeTypeLine, ShapeType.ShapeTypeArc, ShapeType.ShapeTypeOval, ShapeType.ShapeTypeHexagon};
 
     public DrawShapes () {
@@ -76,6 +76,8 @@ public class DrawShapes extends Applet {
     @Override
     public void init () {
         super.init();
+        
+        setLayout(new FlowLayout());
 
         startPoint = new Point(0, 0);
         endPoint = new Point(0, 0);
@@ -111,6 +113,8 @@ public class DrawShapes extends Applet {
     @Override
     public void paint (Graphics g) {
         super.paint(g);
+        Graphics2D g2 = (Graphics2D)g;
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g.setColor(new Color(0xABABAB));
         drawShape(g, shapeType, startPoint, endPoint);
         showStatus("Mouse: Start: " + pointString(startPoint) + ", End: " + pointString(endPoint));
@@ -165,11 +169,14 @@ public class DrawShapes extends Applet {
     public void drawOval (Graphics g, Point startPoint, Point endPoint) {
         g.drawOval(Math.min(startPoint.x, endPoint.x), Math.min(startPoint.y, endPoint.y), Math.abs(endPoint.x - startPoint.x), Math.abs(endPoint.y - startPoint.y));
     }
+    
+    public int randomValue (int lb, int ub) {
+    	return (int)Math.random()*lb + (ub - lb);
+    }
 
     public void drawHexagon (Graphics g, Point startPoint, Point endPoint) {
-        int deav = (int)(endPoint.y - startPoint.y)/(endPoint.x + startPoint.x);
-        int xPoints[] = {startPoint.x, startPoint.x + deav, startPoint.x + deav * 2, endPoint.x, endPoint.x - deav * 2, endPoint.x - deav};
-        int yPoints[] = {startPoint.y, startPoint.y + deav, startPoint.y + deav * 2, endPoint.y, endPoint.y - deav * 2, endPoint.y - deav};
+        int xPoints[] = {startPoint.x, startPoint.x + randomValue(20, 80), startPoint.x + randomValue(80, 160), endPoint.x, endPoint.x - randomValue(20, 100), endPoint.x - randomValue(80, 160)};
+        int yPoints[] = {startPoint.y, startPoint.y + randomValue(20, 80), startPoint.y + randomValue(80, 160), endPoint.y, endPoint.y - randomValue(20, 100), endPoint.y - randomValue(80, 160)};
         int pointCount = 6;
         g.drawPolygon(xPoints, yPoints, pointCount);
     }

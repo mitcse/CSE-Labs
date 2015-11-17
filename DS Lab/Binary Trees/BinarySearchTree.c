@@ -207,8 +207,10 @@ void postorderTransversal (TNODE_p_t root) {
 }
 
 void printLevel (TNODE_p_t root, int level) {
+	
 	if (root == NULL)
 		return;
+	
 	if (level == 1)
 		printf(" %d", root->data);
 	else {
@@ -218,9 +220,12 @@ void printLevel (TNODE_p_t root, int level) {
 }
 
 void levelOrder (TNODE_p_t root) {
-	int h = heightTree(root), i;
+	
+	int h = heightTree(root);
+	int i;
+	
 	for (i = 1; i <= h; ++i)
-		printLevel(root, i);
+		printLevel(root, i);	// Print a specific level
 }
 
 void levelOrderIter (TNODE_p_t root) {
@@ -240,17 +245,36 @@ void levelOrderIter (TNODE_p_t root) {
 #pragma mark - Search
 
 TNODE_p_t searchTree (TNODE_p_t root, int item) {
+	
 	if (root == NULL)
 		return NULL;
+	
 	if (item == root->data)
 		return root;
+	
 	else if (item > root->data)
 		return searchTree(root->right, item);
+	
 	else
 		return searchTree(root->left, item);
 }
 
 #pragma mark - Delete
+
+/**
+ *	Follow the search algorithm to find the element in the tree.
+ *
+ *	Case 1: If the node to be deleted has no children:
+ *		Set the coresponding link from the parent to null, and dispose it.
+ *
+ *	Case 2: If the node to be delete has one child (L or R):
+ *		Link the node's child to the parent, and dispose the node.
+ *
+ *	Case 3: If the node to be deleted has two children:
+ *		Find the minimum value in the right subtree of the node to be deleted (left most in the node's right)
+ *		Replace the value of the node to be deleted with the min value found above.
+ *		Delete the value from the node's right subtree.
+ */
 
 TNODE_p_t minValueNode (TNODE_p_t root) {
 	TNODE_p_t temp = root;
@@ -367,6 +391,25 @@ TNODE_p_t lowestCommonAncestor (TNODE_p_t root, int itema, int itemb) {
 	return root;
 }
 
+#pragma mark - Merge trees
+
+/**
+ *	Merges a tree into another one.
+ *	@param tree (TNODE_p_t *) The tree in which otree is to be merged
+ *	@param otree (TNODE_p_t) The tree to be merged to tree
+ */
+
+void mergeTrees (TNODE_p_t *tree, TNODE_p_t otree) {
+	
+	if (otree == NULL)
+		return;
+	
+	insert(*tree, otree->data);
+	
+	mergeTrees(tree, otree->left);
+	mergeTrees(tree, otree->right);
+}
+
 #pragma mark - Main
 
 int main (int argc, const char * argv []) {
@@ -393,6 +436,7 @@ int main (int argc, const char * argv []) {
 		printf("\n\t12. Level order transversal (Iterative)");
 		printf("\n\t13. Inorder successor and predecessor.");
 		printf("\n\t14. Lowest common ancestor.");
+		printf("\n\t15. Merge another BST to current Tree.");
 		printf("\n\tChoice: ");
 		scanf(" %d", &choice);
 		
@@ -522,7 +566,16 @@ int main (int argc, const char * argv []) {
 			}
 		}
 		
-	} while (choice >= 1 && choice <= 14);
+		else if (choice == 15) {
+			printf("\n\tStart entering data into the new tree:\n");
+			TNODE_p_t tree2 = buildTree();
+			mergeTrees(&tree, tree2);
+			printf("\n\tMerge successful.");
+			printf("\n\t    Inorder: ");
+			inorderTransversal(tree);
+		}
+		
+	} while (choice >= 1 && choice <= 15);
 	
 }
 
