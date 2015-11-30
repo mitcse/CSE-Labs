@@ -10,25 +10,29 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define SIZE 25
+#define SIZE 3
 #define UNDERFLOW_CHAR '\0'
+
+#define initString(size) (String)malloc(size * sizeof(char))
 
 /// Boolean type, just for readability
 
-typedef enum {
-	NO = 0,
-	YES = 1,
-} BOOL;
+typedef enum { NO, YES } BOOL;
+
+typedef char * String;
 
 typedef struct CircularQueue {
-	char ** arr;
+	String *arr;
 	int front;
 	int rear;
-} CQUEUE_t;
+} CQUEUE_t, *CQUEUE_p_t;
 
-/// CQUEUE_t pointer type @line You might as well use CQUEUE_t *
-
-typedef CQUEUE_t * CQUEUE_p_t;
+CQUEUE_p_t initQueue (int size) {
+	CQUEUE_p_t queue = (CQUEUE_p_t)calloc(SIZE, sizeof(CQUEUE_t));
+	queue->arr = (String *)calloc(SIZE, sizeof(String));
+	queue->front = queue->rear = -1;
+	return queue;
+}
 
 // Queue methods
 
@@ -44,7 +48,7 @@ BOOL isEmptyQueue (CQUEUE_t queue) {
 	return NO;
 }
 
-void insert (CQUEUE_p_t queue, char * item) {
+void insert (CQUEUE_p_t queue, String item) {
 	if (isFullQueue(*queue)) {
 		printf("\n\tQUEUE OVERFLOW!\n\n");
 		return;
@@ -58,13 +62,13 @@ void insert (CQUEUE_p_t queue, char * item) {
 	*(queue->arr + queue->rear) = item;
 }
 
-char * delete (CQUEUE_p_t queue) {
+String delete (CQUEUE_p_t queue) {
 	if (isEmptyQueue(*queue)) {
 		printf("\n\tQUEUE UNDERFLOW!\n\n");
 		return UNDERFLOW_CHAR;
 	}
 	
-	char * item = *(queue->arr + queue->front);
+	String item = *(queue->arr + queue->front);
 	
 	if (queue->front == queue->rear)
 		queue->front = queue->rear = -1;
@@ -89,9 +93,7 @@ void display (CQUEUE_t queue) {
 
 int main(int argc, const char * argv[]) {
 	
-	CQUEUE_p_t queue = (CQUEUE_p_t)calloc(SIZE, sizeof(CQUEUE_t));
-	queue->arr = (char **)calloc(SIZE, sizeof(char *));
-	queue->front = queue->rear = -1;
+	CQUEUE_p_t queue = initQueue(SIZE);
 	
 	char choice;
 	
@@ -99,7 +101,7 @@ int main(int argc, const char * argv[]) {
 		printf("\n------------------------------------------------------------\n | 1. Insert\n | 2. Delete\n | 3. Display Queue.\n | Q. Quit\n | Enter choice : ");
 		scanf(" %c", &choice);
 		
-		char * item = (char *)calloc(SIZE, sizeof(char));
+		String item = initString(SIZE);
 		
 		if (choice == '1') {
 			printf("\n | Enter item to be inserted: ");

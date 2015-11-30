@@ -410,6 +410,24 @@ void mergeTrees (TNODE_p_t *tree, TNODE_p_t otree) {
 	mergeTrees(tree, otree->right);
 }
 
+#pragma mark - Largest and smallest element
+
+void largestAndSmallest (TNODE_p_t root, int *max, int *min) {
+	
+	TNODE_p_t nodeLeft = root
+	TNODE_p_t nodeRight = root;
+	
+	while (nodeLeft->left != NULL)
+		nodeLeft = nodeLeft->left;
+	
+	while (nodeRight->right != NULL)
+		nodeRight = nodeRight->right;
+	
+	*min = nodeLeft->data;
+	*max = nodeRight->data;
+	
+}
+
 #pragma mark - Main
 
 int main (int argc, const char * argv []) {
@@ -437,6 +455,7 @@ int main (int argc, const char * argv []) {
 		printf("\n\t13. Inorder successor and predecessor.");
 		printf("\n\t14. Lowest common ancestor.");
 		printf("\n\t15. Merge another BST to current Tree.");
+		printf("\n\t16. Largest and smallest element.");
 		printf("\n\tChoice: ");
 		scanf(" %d", &choice);
 		
@@ -575,7 +594,13 @@ int main (int argc, const char * argv []) {
 			inorderTransversal(tree);
 		}
 		
-	} while (choice >= 1 && choice <= 15);
+		else if (choice == 16) {
+			int max, min;
+			largestAndSmallest(tree, &max, &min);
+			printf("\n\tLargest = %d, Smallest = %d.", max, min);
+		}
+		
+	} while (choice >= 1 && choice <= 16);
 	
 }
 

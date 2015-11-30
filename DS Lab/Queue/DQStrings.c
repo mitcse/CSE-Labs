@@ -21,11 +21,7 @@ typedef struct DoubleEndedQueue {
 	int front;
 	int rear;
 	int capacity;
-} DQUEUE_t;
-
-/// DQUEUE_t pointer type @line You might as well use DQUEUE_t *
-
-typedef DQUEUE_t * DQUEUE_p_t;
+} DQUEUE_t, *DQUEUE_p_t;
 
 // Queue methods
 
@@ -48,8 +44,8 @@ BOOL isEmptyQueue (DQUEUE_t queue) {
 }
 
 void insertRight (DQUEUE_p_t queue, char * item) {
-	if (isFullQueue(*queue)) {
-		printf("\n\tQUEUE FULL!\n\n");
+	if (queue->rear == SIZE - 1) {
+		printf("\n\tQUEUE RIGHT OVERFLOW\n\n");
 		return;
 	}
 	
@@ -57,15 +53,15 @@ void insertRight (DQUEUE_p_t queue, char * item) {
 		queue->front = queue->rear = 0;
 	else
 		queue->rear += 1;
-		
+	
 	queue->capacity += 1;
 	
 	*(queue->arr + queue->rear) = item;
 }
 
 void insertLeft (DQUEUE_p_t queue, char * item) {
-	if (isFullQueue(*queue)) {
-		printf("\n\tQUEUE FULL!\n\n");
+	if (!isEmptyQueue(*queue) && queue->front == 0) {
+		printf("\n\tQUEUE LEFT OVERFLOW!\n\n");
 		return;
 	}
 	
@@ -73,8 +69,8 @@ void insertLeft (DQUEUE_p_t queue, char * item) {
 		queue->front = queue->rear = 0;
 	else
 		queue->front -= 1;
-		
-	queue->capacity += 1;	
+	
+	queue->capacity += 1;
 	
 	*(queue->arr + queue->front) = item;
 }
@@ -87,22 +83,38 @@ char * deleteLeft (DQUEUE_p_t queue) {
 	
 	char * item = *(queue->arr + queue->front);
 	
+	queue->front += 1;
+	queue->capacity -= 1;
+	
 	if (isEmptyQueue(*queue))
 		queue->front = queue->rear = -1;
-	else
-		queue->front += 1;
-		
+	
+	return item;
+}
+
+char * deleteRight (DQUEUE_p_t queue) {
+	if (isEmptyQueue(*queue)) {
+		printf("\n\tQUEUE EMPTY!\n\n");
+		return UNDERFLOW_CHAR;
+	}
+	
+	char * item = *(queue->arr + queue->front);
+	
+	queue->rear -= 1;
 	queue->capacity -= 1;
+	
+	if (isEmptyQueue(*queue))
+		queue->front = queue->rear = -1;
 	
 	return item;
 }
 
 void display (DQUEUE_t queue) {
 	if (!isEmptyQueue(queue)) {
-		printf("\n | Current Queue : \n");
+		printf("\n | Current Queue (f = %d, r = %d, c = %d) : \n", queue.front, queue.rear, queue.capacity);
 		int i;
 		for (i = queue.front; i <= queue.rear; ++i)
-			printf("\t\t%s", *(queue.arr + i));
+			printf("\t\t%d | %s", i,  *(queue.arr + i));
 		printf("\n\n");
 	}
 }
@@ -116,7 +128,7 @@ int main(int argc, const char * argv[]) {
 	char choice;
 	
 	do {
-		printf("\n------------------------------------------------------------\n | 1. Insert Left\n | 2. Insert Right\n | 3. Delete Left\n | 4. Display Queue.\n | Q. Quit\n | Enter choice : ");
+		printf("\n------------------------------------------------------------\n | 1. Insert Left\n | 2. Insert Right\n | 3. Delete Left\n | 4. Delete Right\n | 5. Display Queue.\n | Q. Quit\n | Enter choice : ");
 		choice = getchar();
 		getchar();
 		
@@ -137,10 +149,15 @@ int main(int argc, const char * argv[]) {
 			if (item != UNDERFLOW_CHAR)
 				printf("\n | Deleted item: %s\n", item);
 		}
+		else if (choice == '4') {
+			item = deleteRight(queue);
+			if (item != UNDERFLOW_CHAR)
+				printf("\n | Deleted item: %s\n", item);
+		}
 		
 		display(*queue);
 		
-	} while (choice == '1' || choice == '2' || choice == '3' || choice == '4');
+	} while (choice >= '1' && choice <= '5');
 	
 	return 0;
 }

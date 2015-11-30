@@ -104,43 +104,51 @@ TNODE_p_t createNode () {
 
 void insertIterative (TNODE_p_t *root, String item) {
 	
-	int ch;
-	TNODE_p_t t = *root;
-	TNODE_p_t present = NULL;
-	TNODE_p_t newnode;
+	TNODE_p_t temp = *root, prev = *root;
 	
-	if (*root == NULL) {
+	if (temp == NULL) {
 		*root = initNode(item);
 		return;
 	}
 	
+	int ch = 0;
+	
 	do {
-		printf("\tCurrent: '%s' | 1. Left%s; 2. Right%s | Choice: ", t->data, ((t->left == NULL)?"(*)":""), ((t->right == NULL)?"(*)":""));
-		scanf(" %d", &ch);
-		present = t;
 		
-		if (ch == 1)
-			t = t->left;
-		else if (ch == 2)
-			t = t->right;
-		
-		if (t == NULL) {
-			newnode = initNode(item);
-			(ch == 1)?(present->left = newnode):(present->right = newnode);
+		if (temp == NULL) {
+			if (ch == 1)
+				prev->left = initNode(item);
+			else if (ch == 2)
+				prev->right = initNode(item);
 			return;
 		}
 		
+		prev = temp;
+		
+		printf("\n\tCurrent '%s' | 1. Left%s, 2. Right%s | Choice: ", temp->data, ((temp->left == NULL)?"(*)":""), ((temp->right == NULL)?"(*)":""));
+		scanf(" %d", &ch);
+		
+		if (ch == 1)
+			temp = temp->left;
+		
+		else if (ch == 2)
+			temp = temp->right;
+		
 	} while (YES);
+	
 }
 
 void insertRecursive (TNODE_p_t *root, String item) {
+	
 	if (*root == NULL) {
 		*root = initNode(item);
 		return;
 	}
+	
 	else {
 		int ch;
 		TNODE_p_t t = *root;
+		
 		printf("\tCurrent: '%s' | 1. Left%s; 2. Right%s | Choice: ", t->data, ((t->left == NULL)?"(*)":""), ((t->right == NULL)?"(*)":""));
 		scanf(" %d", &ch);
 		
@@ -154,13 +162,23 @@ void insertRecursive (TNODE_p_t *root, String item) {
 #pragma mark - Search
 
 TNODE_p_t search (TNODE_p_t root, String item) {
+	
 	if (root == NULL)
 		return NULL;
+	
 	if (strcmp(root->data, item) == 0)
 		return root;
+	
 	TNODE_p_t left = search(root->left, item);
+	
 	TNODE_p_t right = search(root->right, item);
-	return (left != NULL)?left:((right != NULL)?right:NULL);
+	
+	if (left != NULL)
+		return left;
+	if (right != NULL)
+		return right;
+	return NULL;
+	
 }
 
 #pragma mark - Recursive transversals
@@ -217,7 +235,7 @@ void levelOrder (TNODE_p_t root) {
 #pragma mark - Iterative transversals
 
 /**
- *	Initilize an empty stack.
+ *	Initialize an empty stack.
  *	if (stack is empty, or, node is not null)
  *		if (node is not null)
  *			visit node
@@ -229,13 +247,19 @@ void levelOrder (TNODE_p_t root) {
  */
 
 void preorderIterative (TNODE_p_t root) {
+	
 	STACK_p_t stack = initStack();
+	
 	TNODE_p_t temp = root;
+	
 	while (!isEmpty(stack) || temp != NULL) {
+		
 		if (temp != NULL) {
 			printf("%s ", temp->data);
+			
 			if (temp->right != NULL)
 				push(stack, temp->right);
+			
 			temp = temp->left;
 		}
 		else
@@ -244,7 +268,7 @@ void preorderIterative (TNODE_p_t root) {
 }
 
 /**
- *	Initilize an empty stack
+ *	Initialize an empty stack
  *	if (stack is not empty, or node is not null)
  *		if (node is not null)
  *			push node into the stack
@@ -256,40 +280,120 @@ void preorderIterative (TNODE_p_t root) {
  */
 
 void inorderIterative (TNODE_p_t root) {
+	
 	STACK_p_t stack = initStack();
+	
 	TNODE_p_t temp = root;
+	
 	while (!isEmpty(stack) || temp != NULL) {
+		
 		if (temp != NULL) {
 			push(stack, temp);
+			
 			temp = temp->left;
 		}
 		else {
 			temp = pop(stack);
+			
 			printf("%s ", temp->data);
+			
 			temp = temp->right;
 		}
 	}
 }
 
+/**
+ *	Initialize an empty stack
+ *	lastNode = null
+ *	while (stack is not empty or node is not null)
+ *		if (node is not null)
+ *			push node into the stack
+ *			node = node->left
+ *		else
+ *			peek = stack's top level node
+ *			if (peek->right is not null and lastNode != peek->right)
+ *				node = peek->right
+ *			else
+ *				visit peek
+ *				lastNode = pop stack
+ */
+
 void postorderIterative (TNODE_p_t root) {
+	
 	STACK_p_t stack = initStack();
+	
 	TNODE_p_t temp = root;
 	TNODE_p_t last = NULL;
+	
 	while (!isEmpty(stack) || temp != NULL) {
+		
 		if (temp != NULL) {
 			push(stack, temp);
+			
 			temp = temp->left;
 		}
 		else {
 			TNODE_p_t peek = *(stack->arr + stack->tos);
+			
 			if ((peek->right != NULL) && (last != peek->right))
 				temp = peek->right;
 			else {
 				printf("%s ", peek->data);
+				
 				last = pop(stack);
 			}
 		}
 	}
+}
+
+/**
+ *	node = root, initialize two stacks, say stack and pstack
+ *	push root to stack
+ *
+ *	do the following while (stack is not empty)
+ *		if (stack is not empty)
+ *			node = pop stack
+ *			push node to pstack
+ *			if (node->left is not null)
+ *				push node->left to stack
+ *			if (node->right is not null)
+ *				push node->right to stack
+ *
+ *	while (pstack is not empty)
+ *		visit pop pstack
+ */
+
+void postorderIterativeAlternative (TNODE_p_t root) {
+	
+	STACK_p_t stack = initStack();
+	STACK_p_t pstack = initStack();
+	
+	TNODE_p_t temp = root;
+	push(stack, temp);
+	
+	do {
+		
+		if (!isEmpty(stack)) {
+			
+			temp = pop(stack);
+			
+			push(pstack, temp);
+			
+			if (temp->left != NULL)
+				push(stack, temp->left);
+			
+			if (temp->right != NULL)
+				push(stack, temp->right);
+			
+		}
+		
+	} while (!isEmpty(stack));
+	
+	while (!isEmpty(pstack)) {
+		temp = pop(pstack);
+		printf("%s ", temp->data);
+	}
+	
 }
 
 #pragma mark - BST checker
@@ -396,6 +500,8 @@ int main (int argc, const char * argv []) {
 				
 			case 8: printf("\n\tPostorder (Iter): ");
 				postorderIterative(tree);
+				printf("\n\tPostorder (Alter): ");
+				postorderIterativeAlternative(tree);
 				break;
 				
 			case 9: printf("\n\n\tLevel Order: ");
