@@ -11,7 +11,7 @@ import java.util.*;
 
 public class FileDetails {
 
-	public static void main (String [] args) throws IOException {
+	public static void main (String [] args) throws Exception {
 		
 		FileInputStream fin = null;
 		Scanner fileScanner = null;
@@ -49,12 +49,14 @@ public class FileDetails {
 			fileScanner.close();
 		}
 
-		System.out.println(	"\n\t File name | " + args[0] +
-							"\n\t     Lines | " + linesCount + 
-							"\n\t     Words | " + wordsCount + 
-							"\n\tCharacters | " + charactersCount + 
-							"\n\t    Digits | " + digitsCount + 
-							"\n\t   Special | " + specialCharacters + "\n\n");
+		PrintWriter pw = new PrintWriter(System.out, true);
+
+		pw.println(	"\n\t File name | " + args[0] +
+					"\n\t     Lines | " + linesCount + 
+					"\n\t     Words | " + wordsCount + 
+					"\n\tCharacters | " + charactersCount + 
+					"\n\t    Digits | " + digitsCount + 
+					"\n\t   Special | " + specialCharacters + "\n\n");
 
 	}
 

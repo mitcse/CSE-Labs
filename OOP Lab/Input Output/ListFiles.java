@@ -32,13 +32,16 @@ public class ListFiles {
 		
 		for (File file: paths) {
 
-			if (file.isDirectory())
-				printContents(file.listFiles(), tabLength + 1);
-
 			for (int i = 0; i < tabLength; ++i)
 				System.out.print("\t");
 
-			System.out.println(file.getName());
+			if (file.isDirectory()) {
+				System.out.println(" > " + file.getName());
+				printContents(file.listFiles(), tabLength + 1);
+			}
+			else 
+				System.out.println(" | " + file.getName());
+
 		}
 
 	}
