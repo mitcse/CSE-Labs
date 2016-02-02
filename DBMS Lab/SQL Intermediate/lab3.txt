@@ -1,0 +1,57 @@
+Lab-2 : 1-15
+
+Lab-3 :
+	21:SQL> (select course_id from section where semester='Fall' and year=2009) union all (select
+ course_id from section where semester='Spring' and year=2010);
+
+	22:SQL> (select course_id from section where semester='Fall' and year=2009) intersect all (select
+ course_id from section where semester='Spring' and year=2010);
+
+	23:SQL> (select course_id from section where semester='Fall' and year=2009) minus (select
+ course_id from section where semester='Spring' and year=2010);
+
+	24:SQL> select avg(salary) from instructor where dept_name='Comp. Sci.';
+
+	25:SQL> select count(id) from teaches where semester='Spring' and year='2010';
+	
+	26:SQL> select count(id),course_id from takes group by course_id;
+
+	27:SQL> select dept_name,count(id) from student group by dept_name having count(id) > 1;
+
+	28:SQL> select dept_name,count(course_id) from course group by dept_name;
+
+	29:SQL> select dept_name,avg(salary) from instructor group by dept_name having avg(salary) > 42000;
+
+	30:SQL> (select course_id from course) minus (select distinct course_id from takes);
+
+	31:SQL> (select course_id from section where semester='Fall' and year=2009 and course_id in (select
+ course_id from section where semester='Spring' and year=2010);
+
+	32:SQL> select count(takes.id) from takes where course_id in (select course_id from teaches where id='45565');
+
+	33:SQL> select course_id from section where semester='Fall' and year=2009 and course_id not in (select course_id fr
+om section where semester='Spring' and year=2010);
+
+	34:SQL> select name from instructor where salary > some (select salary from instructor where dept_name='Biology');
+
+	35:SQL> select name from instructor where salary > all (select salary from instructor where dept_name='Biology');
+	
+	36:
+
+	37:
+
+	38:SQL> with T as (select course_id,count(course_id) as offered from section group by course_id) select course_id f
+rom T where offered<=1;
+
+	39:
+
+	40:SQL> with T as (select sum(salary) as Total from instructor group by dept_name) select max(Total) from T;
+
+	41:SQL> with T as (select dept_name,avg(salary) as avg_salary from instructor group by dept_name) select dept_name,
+avg_salary from T where avg_salary > 42000;
+
+	42:SQL> with T as (select max(budget) as max_budget from department) select dept_name from department,T where budge
+t=T.max_budget;
+
+	43:SQL> with T as (select dept_name,sum(salary) as tot_salary from instructor group by dept_name) select dept_name
+from T where tot_salary >(select avg(tot_salary) from T);
