@@ -1,0 +1,1 @@
+select salary, 100*round(salary/300) from Employee;

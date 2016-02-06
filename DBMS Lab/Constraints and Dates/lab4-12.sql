@@ -1,0 +1,1 @@
+select substr(dept_name, 3, 3) from department;

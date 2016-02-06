@@ -1,0 +1,1 @@
+select upper(name) from instructor;

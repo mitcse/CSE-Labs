@@ -1,0 +1,1 @@
+select last_day(dob), to_char(last_day(dob), 'DAY') from employee where empNo='002';

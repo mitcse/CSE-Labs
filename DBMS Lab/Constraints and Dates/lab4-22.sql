@@ -1,0 +1,1 @@
+select empName, next_day(add_months(dob, 60 * 12), 'Saturday') from Employee;
