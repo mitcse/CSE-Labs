@@ -11,10 +11,12 @@ start:
         mov ds,ax
         lea di,list
         mov bh,a
+
     do1:add bh,1
         cmp bh,a+1
-        je do4
+        je fnsh
         mov bl,count
+
     do2:add bl,1
         cmp bl,bh
         je do3
@@ -24,10 +26,12 @@ start:
         cmp ah,0
         je do1
         jne do2
+
     do3:mov [di],bh
         inc di
         jmp do1
-    do4:mov ah,4ch
+
+    fnsh:mov ah,4ch
         int 21h
         code ends
         end start
