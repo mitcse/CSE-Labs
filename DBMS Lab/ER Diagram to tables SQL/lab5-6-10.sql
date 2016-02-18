@@ -29,9 +29,9 @@ from XEmployee
 where salary between 50000 and 150000 and dno in
 	(select dno from XDepartment where dname='Machine Field');
 	
-# 10 (Doubtful...)
+# 10 
 	
--- select fname, lname, pno, dname
--- from XEmployee, XWorksOn, XDepartment
--- where ssn=essn and XEmployee.dno=XDepartment.dno
--- order by dname, lname, fname;
+ select fname, lname, pname, dname
+ from XEmployee, XWorksOn, XDepartment
+ where XEmployee.ssn=XWorksOn.ssn and XEmployee.dno=XDepartment.dno and XWorksOn.pno = ProjectX.pno
+ order by dname, lname, fname;
