@@ -1,0 +1,184 @@
+1. roots or not
+
+set serveroutput on
+declare
+a int := 3;
+b int := 5;
+c int := 4;
+d int;
+r1 float;
+r2 float;
+nr varchar(20) := 'imaginary roots';
+begin
+d := (b*b) - 4*a*c;
+if d>=0 then
+r1 := (-b + sqrt(d))/(2*a);
+r2 := (-b - sqrt(d))/(2*a);
+dbms_output.put_line(r1 || 'is a root');
+dbms_output.put_line(r2 || 'is a root');
+else
+dbms_output.put_line(nr);
+end if;
+end;
+/
+
+
+2. fine charged
+
+set serveroutput on
+declare
+doi date := '18-JUN-2015';
+dor date := '30-JUN-2015';
+latedays int;
+fine float;
+erro varchar (20) := 'the fine is rs ';
+nd varchar (50) := 'number of late days is ';
+begin
+latedays := dor - doi;
+if latedays <= 5 then
+fine := 0.50;
+elsif latedays <=10 then
+fine := 1.00;
+elsif latedays <=30 then
+fine := 5.00;
+else
+fine := 10.00;
+end if;
+dbms_output.put_line(nd || latedays);
+dbms_output.put_line(erro || fine);
+end;
+/
+
+
+3. fibonacci series
+
+set serveroutput on
+declare
+a int := 0;
+b int := 1;
+c int;
+d int;
+fi varchar (50) := 'next fibonacci number is ';
+begin
+d := &d;
+dbms_output.put_line('printing fib nos till ' ||d);
+dbms_output.put_line('fib 1 and fib 2 are ' || a || b || ' respectively');
+loop
+c := b;
+b := a+b;
+a := c;
+if b >= d then
+exit;
+end if;
+dbms_output.put_line(fi || b);
+end loop;
+end;
+/
+
+
+4. palindrome
+
+set serveroutput on
+declare
+num int;
+dig int;
+temp int;
+rev int := 0;
+begin
+num := &num;
+temp := num;
+dbms_output.put_line('number entered is ' || num);
+while (num>0)
+loop
+rev := (rev*10) + (num mod 10);
+num := num/10;
+end loop;
+if rev = temp then
+dbms_output.put_line('palindrome');
+else
+dbms_output.put_line('not palindrome');
+end if;
+end;
+/
+
+
+5. date input increase and insert
+
+create table tbl_next_date (given_date date, next_date date);
+set serverupdate on
+declare
+type ds is varray(5) of date;
+d ds;
+d1 ds;
+cnt int;
+i int := 1;
+begin
+d := ds('18-JUN-2009', '28-JUN-2009', '08-MAY-2019', '18-JUL-2012', '18-AUG-2011');
+d1 := ds('18-JUN-2009', '28-JUN-2009', '08-MAY-2019', '18-JUL-2012', '18-AUG-2011');
+cnt := d.count;
+while i<6 loop
+d1(i) := d(i) + 1;
+insert into tbl_next_date values (d(i), d1(i));
+i := i+1;
+end loop;
+end;
+/
+
+
+6. volume, surface area
+
+create table sphere (radius float, volume float, surface_area float);
+set serveroutput on
+declare
+radius float := 3;
+volume float;
+surface_area float;
+begin
+radius := 3;
+while radius < 7
+loop
+volume := (4/3)*3.14*(radius*radius*radius);
+surface_area := 4*3.14*(radius*radius);
+insert into sphere values(radius, volume, surface_area);
+radius := radius + 0.5;
+end loop;
+end;
+/
+
+
+7. factorial
+
+set serveroutput on
+declare
+n int;
+fac int := 1;
+begin
+n := &n;
+for i in 1..n loop
+fac := fac*i;
+end loop;
+dbms_output.put_line('factorial of ' ||n || ' is ' || fac);
+end;
+/
+
+
+8. average of series
+
+set serveroutput on
+declare
+type numbers is varray(5) of integer;
+num numbers;
+cnt int;
+aver float := 0;
+begin
+num := numbers(18, 92, 10, 44, 1);
+cnt := num.count;
+for i in 1..cnt loop
+if num(i) = -1 then exit;
+end if;
+aver := num(i) + aver;
+end loop;
+aver := aver/cnt;
+dbms_output.put_line('average of series is ' || aver);
+end;
+/
