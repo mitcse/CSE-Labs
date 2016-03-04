@@ -1,0 +1,131 @@
+1.
+
+create table areas (radius float, area float);
+
+set serveroutput on
+declare
+a_rad float;
+a_ar float;
+rad float :=23;
+begin
+select radius, area into a_rad, a_ar from areas where radius = rad;
+exception
+when NO_DATA_FOUND then dbms_output.put_line('no data found');
+end;
+/
+
+2.
+
+set serveroutput on
+declare
+name varchar2(20);
+deptName varchar2(20);
+inputDept varchar2(20) := 'Biology';
+countD int;
+exceptionMulti exception;
+begin
+select name, dept_name into name, deptName from instructor where dept_name = inputDept;
+select name, count(*) into name, countD from instructor group by name;
+if countD > 1 then raise exceptionMulti;
+end if;
+dbms_output.put_line('Name: '|| to_char(name));
+exception
+when NO_DATA_FOUND then dbms_output.put_line('No associated instructor');
+when TOO_MANY_ROWS then dbms_output.put_line('Multiple rows returned');
+when exceptionMulti then dbms_output.put_line('1 instructor, multiple depts');	
+end;
+/
+
+3.
+
+create table salesman_master (salesman_no int, salesman_name varchar2(20), rate_of_commission float,target_sales float, total_sales float);
+
+create table comission_payable (commission_amount float, salesman_no int, date_of_payment date);
+
+insert into salesman_master values(1,'Rachit',1,1000,500);
+
+insert into salesman_master values(2,'Yash',2,2000,1000);
+
+insert into salesman_master values(3,'Saket',5,5000,6000);
+
+
+// does not get inserted
+
+declare
+tar_s float;
+tot_s float;
+sal_no int;
+roc float;
+exception1 exception;
+begin
+select salesman_no, target_sales, total_sales, rate_of_commission into sal_no, tar_s, tot_s, roc from salesman_master where salesman_no = 2;
+if tar_s > tot_s then
+raise exception1;
+else
+insert into comission_payable values (tot_s*roc, sal_no, (select sysdate from dual));
+end if;
+exception
+	when exception1 then dbms_output.put_line('Not Reached');
+end;
+/
+
+// gets inserted
+
+declare
+tar_s float;
+tot_s float;
+sal_no int;
+roc float;
+exception1 exception;
+begin
+select salesman_no, target_sales, total_sales, rate_of_commission into sal_no, tar_s, tot_s, roc from salesman_master where salesman_no = 3;
+if tar_s > tot_s then
+raise exception1;
+else
+insert into comission_payable values (tot_s*roc, sal_no, (select sysdate from dual));
+end if;
+exception
+when exception1 then dbms_output.put_line('Not Reached');
+end;
+/
+
+4.
+
+create table salary_raise (instructor_id varchar(5), raise_date date, raise_amt number(8,2));
+set serveroutput on
+declare
+	temp instructor%ROWTYPE;
+	cursor my_cursor is select * from instructor where dept_name='Physics';
+	raiset number(8,2);
+begin
+	open my_cursor;
+	
+	loop
+		fetch my_cursor into temp;
+		exit when my_cursor%notfound;
+		update instructor
+		set salary = salary + (salary * 0.05)
+		where dept_name = 'Physics';		
+		raiset := temp.salary * 0.05;		
+		insert into salary_raise values(temp.id, (select sysdate from dual), raiset);
+	end loop;
+	close my_cursor;
+end;
+/
+
+5.
+
+declare
+	cursor c1 is select * from student order by tot_cred;
+	v_row student%rowtype;
+begin
+	open c1;
+	loop 
+		fetch c1 into v_row;
+		dbms_output.put_line(v_row.name||'   '||v_row.ID||'   '||v_row.tot_cred);
+		exit when c1%rowcount > 9;
+	end loop;
+	close c1;	
+
+end;
+/
