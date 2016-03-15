@@ -1,0 +1,485 @@
+1.1 
+create table salary_raise_table (Instructor_Id varchar(20),raise_date date,salary_raise numeric(8, 2));
+
+	declare
+		Cursor c1 is 
+			select * from instructor where dept_name = 'Physics' FOR update;
+			raise_amt number;
+	begin
+		for sal in c1
+		loop
+			
+			raise_amt := sal.salary*1.02;
+			update instructor set salary = salary*1.02;
+			insert into salary_raise_table values(sal.Id,current_date,raise_amt);
+			end loop;
+			end;
+			/
+
+1.2    
+declare
+	Id_inst varchar(5);
+	sal numeric(8,2);
+	dept varchar(20);
+	ins_salary numeric(8,2);
+	
+	cursor c1 is 
+		select ID,salary,dept_name from instructor
+		for UPDATE;
+begin
+	open c1;
+	loop fetch c1 into id_inst,sal,dept;
+	if dept = 'History' then 
+		update instructor
+		set salary = salary *1.05
+		where current of c1;
+		ins_salary := sal*1.05;
+		insert into salary_raise_table values(id_inst,current_date,ins_salary);
+	end if;
+	exit when c1%notfound;
+	end loop;
+end; 
+/
+
+3.
+
+declare
+		total_sal numeric;
+	begin
+		savepoint insrt_in;
+		insert into instructor values ('10105', 'Tanishq', 'Comp. Sci.', '75000');
+		insert into instructor values ('10202', 'Aditya', 'Finance', '85000');
+		savepoint sal_inc;
+		update instructor set salary=150000 where name like 'Srinivasan';
+		update instructor set salary=100000 where name like 'Mozart';
+		select sum(salary) into total_sal from instructor;
+		if total_sal > 2000000 then
+			rollback to savepoint sal_inc;
+		end if;
+		end;
+		/
+
+2.
+
+create table item_master(itemid int primary key, description varchar(50), bal_stock int);
+
+create table item_transaction(itemid int primary key, description varchar(50), quantity int);
+
+insert into item_master values (1, 'some generic description', 10);
+insert into item_master values (2, 'rachit is archit stickers', 20);
+insert into item_master values (3, 'saket is going to die coffee mugs', 30);
+
+
+set serveroutput on
+
+DECLARE 
+CURSOR c1(item int) is select * from item_master where ItemID = item FOR UPDATE;
+var_cur item_master%rowtype;
+ID int;
+des varchar2(20);
+Qty int;
+
+BEGIN
+ID := &ID;
+des := '&des';
+Qty := &Qty;
+open c1(ID);
+	
+	FETCH c1 into var_cur;
+	if c1%notfound then
+		insert into item_master values (ID, des, Qty);	
+	else
+		update item_master set bal_stock = bal_stock-Qty where ItemID = ID;
+	end if;
+close c1;
+
+END;
+/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
