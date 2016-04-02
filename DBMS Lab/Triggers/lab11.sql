@@ -43,49 +43,49 @@
 	/
 
 --3)
-		CREATE or REPLACE trigger ValidateTransaction
-		BEFORE INSERT on Transactions for EACH ROW
-		Declare
-			varAccountNo Varchar2(10):=0;
-			varCurrentBalance Number(10);
-			BEGIN
-				select count(AccountNo) into varAccountNo from Accounts where AccountNo =: NEW.AccountNo;
-				if varAccountNo = 0 THEN
-					Raise_Application_Error(-20000,'The Account Number is invalid');
-				End if;
-				if :NEW.Ammount<=0 then 
-				Raise_Application_Error(-20001,'The transaction ammount cannot be negative or zero');
-				END IF;
+	CREATE table client
+		(c_no varchar(5) primary key,
+		 name varchar(20),
+		 bal_due number);
+		insert into client values ('10001','SomeGuy',10000);
+		insert into client values ('10002','SomeOtherGuy',20000);
+		insert into client values ('10003','YetAnotherGuy',30000);
+	CREATE table audit_client
+		(c_no varchar(5),
+		 name varchar(20),
+		 bal_due number,
+		 op varchar(3),
+		 user_id varchar(5) default('00000'),
+		 opDate date);
 
-				select CurrentBalance into varCurrentBalance from Accounts where AccountNo = :NEW.AccountNo;
-
-			END;
-			/
-
+	CREATE or REPLACE trigger client_audit
+	BEFORE UPDATE or INSERT on client
+	FOR EACH ROW
+	BEGIN
+		CASE
+			WHEN UPDATING THEN
+				insert into audit_client values (:OLD.c_no,:OLD.name,:OLD.bal_due,'upd',NULL,sysdate);
+			WHEN DELETING THEN
+				insert into audit_client values (:OLD.c_no,:OLD.name,:OLD.bal_due,'del',NULL,sysdate);
+		END CASE;
+	END;
+	/
+	
 
 --4)
-	create trigger audit_trail
-		after update or delete on client_master
-		for each row
-		Declare
-			oper varchar2(8);
-			client_no varchar2(6);
-			Name varchar2(20);
-			Bal_due number(10,2);
-		Begin 
-			if updating then
-				oper:='update';
-				END IF
-				if deleting then 
-					oper :='delete';
-				end if;
-				client_no :+:old.client_no;
-				Name :=: old.name;
-				bal_due:= old.bal_due;
-				insert into auditclient 
-					values(client_no,name,bal_due,oper,user,sysdate);
-			END;
-			/
+	create or replace view adv_stu as
+		select s_id,S.name as s_name,S.dept_name as s_dept,S.tot_cred,i_id,I.name as i_name,i.dept_name as i_dept,I.salary  
+		from ((student S join advisor A on s.id=a.s_id) join instructor I on i_id=i.id);
+
+	CREATE or REPLACE trigger advisor_update
+	INSTEAD of DELETE on adv_stu 
+	FOR EACH ROW
+	BEGIN
+		delete from advisor where s_id = :OLD.s_id;
+	END;
+	/
+
+
 
 --5)
 	create view Advisor_Student as select Instructor.id as iid, student.id as sid, instructor.name as iname, student.name as sname from instructor, advisor, student where instructor.id=i_id and student.id=s_id;
