@@ -1,9 +1,9 @@
 -- A
 
-CREATE OR REPLACE PROCEDURE prINt_loan_details (c_id depositor.customer_id%type) is
-	CURSOR apCURSOR(id depositor.customer_id%type) is 
-	with amounts as( SELECT amount FROM borrower natural joIN loan WHERE customer_id=id),
-		payments as( SELECT payment_amount FROM borrower natural joIN payment WHERE customer_id=id)
+CREATE OR REPLACE PROCEDURE printLoanDetails (c_id depositor.customer_id%type) IS
+	CURSOR apCURSOR(id depositor.customer_id%type) IS 
+	WITH amounts AS (SELECT amount FROM borrower natural joIN loan WHERE customer_id = id),
+		payments AS (SELECT payment_amount FROM borrower natural joIN payment WHERE customer_id=id)
 	SELECT sum(amount) as total_amount, sum(payment_amount) as total_payment FROM amounts, payments;
 	a loan.amount%type;
 	p payment.payment_amount%type;
@@ -17,8 +17,8 @@ END;
 
 -- B
 
-CREATE OR REPLACE PROCEDURE prINt_loan_branch(b_name loan_branch.branch_name%type) is
-	CURSOR adCURSOR(name loan_branch.branch_name%type) is 
+CREATE OR REPLACE PROCEDURE printLoanBranch (b_name loan_branch.branch_name%type) IS
+	CURSOR adCURSOR(name loan_branch.branch_name%type) IS 
 	with amounts as(SELECT amount FROM loan_branch natural joIN loan WHERE branch_name=name),
 		deposits as(SELECT balance FROM account_branch natural joIN account WHERE branch_name=name)
 	SELECT sum(amount) as total_amount, sum(balance) as total_deposit FROM amounts, deposits;
