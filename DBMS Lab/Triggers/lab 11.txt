@@ -1,0 +1,112 @@
+1.
+create table log_change_takes (
+		toc timestamp,
+		type varchar(3),
+		ID			varchar(5), 
+		course_id		varchar(8),
+		sec_id			varchar(8), 
+		semester		varchar(6),
+		year			numeric(4,0),
+		grade		        varchar(2),
+	 	primary key (toc, ID, course_id, sec_id, semester, year)
+);
+
+
+create or replace trigger log_change_takes before insert or update or delete on takes for each row
+begin
+	case
+		when inserting then
+			insert into log_change_takes values (current_timestamp,'ins',:NEW.id,:NEW.course_id,:NEW.sec_id,:NEW.semester,:NEW.year,:NEW.grade);
+		when deleting then
+			insert into log_change_takes values (current_timestamp,'del',:OLD.id,:OLD.course_id,:OLD.sec_id,:OLD.semester,:OLD.year,:OLD.grade);
+		when updating then
+			insert into log_change_takes values (current_timestamp,'upd',:NEW.id,:NEW.course_id,:NEW.sec_id,:NEW.semester,:NEW.year,:NEW.grade);
+	end case;
+end;
+/
+
+
+
+2.
+create or replace trigger item_update before insert on item_transaction for each row
+begin
+	case
+		when inserting then
+			update item_master set bal_stock=bal_stock-:NEW.quantity;
+	end case;
+end;
+/
+
+
+3.
+create table account (account_number varchar(10) primary key, balance number (8));
+insert into account values (130013, 200);
+insert into account values (130012, 2900);
+insert into account values (1300135, 700);
+insert into account values (126013, 20000);
+create table Transaction (account_number varchar (10), withdraw number (8)); 
+create or replace trigger bankwith
+before insert on transaction for each row
+declare
+	acc_count number(1) := 0;
+	bal float := 0;
+begin
+	select balance into bal from account where account_number = :NEW.account_number;
+	if :NEW.account_number<0 then
+		raise_application_error (-1, 'Wrong account!');
+	elsif bal - :NEW.withdraw < 0 then
+		raise_application_error (-2, 'Low Balance!');		
+	elsif :NEW.withdraw < 1 then
+		raise_application_error (-3, 'Withdrawing negative amount!');
+	else
+		update account set balance = balance - :NEW.withdraw where account_number = :NEW.account_number;
+	end if;
+	
+end;
+/
+
+
+
+4.
+create table client_master
+		(c_no varchar(5) primary key,
+		 name varchar(20),
+		 address varchar (50),
+		 bal_due number);
+
+insert into client_master values ('70001', 'Saket', 'bangalore', 10000);
+insert into client_master values ('40002', 'Rachit', 'jaipur', 20000);
+insert into client_master values ('90003', 'YKL', 'patna mumbai', 50000);
+
+create table audit_client
+		(c_no varchar(5),
+		 name varchar(20),
+		 address varchar(50),
+		 bal_due number,
+		 op varchar(3),
+		 user_id varchar(5) default('00000'),
+		 opDate date);
+
+create or replace trigger client_audit before update or delete on client_master for each row
+begin
+	case
+		when updating then
+			insert into audit_client values (:OLD.c_no, :OLD.name, :OLD.address, :OLD.bal_due, 'upd', NULL, sysdate);
+		when deleting then
+			insert into audit_client values (:OLD.c_no, :OLD.name, :OLD.address, :OLD.bal_due, 'del', NULL, sysdate);
+	end case;
+end;
+/
+
+
+
+5.
+create or replace view advi_stud as
+		select s_id, s.name as s_name, s.dept_name as s_dept, s.tot_cred, i_id, i.name as i_name, i.dept_name as i_dept, i.salary  
+		from ((student S join advisor A on s.id = a.s_id) join instructor I on i_id = i.id);
+
+create or replace trigger advisor_update instead of delete on advi_stud for each row
+begin
+	delete from advisor where s_id = :OLD.s_id;
+end;
+/
