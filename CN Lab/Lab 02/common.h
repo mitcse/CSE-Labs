@@ -25,6 +25,12 @@ typedef struct sockaddr_in sockaddr_in_t;
 
 typedef char * string;
 
+typedef struct Thing {
+	double a;
+	double b;
+	char op;
+} THING_t, *THING_p_t;
+
 // Defines
 
 #define MAX_LEN 255
