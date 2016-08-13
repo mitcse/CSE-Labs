@@ -1,0 +1,12 @@
+#!/bin/bash
+echo "Compilation test."
+if [ -z "$1" ]; then
+	echo "Supply a god-damn file!"
+else
+	gcc -o a.out $1
+	if [[ $? -eq 0 ]]; then
+		echo "Compilation success!"
+	else
+		echo "Compilation failure!"
+	fi
+fi

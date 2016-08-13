@@ -1,0 +1,7 @@
+#!/bin/bash
+dt=$(date)
+px=$(pwd)
+echo "Eggguting date: $dt"
+echo "Eggguting ls:"
+ls -alh
+echo "Eggguting pwd: $px"
