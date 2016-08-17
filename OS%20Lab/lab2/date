@@ -1,3 +1,0 @@
-#!/bin/bash
-dt=$(date +%A,\ %B\ %d\ %Y)
-echo "Today is: $dt"

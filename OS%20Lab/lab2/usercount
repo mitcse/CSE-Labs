@@ -1,3 +1,0 @@
-#!/bin/bash
-uc=$(users | wc -l)
-echo "Number of users logged in = $uc"

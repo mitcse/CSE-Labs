@@ -1,7 +1,0 @@
-#!/bin/bash
-echo "list demo"
-if [ -z "$1" ]; then
-	ls -alh
-else
-	ls -alh $1
-fi
