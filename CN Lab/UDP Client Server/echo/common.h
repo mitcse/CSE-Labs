@@ -2,6 +2,9 @@
 
 // Includes
 
+#ifndef COMMON_H
+#define COMMON_H
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -22,15 +25,17 @@
 typedef enum { NO, YES } BOOL;
 
 typedef struct sockaddr_in sockaddr_in_t;
+typedef struct sockaddr sockaddr_t;
+typedef struct sockaddr * sockaddr_p_t;
 
 typedef char * string;
-
-typedef struct Thing {
-	double a;
-	double b;
-	char op;
-} THING_t, *THING_p_t;
 
 // Defines
 
 #define MAX_LEN 255
+
+#define BUFLEN 140
+
+#define PORT 19389
+
+#endif

@@ -1,0 +1,13 @@
+#!/bin/bash
+echo "subshell demo"
+echo "current directory = "
+pwd
+(
+	echo "inside subshell"
+	cd /bin/
+	echo "subshell directory = "
+	pwd
+)
+echo "subshell finished"
+echo "current directory = "
+pwd
