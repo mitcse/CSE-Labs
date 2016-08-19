@@ -4,7 +4,7 @@ echo Enter a, b, c as coefficients of equation
 read a
 read b
 read c
-d=$(( ($b)*($b)-4*($a)*($c) ));
+d=$(( ($b)*($b)-4*($a)*($c) ))
 if [ $d -gt 0 ]
 then
 flag=1
@@ -26,7 +26,7 @@ case $flag in
         echo -e "scale=3\n-0.5*($b)/($a)" | bc
         ;;
     "2" )
-        echo -e "x1 = ("
+        echo -n "x1 = ("
         echo -e "scale=3\n-0.5*($b)/($a) " | bc
         echo -e "scale=3\n0.5*sqrt(-($d))/($a)" | bc
         echo "i)"
