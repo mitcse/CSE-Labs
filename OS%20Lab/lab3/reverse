@@ -1,0 +1,20 @@
+#!/bin/bash
+
+function reverse {
+	r=0;
+	n=$1;
+	until [[ $n -eq 0 ]]; do
+		b=$(($n % 10));
+		r=$((10*$r + $b));
+		n=$(($n/10));
+	done
+	echo "Reverse of $1 is $r";
+}
+
+if [[ -z "$1" ]]; then
+	echo "Enter the god damn number: ";
+	read a;
+	reverse $a;
+else
+	reverse $1;
+fi

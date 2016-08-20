@@ -1,0 +1,18 @@
+#!/bin/bash
+
+function evenTest {
+	nm2=$(($1%2))
+	if [[ $nm2 -eq 0 ]]; then
+		echo "$1 is even.";
+	else
+		echo "$1 is odd.";
+	fi
+}
+
+if [[ -z "$1" ]]; then
+	echo "Enter a god damn number: ";
+	read number;
+	evenTest $number;
+else
+	evenTest $1;
+fi
