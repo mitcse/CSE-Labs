@@ -1,4 +1,4 @@
-// ...
+	// ...
 
 /**
  *	TCP from client side
@@ -25,7 +25,7 @@ int main (int argc, char const * argv []) {
 	char output[BUFLEN];
 	char filename[1023];
 	
-	// create a UDP server
+	// create a TCP server
 	if ((sockfd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0) {
 		commit_suicide("socket()");
 	}
@@ -45,13 +45,14 @@ int main (int argc, char const * argv []) {
 	while (YES) {
 
 		memset(input, '\0', BUFLEN); // reset memory buffer
+		memset(output, '\0', BUFLEN);
 
 		printf("Enter filename: ");
-		fgets(filename, BUFLEN, stdin);
+		scanf(" %s", filename);
 
 		FILE *file;
-		file = fopen("filename", "r");
-		fscanf(file, "%s", input);
+		file = fopen(filename, "r");
+		fgets(input, BUFLEN, file);
 		
 		// try sending some data to the server
 		if (write(sockfd, input, BUFLEN) < -1) {

@@ -36,6 +36,6 @@ typedef char * string;
 
 #define BUFLEN 65535
 
-#define PORT 49563
+#define PORT 6969
 
 #endif

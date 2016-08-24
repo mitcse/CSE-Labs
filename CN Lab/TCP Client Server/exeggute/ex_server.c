@@ -23,7 +23,7 @@ int main (int argc, char const * argv []) {
 	char output[BUFLEN];
 	int received_length;
 
-	// create a UDP Server
+	// create a TCP Server
 	if ((sockfd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0) {
 		commit_suicide("socket()");
 	}
@@ -63,19 +63,21 @@ int main (int argc, char const * argv []) {
 		if ((received_length = read(nsckfd, buffer, BUFLEN)) < 0) {
 			commit_suicide("read()");
 		}
-
+		
 		FILE *file;
-		file = fopen("tmp.out", "w+");
-		fprintf(file, "%s\n", buffer);
+		file = fopen("tmp.o", "w+");
+		fputs(buffer, file);
+		fclose(file);
+		
 
-		// exeggute tmp.out
+		// exeggute tmp.o
 		// Get the output and send it back
 
-		exec("./tmp.out > out.txt");
+		system("./tmp.o > out.txt");
 
 		FILE *outfile;
 		outfile = fopen("out.txt", "r");
-		fscanf(outfile, "%s", output);
+		fgets(output, BUFLEN, outfile);
 
 		printf("Client [%s:%d] sent file.\n", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
 
@@ -83,6 +85,8 @@ int main (int argc, char const * argv []) {
 		if (write(nsckfd, output, BUFLEN) < 0) {
 			commit_suicide("write()");
 		}
+
+		fclose(outfile);
 
 	}
 
