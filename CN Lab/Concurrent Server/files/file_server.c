@@ -19,10 +19,12 @@ int main (int argc, char const * argv []) {
 	int sockfd, nsckfd = -1, i;
 	socklen_t clen = sizeof(server_address);
 
-	char buffer[BUFLEN];
-	char output[BUFLEN];
-	int received_length;
+	char filename[1023];
 
+	int *fst = (int *)malloc(sizeof(int));
+	char output[BUFLEN];
+	
+	int received_length;
 	int pid;
 
 	// create a TCP Server
@@ -51,8 +53,7 @@ int main (int argc, char const * argv []) {
 
 		printf("Server [%s:%d] waiting...\n", inet_ntoa(server_address.sin_addr), ntohs(server_address.sin_port));
 
-		// reset memory buffer
-		memset(buffer, '\0', BUFLEN);
+		memset(filename, '\0', 1023);
 
 		// blocking call; try to get some data from the client?
 		if (nsckfd < 0) {
@@ -63,36 +64,44 @@ int main (int argc, char const * argv []) {
 
 		if ((pid == fork()) == 0) {
 
-			// read into buffer
-			if ((received_length = read(nsckfd, buffer, BUFLEN)) < 0) {
+			// read into filename
+			if ((received_length = read(nsckfd, filename, 1023)) < 0) {
 				commit_suicide("read()");
 			}
-			
-			FILE *file;
-			file = fopen("tmp.c", "w+");
-			fwrite(buffer, sizeof(char), received_length, file);
-			fclose(file);
 
-			// exeggute tmp.o
-			// Get the output and send it back
-			system("gcc -o tmp.o tmp.c");
-			system("./tmp.o > out.txt");
+			printf("Client [%s:%d] requested file: %s\n", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port), filename);
+			if (access(filename, F_OK) != -1) {
 
-			FILE *outfile;
-			outfile = fopen("out.txt", "r");
-			fseek(outfile, 0, SEEK_END);
-			size_t flen = ftell(outfile);
-			fseek(outfile, 0, SEEK_SET);
-			fread(output, sizeof(char), flen, outfile);
+				*fst = 1;
+				// send status to the client
+				if (write(nsckfd, fst, sizeof(int)) < 0) {
+					commit_suicide("write()");
+				}
+				printf("File present, preparing for sending.\n");
 
-			printf("Client [%s:%d] sent file.\n", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
+				FILE *deadfile;
+				deadfile = fopen(filename, "r");
 
-			// reply to client with the same data, cause echo server.
-			if (write(nsckfd, output, BUFLEN) < 0) {
-				commit_suicide("write()");
+				fseek(deadfile, 0, SEEK_END);
+				size_t flen = ftell(deadfile);
+				fseek(deadfile, 0, SEEK_SET);
+				fread(output, sizeof(char), flen, deadfile);
+
+				// send file data to the client.
+				if (write(nsckfd, output, BUFLEN) < 0) {
+					commit_suicide("write()");
+				}
+
+				fclose(deadfile);
+			} else {
+				*fst = 0;
+				// send status to the client
+				if (write(nsckfd, fst, sizeof(int)) < 0) {
+					commit_suicide("write()");
+				}
+				printf("File not present, exiting.\n");
 			}
 
-			fclose(outfile);
 			close(nsckfd);
 			exit(0);
 
@@ -106,7 +115,6 @@ int main (int argc, char const * argv []) {
 
 	}
 
-	close(nsckfd);
 	close(sockfd);
 
 	return 0;

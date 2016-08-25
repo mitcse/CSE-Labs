@@ -1,4 +1,4 @@
-	// ...
+// ...
 
 /**
  *	TCP from client side
@@ -6,8 +6,6 @@
  */
 
 #include "common.h"
-
-#define SERVER "127.0.0.1"
 
 void commit_suicide(string message) {
 	perror(message);
@@ -21,9 +19,8 @@ int main (int argc, char const * argv []) {
 	int sockfd, i;
 	socklen_t slen = sizeof(server_address);
 	
-	char input[BUFLEN];
-	char output[BUFLEN];
-	char filename[1023];
+	char buffer[BUFLEN];
+	int ch;
 	
 	// create a TCP server
 	if ((sockfd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0) {
@@ -42,30 +39,20 @@ int main (int argc, char const * argv []) {
 		commit_suicide("connect()");
 	}
 
-	memset(input, '\0', BUFLEN); // reset memory buffer
-	memset(output, '\0', BUFLEN);
+	printf("1. Request time\n2. Exit\nEnter choice: ");
+	scanf(" %d", &ch);
 
-	printf("Enter filename (a.c) to send and eggecute: ");
-	scanf(" %s", filename);
-
-	FILE *file;
-	file = fopen(filename, "r");
-	fseek(file, 0, SEEK_END);
-	size_t flen = ftell(file);
-	fseek(file, 0, SEEK_SET);
-	fread(input, sizeof(char), flen, file);
-	
-	// try sending some data to the server
-	if (write(sockfd, input, BUFLEN) < -1) {
-		commit_suicide("write()");
+	if (ch != 1) {
+		commit_suicide("Quitting...");
+		return -6;	
 	}
 	
 	// blocking call; try getting data from the server
-	if (read(sockfd, output, BUFLEN) < -1) {
+	if (read(sockfd, buffer, BUFLEN) < -1) {
 		commit_suicide("recvfrom()");
 	}
 	
-	printf("Server said:\n%s\n", output);
+	printf("Server said: %s\n", buffer);
 	
 	close(sockfd);
 

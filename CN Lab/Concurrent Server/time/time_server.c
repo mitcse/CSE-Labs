@@ -19,9 +19,7 @@ int main (int argc, char const * argv []) {
 	int sockfd, nsckfd = -1, i;
 	socklen_t clen = sizeof(server_address);
 
-	char buffer[BUFLEN];
-	char output[BUFLEN];
-	int received_length;
+	char *buffer = (char *)malloc(BUFLEN * sizeof(char));
 
 	int pid;
 
@@ -48,65 +46,42 @@ int main (int argc, char const * argv []) {
 	}
 
 	while (YES) {
-
+		
 		printf("Server [%s:%d] waiting...\n", inet_ntoa(server_address.sin_addr), ntohs(server_address.sin_port));
 
 		// reset memory buffer
 		memset(buffer, '\0', BUFLEN);
 
 		// blocking call; try to get some data from the client?
-		if (nsckfd < 0) {
-			if ((nsckfd = accept(sockfd, (sockaddr_p_t)&client_address, &clen)) < 0) {
-				commit_suicide("accept()");
-			}
+		if ((nsckfd = accept(sockfd, (sockaddr_p_t)&client_address, &clen)) < 0) {
+			commit_suicide("accept()");
 		}
 
-		if ((pid == fork()) == 0) {
+		if ((pid = fork()) == 0) {
 
-			// read into buffer
-			if ((received_length = read(nsckfd, buffer, BUFLEN)) < 0) {
-				commit_suicide("read()");
-			}
+			close(sockfd);
+
+			printf("Client [%s:%d] requested time.\n", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
 			
-			FILE *file;
-			file = fopen("tmp.c", "w+");
-			fwrite(buffer, sizeof(char), received_length, file);
-			fclose(file);
+			// Get the time string
+			time_t tme = time(NULL);
+			buffer = ctime(&tme);
 
-			// exeggute tmp.o
-			// Get the output and send it back
-			system("gcc -o tmp.o tmp.c");
-			system("./tmp.o > out.txt");
-
-			FILE *outfile;
-			outfile = fopen("out.txt", "r");
-			fseek(outfile, 0, SEEK_END);
-			size_t flen = ftell(outfile);
-			fseek(outfile, 0, SEEK_SET);
-			fread(output, sizeof(char), flen, outfile);
-
-			printf("Client [%s:%d] sent file.\n", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
-
-			// reply to client with the same data, cause echo server.
-			if (write(nsckfd, output, BUFLEN) < 0) {
+			if (write(nsckfd, buffer, BUFLEN) < 0) {
 				commit_suicide("write()");
 			}
 
-			fclose(outfile);
 			close(nsckfd);
 			exit(0);
 
 		} else if (pid < 0) {
 			commit_suicide("fork()");
-			return -2;
 		} else {
 			close(nsckfd);
-			return -1;
 		}
 
 	}
 
-	close(nsckfd);
 	close(sockfd);
 
 	return 0;

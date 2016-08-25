@@ -21,8 +21,9 @@ int main (int argc, char const * argv []) {
 	int sockfd, i;
 	socklen_t slen = sizeof(server_address);
 	
-	char input[BUFLEN];
+	int *fst = (int *)malloc(sizeof(int));
 	char output[BUFLEN];
+
 	char filename[1023];
 	
 	// create a TCP server
@@ -42,30 +43,31 @@ int main (int argc, char const * argv []) {
 		commit_suicide("connect()");
 	}
 
-	memset(input, '\0', BUFLEN); // reset memory buffer
 	memset(output, '\0', BUFLEN);
 
-	printf("Enter filename (a.c) to send and eggecute: ");
+	printf("Enter filename: ");
 	scanf(" %s", filename);
-
-	FILE *file;
-	file = fopen(filename, "r");
-	fseek(file, 0, SEEK_END);
-	size_t flen = ftell(file);
-	fseek(file, 0, SEEK_SET);
-	fread(input, sizeof(char), flen, file);
 	
 	// try sending some data to the server
-	if (write(sockfd, input, BUFLEN) < -1) {
+	if (write(sockfd, filename, BUFLEN) < -1) {
 		commit_suicide("write()");
 	}
 	
-	// blocking call; try getting data from the server
-	if (read(sockfd, output, BUFLEN) < -1) {
+	// Get the file status from the server
+	if (read(sockfd, fst, sizeof(int)) < -1) {
 		commit_suicide("recvfrom()");
 	}
-	
-	printf("Server said:\n%s\n", output);
+
+	if (*fst == 1) {
+		printf("File found on the server; contents:\n\n");
+		if (read(sockfd, output, BUFLEN) < -1) {
+			commit_suicide("recvfrom()");
+		}
+		printf("Server said: %s\n", output);
+	} else {
+		printf("File not found the server :(\n");
+	}
+
 	
 	close(sockfd);
 
