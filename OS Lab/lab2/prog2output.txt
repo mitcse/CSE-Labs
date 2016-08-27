@@ -1,8 +1,0 @@
-Enter n
-Enter numbers
-printing now
-2
-65
-12
-32
-11
