@@ -9,9 +9,9 @@ echo "alias subl='~/.sublime/sublime_text'" >> ~/.bashrc
 rm sublime.tar.bz2
 rmdir sublime_text_3/
 echo "------------------------------------"
-echo "Use 'subl' for sublime text."
+echo "Use 'subl' for sublime text. Open a new terminal, this will close now."
 sleep 2
 
-# Copy the following line and paste it in the terminal to install sublime_text_3 in one go
+# Copy the following line (Uncommented) and paste it in the terminal to install sublime_text_3 in one go
 
-$(wget 'https://raw.githubusercontent.com/mitcse/CSE-Labs/master/Scripts/sublime.sh') sh sublime.sh && rm sublime.sh && exit
+# $(wget 'https://raw.githubusercontent.com/mitcse/CSE-Labs/master/Scripts/sublime.sh') sh sublime.sh && rm sublime.sh && exit
