@@ -78,7 +78,7 @@
 
         serveraddr.sin_family = AF_INET;
 
-        serveraddr.sin_addr.s_addr = inet_addr(SERVER);
+        serveraddr.sin_addr.s_addr = INADDR_ANY;
 
         serveraddr.sin_port = htons(PORT);
 

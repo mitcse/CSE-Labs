@@ -42,7 +42,6 @@ int main (int argc, char const * argv []) {
 		commit_suicide("connect()");
 	}
 
-	memset(input, '\0', BUFLEN); // reset memory buffer
 	memset(output, '\0', BUFLEN);
 
 	printf("Enter filename (a.c) to send and eggecute: ");

@@ -3,9 +3,9 @@
 # Useful aliases and functions for bash.
 # Copy paste these into the ~/.bashrc
 
-alias ..='cd ..'			# Go back 1 directory level
-alias ...='cd ../../'		# Go back 2 directory levels
-alias ....='cd ../../../'	# Go back 3 directory levels
+alias ..='cd ..'            # Go back 1 directory level
+alias ...='cd ../../'       # Go back 2 directory levels
+alias ....='cd ../../../'   # Go back 3 directory levels
 
 alias docs='cd ~/Documents'
 
