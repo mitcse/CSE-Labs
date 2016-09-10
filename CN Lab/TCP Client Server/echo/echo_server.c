@@ -21,7 +21,7 @@ int main (int argc, char const * argv []) {
 	char buffer[BUFLEN];
 	int received_length;
 
-	// create a UDP Server
+	// create a TCP Server
 	if ((sockfd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0) {
 		commit_suicide("socket()");
 	}
