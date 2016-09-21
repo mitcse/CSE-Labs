@@ -105,32 +105,23 @@ int main (int argc, char const * argv []) {
 
 							if (FD_ISSET(j, &master)) {
 								
-								// If requested socket is found, send data to that.
-								if (j == i) {
+								// destination != sender, we don't want to echo back message to the sender.
+								if (j != i && j != sockfd) {
 
-									printf("Client on socket %d requested time.\n", j);
-			
-									time_t tme = time(NULL);
-									buffer = ctime(&tme);
+									printf("[%d]: %s.\n", j, buffer);
 
 									if (send(j, buffer, BUFLEN, 0) < 0) {
 										commit_suicide("send()");
 									}
-
+									
 								}
-
+								
 							}
-
 						}
-
 					}
-
 				}
-
 			}
-
 		}
-
 	}
 
 	close(sockfd);

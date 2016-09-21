@@ -39,22 +39,24 @@ int main (int argc, char const * argv []) {
 		commit_suicide("connect()");
 	}
 
-	printf("1. Request time\n2. Exit\nEnter choice: ");
-	scanf(" %d", &ch);
+	int pid = fork();
+	if (pid == 0) {
 
-	if (ch != 1) {
-		commit_suicide("Quitting...");
-		return -6;	
+		printf("Enter some shit: ");
+		while (YES) {
+			scanf(" %s", buffer);
+			send(sockfd, buffer, BUFLEN, 0);
+		}
+
+	} else {
+
+		while (YES) {
+			if (recv(sockfd, buffer, BUFLEN, 0) > 0) {
+				printf("Server said: %s\n", buffer);
+			}
+		}
+
 	}
-	
-	// blocking call; try getting data from the server
-	if (read(sockfd, buffer, BUFLEN) < -1) {
-		commit_suicide("recvfrom()");
-	}
-	
-	printf("Server said: %s\n", buffer);
-	
-	close(sockfd);
 
 	return 0;
 }

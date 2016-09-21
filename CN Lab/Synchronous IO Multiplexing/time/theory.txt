@@ -1,5 +1,0 @@
-if an application is using several sockets; then the select() maybe used to find out which ones are active i.e. which ones have outstanding incoming data and which can out further data, for transmission, or which have outstanding exeggceptional conditionals.
-
-Before calling select(); FD_SET, FD_CLR, and FD_ZERO should be used to put the relevant selectors into objects of type FD_SET.
-
-After the call the return value gives the number of active sockets; and FD_ISET macro maybe used to determine whether a particular socket is active and width specifies the number of largest descriptor to be set, timeout specifies how long to wait for the completion.

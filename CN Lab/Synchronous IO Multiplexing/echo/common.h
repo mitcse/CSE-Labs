@@ -36,7 +36,7 @@ typedef char * string;
 
 #define BUFLEN 1024
 
-#define PORT 21094
+#define PORT 20134
 
 #define SERVER "127.0.0.1"
 

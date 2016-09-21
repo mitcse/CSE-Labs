@@ -108,10 +108,7 @@ int main (int argc, char const * argv []) {
 								// If requested socket is found, send data to that.
 								if (j == i) {
 
-									printf("Client on socket %d requested time.\n", j);
-			
-									time_t tme = time(NULL);
-									buffer = ctime(&tme);
+									printf("Client on socket %d said: %s.\n", j, buffer);
 
 									if (send(j, buffer, BUFLEN, 0) < 0) {
 										commit_suicide("send()");
