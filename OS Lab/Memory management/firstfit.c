@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-int main (int argc, const char * ar) {
+int main (int argc, const char * argv[]) {
 
 	// Sample input: 3 5 2 7 2 1 4
 	// Sample output: Process 1 (1) allocated to block of size 5; Process 2 (4) allocated to block of size 7.
