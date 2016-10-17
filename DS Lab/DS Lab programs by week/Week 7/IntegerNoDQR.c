@@ -15,7 +15,7 @@ void enqueueRight(int);
 void display();
 int dequeueLeft();
 void enqueueLeft(int);
-//int dequeueRight();
+
 
 int main()
 {
