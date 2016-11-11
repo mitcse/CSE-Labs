@@ -27,7 +27,6 @@ int main(int argc, char const *argv[])
 		int n_pages;
 		
 		scanf("%d", &n_pages);
-		assigned += n_pages;
 		if(assigned + n_pages > tot_pages) {
 			printf("Memory is full!\n");
 			break;
@@ -37,6 +36,7 @@ int main(int argc, char const *argv[])
 		for(j = 0; j<n_pages; j++) {
 			scanf("%d", &page_tables[i][j]);
 		}
+		assigned += n_pages;
 	}
 
 	int ch, phy;
