@@ -28,16 +28,20 @@ int main (int argc, const char * argv []) {
 	int fib[25], f[25];
 
 	int fd[2];
+	int read_fd;
+	int write_fd;
 	pipe(fd);
 
+	read_fd = fd[0];
+	write_fd = fd[1];
 
 	pid = fork();
 	if (pid == 0) {
 
-		close(fd[1]);
+		close(write_fd);
 
 		// Read from the parent
-		read(fd[0], f, sizeof(f));
+		read(read_fd, f, sizeof(f));
 
 		// Check if they're prime in the child
 		for (i = 0; i < 25; ++i) {
@@ -45,11 +49,12 @@ int main (int argc, const char * argv []) {
 				printf(">> %d is prime.\n", f[i]);
 		}
 
-		close(fd[0]);
+		close(read_fd);
 		exit(1);
+
 	} else {
 
-		close(fd[0]);
+		close(read_fd);
 
 		// Generate fibobacci numbers in parent
 		for (i = 0; i < 25; ++i) {
@@ -57,12 +62,12 @@ int main (int argc, const char * argv []) {
 		}
 
 		// Pass data to the child
-		write(fd[1], fib, sizeof(fib));
+		write(write_fd, fib, sizeof(fib));
 
 		// Wait for child to finish
-		wait(NULL);
+		waitpid(pid, NULL, 0);
 
-		close(fd[1]);
+		close(write_fd);
 	}
 	return 0;
 }
