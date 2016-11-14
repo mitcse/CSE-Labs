@@ -64,6 +64,6 @@ int main (int argc, char const * argv []) {
 		arr[i] = i + 1;
 		curr[i] = NO;
 	}
-	partitons(curr, 0, 6);
+	partitons(curr, 0, 7);
 	return 0;
 }

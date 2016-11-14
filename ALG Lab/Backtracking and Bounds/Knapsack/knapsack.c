@@ -52,13 +52,16 @@ void findKnapsack (BOOL incl[N], int i) {
 			mval = cval;
 		}
 	}
-	if (i == N || cwt >= cap) {
+	if (i == N || cwt >= cap || (cval < mval && i == N)) {
 		return;
 	}
 	int x = wts[i];
 	BOOL use[N], nouse[N];
-	memcpy(use, incl, sizeof(use));
-	memcpy(nouse, incl, sizeof(nouse));
+	int j;
+	for (j = 0; i < N; ++j) {
+		use[j] = incl[j];
+		nouse[j] = incl[j];
+	}
 	use[i] = YES;
 	nouse[i] = NO;
 	findKnapsack(use, i+1);
@@ -94,4 +97,22 @@ int main(int argc, char const * argv[]) {
 	Included = { 1 }; Total value = 15
 	Included = { 1 5 }; Total value = 25
 	Included = { 1 3 4 }; Total value = 29
+
+
+	Sample input:
+	5
+	2 40
+	3 50
+	2 100
+	5 95
+	3 30
+	10
+
+	Sample output:
+	Included = { 2 }; Total value = 40
+	Included = { 2 3 }; Total value = 90
+	Included = { 2 3 2 }; Total value = 190
+	Included = { 2 3 2 3 }; Total value = 220
+	Included = { 2 2 5 }; Total value = 235
+	Included = { 3 2 5 }; Total value = 245
 */
