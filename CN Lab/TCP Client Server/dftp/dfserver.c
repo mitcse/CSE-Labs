@@ -16,16 +16,14 @@ int main (int argc, char const * argv []) {
 	
 	sockaddr_in_t server_address, client_address;
 
-	int sockfd, nsckfd, i;
+	int sockfd, nsckfd = -1, i;
 	socklen_t clen = sizeof(server_address);
 
-	char buffer[BUFLEN];
-	char output[BUFLEN];
+	pid_t pid;
+
 	int received_length;
 
-	int pid;
-
-	// create a TCP Server
+	// create a UDP Server
 	if ((sockfd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0) {
 		commit_suicide("socket()");
 	}
@@ -47,8 +45,11 @@ int main (int argc, char const * argv []) {
 		commit_suicide("listen()");
 	}
 
-	while (YES) {
+	char buffer[BUFLEN];
+	char buxxer[BUFLEN];
 
+	while (YES) {
+		
 		printf("Server [%s:%d] waiting...\n", inet_ntoa(server_address.sin_addr), ntohs(server_address.sin_port));
 
 		// reset memory buffer
@@ -60,54 +61,60 @@ int main (int argc, char const * argv []) {
 		}
 
 		pid = fork();
-
 		if (pid == 0) {
 
 			close(sockfd);
 
-			size_t flen = 0;
+			system("ls -A1 files/ | grep .c > lsoutput.txt");
 
-			if ((received_length = read(nsckfd, &flen, sizeof(size_t))) < 0) {
-				commit_suicide("read()");
-			}
+			FILE *lsoutput = fopen("lsoutput.txt", "r");
+			fseek(lsoutput, 0, SEEK_END);
+			size_t len = ftell(lsoutput);
+			fseek(lsoutput, 0, SEEK_SET);
+			fread(buffer, sizeof(char), len, lsoutput);
 
-			// read into buffer
-			if ((received_length = read(nsckfd, buffer, flen)) < 0) {
-				commit_suicide("read()");
-			}
-			
-			FILE *file;
-			file = fopen("tmp.c", "w+");
-			fwrite(buffer, sizeof(char), received_length, file);
-			fclose(file);
-
-			// exeggute tmp.o
-			// Get the output and send it back
-			system("gcc -o tmp.o tmp.c");
-			system("./tmp.o > out.txt");
-
-			FILE *outfile;
-			outfile = fopen("out.txt", "r");
-			fseek(outfile, 0, SEEK_END);
-			flen = ftell(outfile);
-			fseek(outfile, 0, SEEK_SET);
-			fread(output, sizeof(char), flen, outfile);
-
-			printf("Client [%s:%d] sent file.\n", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
-
-			if (write(nsckfd, output, BUFLEN) < 0) {
+			if (write(nsckfd, buffer, BUFLEN) < 0) {
 				commit_suicide("write()");
 			}
 
-			system("rm out.txt tmp.o tmp.c");
+			char fname[FLEN];
+			memset(fname, '\0', FLEN);
 
-			fclose(outfile);
+			// read into buffer
+			if ((received_length = read(nsckfd, fname, FLEN)) < 0) {
+				commit_suicide("read()"); // Some error here?
+			}
+
+			char command[FLEN];
+			memset(command, '\0', FLEN);
+			snprintf(command, FLEN, "gcc -o tmp.o files/%s", fname);
+			printf("Executing \'%s\'\n", command);
+
+			system(command);
+
+			system("./tmp.o > temp.txt");
+
+			memset(buffer, '\0', BUFLEN);
+
+			FILE *output = fopen("temp.txt", "r");
+			fseek(output, 0, SEEK_END);
+			len = ftell(output);
+			fseek(output, 0, SEEK_SET);
+			fread(buxxer, sizeof(char), len, output);
+
+			printf("File output: ");
+			puts(buxxer);
+
+			// reply to client with the same data, cause echo server.
+			if (write(nsckfd, buxxer, BUFLEN) < 0) {
+				commit_suicide("rep: write()");
+			}
+
 			close(nsckfd);
 			exit(0);
 
 		} else if (pid < 0) {
 			commit_suicide("fork()");
-			return -2;
 		} else {
 			close(nsckfd);
 		}

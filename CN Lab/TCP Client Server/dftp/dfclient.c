@@ -1,4 +1,4 @@
-	// ...
+// ...
 
 /**
  *	TCP from client side
@@ -21,11 +21,7 @@ int main (int argc, char const * argv []) {
 	int sockfd, i;
 	socklen_t slen = sizeof(server_address);
 	
-	char input[BUFLEN];
-	char output[BUFLEN];
-	char filename[1023];
-	
-	// create a TCP server
+	// create a UDP server
 	if ((sockfd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0) {
 		commit_suicide("socket()");
 	}
@@ -42,34 +38,35 @@ int main (int argc, char const * argv []) {
 		commit_suicide("connect()");
 	}
 
-	memset(output, '\0', BUFLEN);
+	char buffer[BUFLEN];
+	char buxxer[BUFLEN];
+	char filename[FLEN];
 
-	printf("Enter filename (a.c) to send and eggecute: ");
-	scanf(" %s", filename);
+	memset(buffer, '\0', BUFLEN);
 
-	FILE *file;
-	file = fopen(filename, "r");
-	fseek(file, 0, SEEK_END);
-	size_t flen = ftell(file);
-	fseek(file, 0, SEEK_SET);
-	fread(input, sizeof(char), flen, file);
-
-	// send size
-	if (write(sockfd, &flen, sizeof(size_t)) < -1) {
-		commit_suicide("write()");
-	}
-	
-	// try sending some data to the server
-	if (write(sockfd, input, flen) < -1) {
-		commit_suicide("write()");
-	}
-	
-	// blocking call; try getting data from the server
-	if (read(sockfd, output, BUFLEN) < -1) {
+	if (read(sockfd, buffer, BUFLEN) < -1) {
 		commit_suicide("recvfrom()");
 	}
 	
-	printf("Server said:\n%s\n", output);
+	printf("Server file list: \n");
+	puts(buffer);
+
+	printf("Enter filename: ");
+	scanf(" %s", filename);
+
+	// try sending some data to the server
+	if (write(sockfd, filename, FLEN) < -1) {
+		commit_suicide("write()");
+	}
+
+	if (read(sockfd, buxxer, BUFLEN) < -1) {
+		commit_suicide("recvfrom()");
+	}
+
+	sleep(1);
+
+	printf("Output: \n");
+	puts(buxxer);
 	
 	close(sockfd);
 

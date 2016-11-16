@@ -83,49 +83,47 @@ BOOL placeQueens (int board[MAX][MAX], int col) {
 
 }
 
-int main (int argc, const char * argv []) {
+// int main (int argc, const char * argv []) {
 
-	clock_t st, et;
-	double tt;
+// 	clock_t st, et;
+// 	double tt;
 
-	FILE *outfile = fopen("nqueens.csv", "w+");
-	fprintf(outfile, "Input size, Time, Solution?\n");
+// 	FILE *outfile = fopen("nqueens.csv", "w+");
+// 	fprintf(outfile, "Input size, Time, Solution?\n");
 
-	n = 4;
-	int board[MAX][MAX];
+// 	n = 4;
+// 	int board[MAX][MAX];
 
-	int i, j;
+// 	int i, j;
 
-	do {
+// 	do {
 
-		BOOL soln;
+// 		BOOL soln;
 
-		for (i = 0; i < n; ++i) {
-			for (j = 0; j < n; ++j) {
-				board[i][j] = 0;
-			}
-		}
+// 		for (i = 0; i < n; ++i) {
+// 			for (j = 0; j < n; ++j) {
+// 				board[i][j] = 0;
+// 			}
+// 		}
 
-		st = clock();
+// 		st = clock();
 
-		soln = placeQueens(board, 0);
+// 		soln = placeQueens(board, 0);
 
-		et = clock();
+// 		et = clock();
 
-		tt = (double)(et - st)/CLOCKS_PER_SEC;
+// 		tt = (double)(et - st)/CLOCKS_PER_SEC;
 
-		fprintf(outfile, "%d, %.6lf, %d\n", n, tt, soln);
-		printf("%d, %.6lf, %d\n", n, tt, soln);
+// 		fprintf(outfile, "%d, %.6lf, %d\n", n, tt, soln);
+// 		printf("%d, %.6lf, %d\n", n, tt, soln);
 
-		n += 1;
+// 		n += 1;
 
-	} while (n <= 24);
+// 	} while (n <= 24);
 
-	fclose(outfile);
+// 	fclose(outfile);
 
-}
-
-/* Main driver:
+// }
 
 int main (int argc, const char * argv []) {
 
@@ -138,6 +136,13 @@ int main (int argc, const char * argv []) {
 
 	int board[MAX][MAX];
 
+	int i, j;
+	for (i = 0; i < n; ++i) {
+		for (j = 0; j < n; ++j) {
+			board[i][j] = 0;
+		}
+	}
+
 	if (placeQueens(board, 0)) {
 		printf("Solution exists:\n");
 		printBoard(board);
@@ -146,5 +151,3 @@ int main (int argc, const char * argv []) {
 	}
 
 }
-
-*/

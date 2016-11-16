@@ -32,10 +32,9 @@ typedef char * string;
 
 // Defines
 
-#define MAX_LEN 65535
-
 #define BUFLEN 65535
+#define FLEN 1023
 
-#define PORT 11373
+#define PORT 17682
 
 #endif

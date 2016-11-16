@@ -25,14 +25,10 @@ int main (int argc, char const * argv []) {
 
 	fd_set master, rfds;
 	int fdmax;
-	struct timeval tv;
-	int retval, rlen;
+	int rlen;
 
 	FD_ZERO(&master);
 	FD_ZERO(&rfds);
-
-	tv.tv_sec = 5; // Wait for 5 seconds
-	tv.tv_usec = 0;
 
 	// create a TCP Server
 	if ((sockfd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0) {
