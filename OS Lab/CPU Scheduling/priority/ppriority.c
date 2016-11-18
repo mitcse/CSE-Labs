@@ -190,6 +190,9 @@ int main (int argc, char const *argv[]) {
 		printf("  %3d  |  %3d |  %3d |  %3d |  %3d |  %3d\n", p->id, p->pr, p->at, p->bt, p->wt, p->tat);
 	}
 
+	awt /= n;
+	atat /= n;
+
 	printf("\n      Average wait time = %.2lf\n", awt);
 	printf("Average turnaround time = %.2lf\n", atat);
 
@@ -213,8 +216,8 @@ Sample final output:
     1  |    1 |    2 |    6 |    0 |    6
     2  |    2 |    3 |    3 |    5 |    8
 
-      Average wait time = 14.00
-Average turnaround time = 28.00
+      Average wait time = 4.67
+Average turnaround time = 9.33
 
 TIME ||   
  - - || - - - - - - - - - - -

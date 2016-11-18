@@ -1,7 +1,6 @@
 //
-//  psjf.c
-//  Simulation of preemptive SJF scheduling algorithm
-//	Or (Shortest Response Time First, SRTF)
+//  roundrobin.c
+//  Simulation of round robin scheduling algorithm
 // 	Also prints the gantt chart for the glory of the sontaran empire
 //
 //  Created by Avikant Saini on 11/18/16.
@@ -32,7 +31,9 @@ int n; // Curent number of process
 int k; // Currently being exegguted
 process_p_t *pross; // List of processes
 
-int time;
+int time; // Current time
+int ktime; // Time for which current process has been executed
+int quantum; // Quantum of time allotted to a process
 
 void init () {
 
@@ -47,25 +48,6 @@ void init () {
 	}
 }
 
-void sort (BOOL rt) {
-
-	int i, j;
-
-	for (i = 0; i < n; ++i) {
-		for (j = 0; j < n - 1 - i; ++j) {
-			process_p_t a = *(pross + j);
-			process_p_t b = *(pross + j + 1);
-			BOOL swap = rt ? (a->rt > b->rt) : (a->id > b->id);
-			if (swap) {
-				process_p_t c = a;
-				*(pross + j) = b;
-				*(pross + j + 1) = a;
-			}
-		}
-	}
-
-}
-
 void addProcess (int at, int bt) {
 	process_p_t p = *(pross + n);
 	p->id = n;
@@ -75,7 +57,6 @@ void addProcess (int at, int bt) {
 	p->wt = 0;
 	p->tat = 0;
 	n += 1;
-	sort(YES);
 }
 
 void printCurrent () {
@@ -93,23 +74,28 @@ void executeOneTime () {
 	printCurrent();
 
 	time += 1;
-	k = -1;
+	ktime += 1;
 	int i;
 
-	for (i = 0; i < n; ++i) {
-		process_p_t p = *(pross + i);
-		if (p->rt > 0) {
-			k = i;
-			break;
+	// Allot to the next process that has pending operations
+	process_p_t p = *(pross + k);
+	if (ktime % quantum == 0 || p->rt <= 0) {
+		ktime = 0;
+		k = (k + 1) % n;
+		p = *(pross + k);
+		int kk = k;
+		while (p->rt <= 0) {
+			k = (k + 1) % n;
+			p = *(pross + k);
+			if (k == kk) {
+				printf("-- NO PENDING PROCESSES --\n");
+				return;
+			}
 		}
-	}
-	if (k == -1) {
-		printf("-- NO PENDING PROCESSES --\n");
-		return;
 	}
 	
 	for (i = 0; i < n; ++i) {
-		process_p_t p = *(pross + i);
+		p = *(pross + i);
 		if (i == k) {
 			printf("Servicing process %d [AT = %d, RT = %d]\n", p->id, p->at, p->rt);
 			fprintf(gantt, "%4d ||", time);
@@ -140,6 +126,11 @@ int main (int argc, char const *argv[]) {
 
 	int ch;
 	time = 0;
+	k = 0;
+
+	printf("Enter the time quantum: ");
+	scanf(" %d", &quantum);
+
 
 	do {
 
@@ -178,7 +169,6 @@ int main (int argc, char const *argv[]) {
 
 	fprintf(gantt, " - - || - - - - - - - - - - -\n");
 	fprintf(gantt, "  ID ||");
-	sort(NO);
 	int i;
 	printf("\nFinally:\n    ID |   AT |   BT |   WT |   TAT\n");
 	for (i = 0; i < n; ++i) {
@@ -207,38 +197,70 @@ int main (int argc, char const *argv[]) {
 /**
 
 Sample input:
-1 7 n 2 1 4 n 2 1 1 n 1 4 n 2 2 2 2 2 2 2 2 2 2 2 0
+3 1 1 y 2 y 4 y 6 y 8 n 2 2 2 2 2 2 2 2 2 2 1 8 y 6 y 4 y 2 y 1 n 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 0
 
 Sample final output:
 
     ID |   AT |   BT |   WT |   TAT
-    0  |    0 |    7 |    9 |   16
-    1  |    2 |    4 |    1 |    5
-    2  |    4 |    1 |    0 |    1
-    3  |    5 |    4 |    2 |    6
+    0  |    0 |    1 |    0 |    1
+    1  |    0 |    2 |    1 |    3
+    2  |    0 |    4 |   21 |   25
+    3  |    0 |    6 |   22 |   28
+    4  |    0 |    8 |   32 |   40
+    5  |   11 |    8 |   23 |   31
+    6  |   11 |    6 |   20 |   26
+    7  |   11 |    4 |   23 |   27
+    8  |   11 |    2 |   10 |   12
+    9  |   11 |    1 |   12 |   13
 
-      Average wait time = 3.00
-Average turnaround time = 7.00
+      Average wait time = 16.40
+Average turnaround time = 20.60
 
 TIME ||   
  - - || - - - - - - - - - - -
-   1 || * |
-   2 || * |
-   3 ||   | * |
-   4 ||   | * |
-   5 ||   |   | * |
-   6 ||   | * |   |   |
-   7 ||   | * |   |   |
-   8 ||   |   |   | * |
-   9 ||   |   |   | * |
-  10 ||   |   |   | * |
-  11 ||   |   |   | * |
-  12 || * |   |   |   |
-  13 || * |   |   |   |
-  14 || * |   |   |   |
-  15 || * |   |   |   |
-  16 || * |   |   |   |
- - - || - - - - - - - - - - -
-  ID || 0 | 1 | 2 | 3 |
+   1 || * |   |   |   |   |
+   2 ||   | * |   |   |   |
+   3 ||   | * |   |   |   |
+   4 ||   |   | * |   |   |
+   5 ||   |   | * |   |   |
+   6 ||   |   | * |   |   |
+   7 ||   |   |   | * |   |
+   8 ||   |   |   | * |   |
+   9 ||   |   |   | * |   |
+  10 ||   |   |   |   | * |
+  11 ||   |   |   |   | * |
+  12 ||   |   |   |   | * |   |   |   |   |   |
+  13 ||   |   |   |   |   | * |   |   |   |   |
+  14 ||   |   |   |   |   | * |   |   |   |   |
+  15 ||   |   |   |   |   | * |   |   |   |   |
+  16 ||   |   |   |   |   |   | * |   |   |   |
+  17 ||   |   |   |   |   |   | * |   |   |   |
+  18 ||   |   |   |   |   |   | * |   |   |   |
+  19 ||   |   |   |   |   |   |   | * |   |   |
+  20 ||   |   |   |   |   |   |   | * |   |   |
+  21 ||   |   |   |   |   |   |   | * |   |   |
+  22 ||   |   |   |   |   |   |   |   | * |   |
+  23 ||   |   |   |   |   |   |   |   | * |   |
+  24 ||   |   |   |   |   |   |   |   |   | * |
+  25 ||   |   | * |   |   |   |   |   |   |   |
+  26 ||   |   |   | * |   |   |   |   |   |   |
+  27 ||   |   |   | * |   |   |   |   |   |   |
+  28 ||   |   |   | * |   |   |   |   |   |   |
+  29 ||   |   |   |   | * |   |   |   |   |   |
+  30 ||   |   |   |   | * |   |   |   |   |   |
+  31 ||   |   |   |   | * |   |   |   |   |   |
+  32 ||   |   |   |   |   | * |   |   |   |   |
+  33 ||   |   |   |   |   | * |   |   |   |   |
+  34 ||   |   |   |   |   | * |   |   |   |   |
+  35 ||   |   |   |   |   |   | * |   |   |   |
+  36 ||   |   |   |   |   |   | * |   |   |   |
+  37 ||   |   |   |   |   |   | * |   |   |   |
+  38 ||   |   |   |   |   |   |   | * |   |   |
+  39 ||   |   |   |   | * |   |   |   |   |   |
+  40 ||   |   |   |   | * |   |   |   |   |   |
+  41 ||   |   |   |   |   | * |   |   |   |   |
+  42 ||   |   |   |   |   | * |   |   |   |   |
+ - - || - - - - - - - - - - - - - - - - - - - - 
+  ID || 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |
 
 */
