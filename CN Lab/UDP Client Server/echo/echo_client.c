@@ -34,13 +34,13 @@ int main (int argc, char const * argv []) {
 	// set family and port
 	client_address.sin_family = AF_INET;
 	client_address.sin_port = htons(PORT);
-	
+	client_address.sin_addr.s_addr = inet_addr(SERVER);
 	// get address
-	if (inet_aton(SERVER, &client_address.sin_addr) == 0) {
-		commit_suicide("inet_aton()");
-	}
+	// if (inet_aton(SERVER, &client_address.sin_addr) == 0) {
+	// 	commit_suicide("inet_aton()");
+	// }
 	
-	while (YES) {
+	while (YES) {1
 		printf("Enter message: ");
 		scanf(" %s", message);
 		

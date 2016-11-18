@@ -12,7 +12,7 @@ function reverse {
 }
 
 if [[ -z "$1" ]]; then
-	echo "Enter the god damn number: ";
+	printf "Enter the god damn number: ";
 	read a;
 	reverse $a;
 else

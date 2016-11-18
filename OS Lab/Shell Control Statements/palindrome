@@ -1,18 +1,24 @@
 #!/bin/bash
 
-echo Enter number to be checked
-read n
-temp=$n
-num=0
-until [ $n -eq 0 ]
-do
-    dig=`expr $n % 10`
-    n=`expr $n / 10`
-    num=`expr $num \* 10 + $dig`
-done
-if [ $temp -eq $num ]
-then
-echo Palindrome
+function palin {
+	z=$1
+	r=0
+	until [[ $z -eq 0 ]]; do
+		b=`expr $z % 10`
+		r=`expr $r \* 10 + $b`
+		z=`expr $z / 10`
+	done
+	if [[ $r -eq $1 ]]; then
+		echo "$1 is palindrome"
+	else
+		echo "$1 is not a palindrome"
+	fi
+}
+
+if [[ -z "$1" ]]; then
+	printf "Enter the goddamn number: "
+	read n
+	palin $n
 else
-echo Not palindrome
+	palin $1
 fi

@@ -10,8 +10,8 @@ echo $b
 n=`expr $n - 2`
 while [ $n -gt 0 ]
 do
-    temp=`expr $a + $b`
-    echo $temp
+    c=`expr $a + $b`
+    echo $c
     a=$b
     b=$temp
     n=`expr $n - 1`

@@ -5,24 +5,26 @@
 #include <stdlib.h>
 
 int main(int argc, char const *argv[]) {
-	char sname[100], dname[100];
-	printf("Enter file name to copy: ");
-	scanf(" %s", sname);
-	printf("Enter new file name: ");
-	scanf(" %s", dname);
-
-	int src = open(sname, O_RDONLY);
-	int dst = open(dname, O_WRONLY | O_CREAT , 0641);
 	
-	int n;
-	char buffer;
+	printf("Files list: \n");
+	system("ls -A1");
 
-	while (n = read(src, &buffer, 1) > 0) {
-		write(dst, &buffer, 1);
+	char src[64], dst[64];
+
+	printf("Enter source name: ");
+	scanf(" %s", src);
+
+	printf("Enter dest name: ");
+	scanf(" %s", dst);
+
+	int sfd = open(src, O_RDONLY);
+	int dfd = open(dst, O_WRONLY | O_CREAT, 0640);
+
+	char buffer[1];
+	while ((read(sfd, buffer, 1)) > 0) {
+		write(dfd, buffer, 1);
 	}
 
-	close(src);
-	close(dst);
-
 	return 0;
+
 }

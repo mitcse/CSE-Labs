@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function roots {
-	d=$(($2*$2-4*$1*$3));
+	d=$(echo "$2*$2-4*$1*$3" | bc);
 	r=0;
 	if [[ $d -gt 0 ]]; then
 		r=2;
@@ -31,8 +31,11 @@ function roots {
 
 if [[ -z "$1" || -z "$2" || -z "$3" ]]; then
 	echo "Enter the god damn coeffecients: ";
+	printf "Enter a: "
 	read a;
+	printf "Enter b: "
 	read b;
+	printf "Enter c: "
 	read c;
 	roots $a $b $c;
 else

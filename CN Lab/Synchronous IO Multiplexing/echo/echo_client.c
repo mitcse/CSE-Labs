@@ -45,13 +45,13 @@ int main (int argc, char const * argv []) {
 		printf("Enter some shit: ");
 		while (YES) {
 			scanf(" %s", buffer);
-			send(sockfd, buffer, BUFLEN, 0);
+			write(sockfd, buffer, BUFLEN);
 		}
 
 	} else {
 
 		while (YES) {
-			if (recv(sockfd, buffer, BUFLEN, 0) > 0) {
+			if (read(sockfd, buffer, BUFLEN) > 0) {
 				printf("Server said: %s\n", buffer);
 			}
 		}

@@ -63,11 +63,11 @@ int main (int argc, char const * argv []) {
 
 		rfds = master;
 
+		printf("Server [%s:%d] waiting...\n", inet_ntoa(server_address.sin_addr), ntohs(server_address.sin_port));
+
 		// Select among the connected sockets.
 		if (select(fdmax + 1, &rfds, NULL, NULL, NULL) == -1) {
 			commit_suicide("select()");
-		} else {
-			printf("Server [%s:%d] waiting...\n", inet_ntoa(server_address.sin_addr), ntohs(server_address.sin_port));
 		}
 
 		// Loop though all the sockets.
@@ -89,7 +89,7 @@ int main (int argc, char const * argv []) {
 
 				} else {
 
-					if ((rlen = recv(i, buffer, BUFLEN, 0)) <= 0) {
+					if ((rlen = read(i, buffer, BUFLEN)) <= 0) {
 						
 						if (rlen == 0) {
 							printf("Client on socket %d hung up.\n", i);
@@ -110,7 +110,7 @@ int main (int argc, char const * argv []) {
 
 									printf("Client on socket %d said: %s.\n", j, buffer);
 
-									if (send(j, buffer, BUFLEN, 0) < 0) {
+									if (write(j, buffer, BUFLEN) < 0) {
 										commit_suicide("send()");
 									}
 
