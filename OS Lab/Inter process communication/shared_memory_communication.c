@@ -19,7 +19,8 @@ int main (int argc, char const * argv []) {
 
 	/**
 		void * shmat(int shmid, const void *shmaddr, int shmflg);
-		Attaches the shared memory segment associated with the shared memory identifier specified by shmid to the address space of the calling process.
+		Attaches the shared memory segment associated with the shared memory identifier specified 
+		by shmid to the address space of the calling process.
 	*/
 
 	char *shared_memory = (char *) shmat(segment_id, NULL, 0);
@@ -39,7 +40,8 @@ int main (int argc, char const * argv []) {
 
 		/**
 			int shmdt(const void *shmaddr);
-			Detaches the shared memory segment located at the address specified by shmaddr from the address space of the calling process.
+			Detaches the shared memory segment located at the address specified by shmaddr from
+			the address space of the calling process.
 		*/
 		shmdt(shared_memory);
 

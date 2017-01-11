@@ -54,9 +54,9 @@ void init () {
 	}
 
 	// int pid;
-	// printf("Enter the process requesting resources: \n");
+	// printf("Enter the process requesting resources: ");
 	// scanf(" %d", &pid);
-	// printf("Enter resources request for process %d: \n", pid);
+	// printf("Enter resources request for process %d: ", pid);
 	// for (i = 0; i < m; ++i) {
 	// 	scanf(" %d", &j);
 	// 	NEED[pid][i] += j;
@@ -172,3 +172,15 @@ int main (int argc, char const * argv []) {
 	return 0;
 }
 
+
+/**
+3
+4
+3 1 1 2
+1 2 2 1
+3 3 2 2 
+1 0 3 3 
+1 2 3 4
+1 2 1 0
+1 3 5 0
+*/
