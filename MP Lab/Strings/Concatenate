@@ -1,0 +1,34 @@
+data segment
+      st1 db "poke"
+      len1 db ($-str1)
+      st2 db "mon"
+      len2 db ($-str2)
+      st3 db 10 dup(0)
+data ends
+
+code segment
+assume cs:code, ds:data,es:data
+start:mov ax,data
+      mov ds,ax
+      mov es,ax
+      
+      lea di,st3
+      lea si,st1
+      mov cl,len1
+      
+      cld
+      
+      rep movs st3,st1
+      
+      mov cl,len2
+      lea si,st2
+      
+      rep movs st3,st1
+      
+      mov al,'$'
+      mov [di],al
+      
+      mov ah,4ch
+      int 21h
+    code ends
+end start
