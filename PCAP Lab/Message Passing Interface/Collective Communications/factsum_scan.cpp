@@ -1,3 +1,11 @@
+//
+//	factsum_scan.cpp
+//		
+//	
+//	
+//	Created by Vrushank Upadhayay on 02/08/17
+//
+
 #include "mpi.h"
 #include <iostream>
 #include <stdio.h>
