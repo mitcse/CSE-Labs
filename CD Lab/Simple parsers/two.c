@@ -47,6 +47,8 @@ void E () {
 	E1();
 	if (strcmp(input[i], "$") == 0) {
 		SUCCESS_HANDLER;
+	} else {
+		ERROR_HANDLER;
 	}
 }
 

@@ -54,9 +54,6 @@ void lexp() {
 		list();
 	} else if (strcmp(CURR, "num") == 0 || strcmp(CURR, "id") == 0) {
 		aterm();
-	} 
-	if (strcmp(CURR, "$") == 0) {
-		SUCCESS_HANDLER;
 	}
 }
 
@@ -75,9 +72,16 @@ void list() {
 	LOG_CURRENT;
 	if (strcmp(CURR, "(") == 0) {
 		i += 1;
+		LOG_CURRENT;
 		lexpseq();
 		if (strcmp(CURR, ")") == 0) {
 			i += 1;
+			LOG_CURRENT;
+			if (strcmp(CURR, "$") == 0) {
+				SUCCESS_HANDLER;
+			}
+		} else {
+			ERROR_HANDLER;
 		}
 	} else {
 		ERROR_HANDLER;

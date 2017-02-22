@@ -51,6 +51,7 @@ void S () {
 			i += 1;
 			LOG_CURRENT;
 			B();
+			LOG_CURRENT;
 			if (strcmp(input[i], "e") == 0) {
 				i += 1;
 				LOG_CURRENT;
@@ -81,8 +82,10 @@ void A1 () {
 	if (strcmp(input[i], "b") == 0) {
 		i += 1;
 		A1();
+		LOG_CURRENT;
 	} else if (strcmp(input[i], "c") == 0) {
 		// Actually check for symbols in the follow sets of the grammar
+		LOG_CURRENT;
 		return;
 	}
 }
@@ -90,6 +93,7 @@ void A1 () {
 void B () {
 	if (strcmp(input[i], "d") == 0) {
 		i += 1;
+		LOG_CURRENT;
 	} else {
 		ERROR_HANDLER;
 	}

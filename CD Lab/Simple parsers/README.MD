@@ -1,10 +1,5 @@
-# notclang
+# Simple parsers
 
-Attempt to make a C compiler, as a Compiler Design Lab project.
+Lab 6 codes.
 
-### [Labs Repo](https://github.com/mitcse/CSE-Labs/tree/master/CD%20Lab)
-
-### Building and Running
-
-- `make`
-- `./notclang <filename>`
+`two` and `four` work with the lexer in `notclang`.
