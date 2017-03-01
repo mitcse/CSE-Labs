@@ -62,9 +62,9 @@ void program() {
 					declarations();
 					assign_stat();
 					IF_CURR_EQ("<}>") {
-						// i += 1;
-						printf("%s\n", input[i]);
-						IF_CURR_EQ("$") {
+						printf("FINALLY: %s, %s\n", input[i], input[i+1]);
+						i += 1;
+						if (i == k-1) {
 							SUCCESS_HANDLER;
 						}
 					} else {
@@ -172,7 +172,7 @@ void parse_input (char *inname) {
 		}
 
 	} while (token != NULL);
-	strcpy(input[k++], "$");
+	strcpy(input[k], "$");
 
 	program();
 
