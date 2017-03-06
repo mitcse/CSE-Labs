@@ -2,6 +2,6 @@
 	<int> <id> <;> 
 	<int> <id> <[> <num> <]> <;> 
 	<char> <id> <,> <id> <;> 
-	<id> <=> <id> <+> <num> 
-	<id> <=> <id> <*> <id> 
+	<id> <=> <id> <+> <num> <;> 
+	<id> <=> <id> <*> <id> <;> 
 <}> 

@@ -35,8 +35,8 @@
 		int a;
 		int arr[10];
 		char b, c;
-		a = a + 10
-		b = a * c
+		a = a + 10;
+		b = a * c;
 	}
 */
 
@@ -209,6 +209,12 @@ void assign_stat() {
 			i += 1;
 			LOG_CURRENT;
 			expn();
+			LOG_CURRENT;
+			IF_CURR_EQ("<;>") {
+				i += 1;
+				LOG_CURRENT;
+				return;
+			}
 		} else {
 			ERROR_HANDLER;
 		}

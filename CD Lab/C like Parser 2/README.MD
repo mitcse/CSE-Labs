@@ -37,8 +37,8 @@ main () {
 	int a;
 	int arr[10];
 	char b, c;
-	a = a + 10
-	b = a * c
+	a = a + 10;
+	b = a * c;
 }
 ```
 
@@ -49,8 +49,8 @@ main () {
 	<int> <id> <;> 
 	<int> <id> <[> <num> <]> <;> 
 	<char> <id> <,> <id> <;> 
-	<id> <=> <id> <+> <num> 
-	<id> <=> <id> <*> <id> 
+	<id> <=> <id> <+> <num> <;> 
+	<id> <=> <id> <*> <id> <;> 
 <}>
 ```
 
@@ -102,10 +102,12 @@ main () {
 --> void addop(): <num>
 --> void term(): <num>
 --> void factor(): <num>
---> void factor(): <id>
---> void tprime(): <id>
---> void seprime(): <id>
---> void eprime(): <id>
+--> void factor(): <;>
+--> void tprime(): <;>
+--> void seprime(): <;>
+--> void eprime(): <;>
+--> void assign_stat(): <;>
+--> void assign_stat(): <id>
 --> void statement_list(): <id>
 --> void statement(): <id>
 --> void assign_stat(): <id>
@@ -120,10 +122,12 @@ main () {
 --> void mulop(): <*>
 --> void mulop(): <id>
 --> void factor(): <id>
---> void factor(): <}>
---> void tprime(): <}>
---> void seprime(): <}>
---> void eprime(): <}>
+--> void factor(): <;>
+--> void tprime(): <;>
+--> void seprime(): <;>
+--> void eprime(): <;>
+--> void assign_stat(): <;>
+--> void assign_stat(): <}>
 --> void program(): ?
 void program()(): Success.
 ```
