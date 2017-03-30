@@ -1,0 +1,1 @@
+<SUBSTRACT> <num> <,> <num> <,> <num> <,> <id> <FROM> <id> <,> <id> <,> <id> 
