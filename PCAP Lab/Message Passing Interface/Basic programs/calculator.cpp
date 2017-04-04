@@ -23,21 +23,21 @@ int main (int argc, char *argv []) {
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
 	double res;
-	double a = atof(argv[1]);
-	double b = atof(argv[2]);
+	double a = 6.9;
+	double b = 4.2;
 	// printf("a = %.3f, b = %.3f\n", a, b);
 	if (rank == 0) {
 		res = a + b;
-		printf("Process %d added: %.3f", rank, res);
+		printf("Process %d added: %.3f\n", rank, res);
 	} else if (rank == 1) {
 		res = a - b;
-		printf("Process %d substracted: %.3f", rank, res);
+		printf("Process %d substracted: %.3f\n", rank, res);
 	} else if (rank == 2) {
 		res = a * b;
-		printf("Process %d multiplied: %.3f", rank, res);
+		printf("Process %d multiplied: %.3f\n", rank, res);
 	} else if (rank == 3) {
 		res = a / b;
-		printf("Process %d divided : %.3f", rank, res);
+		printf("Process %d divided : %.3f\n", rank, res);
 	}
 
 	MPI_Finalize();
