@@ -1,142 +1,153 @@
 #include <stdio.h>
 #include <stdlib.h>
+#define M 3
 
-#define LESS -32767
+struct node {
+    int n; 
+    int keys[M-1]; 
+    struct node *p[M]; 
+}*root=NULL;
 
-#define MIN(A, B) ((A > B)? B : A)
-#define MAX(A, B) ((A > B)? A : B)
+enum KeyStatus { Duplicate,Success,InsertIt };
 
-#define MAX3(A, B, C) MAX(A, MAX(B, C))
-#define MIN3(A, B, C) MIN(A, MIN(B, C))
-#define MID3(A, B, C) MAX(MIN(A, B), MIN(MAX(A, B), C))
+void insert(int);
+void display(struct node *,int);
+void search(int x);
+enum KeyStatus ins(struct node *, int , int* , struct node** );
+int  searchPos(int ,int *, int );
+void inorder(struct node *);
 
-typedef enum { NO, YES } BOOL;
 
-typedef struct TwoThreeNode {
-	int k1, k2;
-	struct TwoThreeNode *left, *mid, *right;
-} TTN_t, *TTN_p_t;
+int main()
+{
+    int key;
+    int choice;
+    printf("Creation of 2-3 tree for M=%d\n",M);
+    int x;
+    printf("Enter values (-1 to end)\n");
+    while(1)
+    {   
+        scanf("%d",&x);
+        if(x==-1) 
+            break;
+        insert(x);
+    }
 
-TTN_p_t initNode() {
-	TTN_p_t node = (TTN_p_t)malloc(sizeof(TTN_t));
-	node->k1 = LESS;
-	node->k2 = LESS;
-	node->left = NULL;
-	node->mid = NULL;
-	node->right = NULL;
-	return node;
+    printf("2-3tree is :\n");
+    display(root,0);
+    return 0;
 }
 
-#pragma mark - 
-
-TTN_p_t searchTree (TTN_p_t tree, int key) {
-	if (tree == NULL)
-		return NULL;
-	if (key == tree->k1 || key == tree->k2)
-		return tree;
-	if (key < tree->k1)
-		return searchTree(tree->left, key);
-	else if (key > tree->k2)
-		return searchTree(tree->right, key);
-	return searchTree(tree->mid, key);
+void insert(int key)
+{
+    struct node *newnode;
+    int upKey;
+    enum KeyStatus value;
+    value = ins(root, key, &upKey, &newnode);
+    if (value == Duplicate)
+        printf("Key already available\n");
+    if (value == InsertIt)
+    {
+        struct node *uproot = root;
+        root=malloc(sizeof(struct node));
+        root->n = 1;
+        root->keys[0] = upKey;
+        root->p[0] = uproot;
+        root->p[1] = newnode;
+    }
 }
 
-#pragma mark - Insert and delete
+enum KeyStatus ins(struct node *ptr, int key, int *upKey,struct node **newnode)
+{
+    struct node *newPtr, *lastPtr;
+    int pos, i, n,splitPos;
+    int newKey, lastKey;
+    enum KeyStatus value;
+    if (ptr == NULL)
+    {
+        *newnode = NULL;
+        *upKey = key;
+        return InsertIt;
+    }
+    n = ptr->n;
+    pos = searchPos(key, ptr->keys, n);
+    if (pos < n && key == ptr->keys[pos])
+        return Duplicate;
+    value = ins(ptr->p[pos], key, &newKey, &newPtr);
+    if (value != InsertIt)
+        return value;
 
-TTN_p_t insertItem (TTN_p_t tree, int item) {
+    if (n < M - 1)
+    {
+        pos = searchPos(newKey, ptr->keys, n);
+        /*Shifting the key and pointer right for inserting the new key*/
+        for (i=n; i>pos; i--)
+        {
+            ptr->keys[i] = ptr->keys[i-1];
+            ptr->p[i+1] = ptr->p[i];
+        }
+        /*Key is inserted at exact location*/
+        ptr->keys[pos] = newKey;
+        ptr->p[pos+1] = newPtr;
+        ++ptr->n; /*incrementing the number of keys in node*/
+        return Success;
+    }/*End of if */
+    /*If keys in nodes are maximum and position of node to be inserted is last*/
+    if (pos == M - 1)
+    {
+        lastKey = newKey;
+        lastPtr = newPtr;
+    }
+    else /*If keys in node are maximum and position of node to be inserted is not last*/
+    {
+        lastKey = ptr->keys[M-2];
+        lastPtr = ptr->p[M-1];
+        for (i=M-2; i>pos; i--)
+        {
+            ptr->keys[i] = ptr->keys[i-1];
+            ptr->p[i+1] = ptr->p[i];
+        }
+        ptr->keys[pos] = newKey;
+        ptr->p[pos+1] = newPtr;
+    }
+    splitPos = (M - 1)/2;
+    (*upKey) = ptr->keys[splitPos];
 
-	if (tree == NULL) {
-		TTN_p_t node = initNode();
-		node->k1 = item;
-		return node;
-	}
-
-	if (tree->k1 == LESS) {
-		tree->k1 = item;
-		return tree;
-	} else if (tree->k2 == LESS) {
-		tree->k2 = MAX(item, tree->k1);
-		tree->k1 = MIN(item, tree->k1);
-		return tree;
-	} else {
-		if (item < tree->k1) {
-			tree->left = insertItem(tree->left, item);
-		} else if (item > tree->k2) {
-			tree->right = insertItem(tree->right, item);
-		} else {
-			tree->mid = insertItem(tree->mid, item);
-		}
-	}
-
-	if (tree->left == NULL && tree->mid == NULL && tree->right == NULL) {
-		TTN_p_t leftNode = initNode();
-		TTN_p_t rightNode = initNode();
-		if (item < tree->k1) {
-			// tree->k1 = tree->k1;
-			leftNode->k1 = item;
-			rightNode->k1 = tree->k2;
-		} else if (item > tree->k2) {
-			leftNode->k1 = tree->k1;
-			tree->k1 = tree->k2;
-			rightNode->k1 = item;
-		} else {
-			leftNode->k1 = tree->k1;
-			tree->k1 = item;
-			rightNode->k1 = tree->k2;
-		}
-		tree->k2 = LESS;
-		tree->left = leftNode;
-		tree->mid = rightNode;
-		return tree;
-	}
-
-	return tree;
-
+    (*newnode)=malloc(sizeof(struct node));/*Right node after split*/
+    ptr->n = splitPos; /*No. of keys for left splitted node*/
+    (*newnode)->n = M-1-splitPos;/*No. of keys for right splitted node*/
+    for (i=0; i < (*newnode)->n; i++)
+    {
+        (*newnode)->p[i] = ptr->p[i + splitPos + 1];
+        if(i < (*newnode)->n - 1)
+            (*newnode)->keys[i] = ptr->keys[i + splitPos + 1];
+        else
+            (*newnode)->keys[i] = lastKey;
+    }
+    (*newnode)->p[(*newnode)->n] = lastPtr;
+    return InsertIt;
 }
 
-#pragma mark - Traversals
-
-void inorderTraversal (TTN_p_t root) {
-	if (root == NULL)
-		return;
-	inorderTraversal(root->left);
-	if (root->k1 != LESS)
-		printf(" %d", root->k1);
-	inorderTraversal(root->mid);
-	if (root->k2 != LESS)
-		printf(" %d", root->k2);
-	inorderTraversal(root->right);
+void display(struct node *ptr, int blanks)
+{
+    if (ptr)
+    {
+        int i;
+        for(i=1; i<=blanks; i++)
+            printf(" ");
+        for (i=0; i < ptr->n; i++)
+            printf("%d ",ptr->keys[i]);
+        printf("\n");
+        for (i=ptr->n; i >=0; i--)
+            display(ptr->p[i], blanks+10);
+    }
 }
 
-#pragma mark - 
 
-int main (int argc, char const * argv []) {
-
-	int x;
-	printf("Enter elements one by one, -1 to break: ");
-
-	TTN_p_t tree = NULL;
-
-	do {
-		scanf(" %d", &x);
-		if (x >= 0)
-			tree = insertItem(tree, x);
-	} while (x >= 0);
-
-	// TTN_p_t tree = insertItem(NULL, 4);
-	// tree = insertItem(tree, 3);
-	// tree = insertItem(tree, 2);
-	// tree = insertItem(tree, 5);
-	// tree = insertItem(tree, 6);
-	// tree = insertItem(tree, 1);
-	// tree = insertItem(tree, 8);
-	// tree = insertItem(tree, 7);
-
-	printf("Inorder: \n");
-	inorderTraversal(tree);
-
-	printf("\n\n");
-
-	return 0;
-
+int searchPos(int key, int *key_arr, int n)
+{
+    int pos=0;
+    while (pos < n && key > key_arr[pos])
+        pos++;
+    return pos;
 }
