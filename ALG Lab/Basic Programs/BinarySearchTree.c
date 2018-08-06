@@ -27,6 +27,7 @@ NODE_p_t initNode (int data) {
 	node->data = data;
 	node->left = NULL;
 	node->right = NULL;
+	return node;
 }
 
 NODE_p_t insertNode (NODE_p_t root, int data) {
